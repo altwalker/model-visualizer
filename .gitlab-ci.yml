@@ -1,6 +1,6 @@
 image: node:latest
 
-build:
+pages:
   stage: build
   script:
     - npm install
