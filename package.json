@@ -1,0 +1,20 @@
+{
+  "name": "model-visualizer",
+  "version": "1.0.0",
+  "description": "Visualize your AltWalker or GraphWalker json models",
+  "scripts": {
+    "build": "webpack -o dist/bundle.js --mode production",
+    "dev": "webpack-dev-server --content-base build/"
+  },
+  "author": "Altom Consulting",
+  "license": "GPL-3.0-only",
+  "devDependencies": {
+    "css-loader": "^3.2.0",
+    "dagre-d3": "^0.6.3",
+    "mini-css-extract-plugin": "^0.8.0",
+    "style-loader": "^1.0.0",
+    "webpack": "^4.39.1",
+    "webpack-cli": "^3.3.6",
+    "webpack-dev-server": "^3.8.0"
+  }
+}
