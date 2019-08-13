@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Visualize your AltWalker or GraphWalker json models",
   "scripts": {
-    "build": "webpack -o dist/bundle.js --mode production",
+    "build": "webpack -o public/bundle.js --mode production",
     "dev": "webpack-dev-server --content-base build/"
   },
   "author": "Altom Consulting",
