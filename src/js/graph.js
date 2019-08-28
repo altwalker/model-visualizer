@@ -356,6 +356,7 @@ function renderGraph(container, graph) {
   var svg = d3.select(container).select("svg");
   if (svg.empty()) {
     svg = d3.select(container).append("svg");
+    svg.attr("class", "visualizer");
   }
   svg.attr("width", width).attr("height", height);
 
