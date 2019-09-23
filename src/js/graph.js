@@ -1,40 +1,8 @@
 import dagreD3 from "dagre-d3";
 
-export var defaultModels = {
-  name: "Default model",
-  models: [
-    {
-      name: "ModelName",
-      generator: "random(edge_coverage(100) && vertex_coverage(100))",
-      startElementId: "v0",
-      vertices: [
-        {
-          id: "v0",
-          name: "vertex_A"
-        },
-        {
-          id: "v1",
-          name: "vertex_B"
-        }
-      ],
-      edges: [
-        {
-          id: "e0",
-          name: "edge_A",
-          sourceVertexId: "v0",
-          targetVertexId: "v1"
-        }
-      ]
-    }
-  ]
-};
-var fakeNodesCount = 0;
-
+let fakeNodesCount = 0;
 const commonLegendDommain = ["Start Vertex", "Blocked Vertex", "Fake Vertex"];
 const commonLegendRange = ["#27ae60", "#7f8c8d", "#3498db"];
-
-var legendDomain = [];
-var legendRange = [];
 
 function createVertexLabel(vertex, startElementsIds) {
   const nodeLabelClass = "node-label";
@@ -76,13 +44,11 @@ function createVertexLabel(vertex, startElementsIds) {
 }
 
 function createEdgeLable(edge) {
-  const edgeLabelClass = "edge-label";
-
   let label = {
     id: edge.id,
+    labelId: "label_" + edge.id,
     targetVertexId: edge.targetVertexId,
-    label: edge.name,
-    class: edgeLabelClass
+    label: edge.name
   };
 
   if (edge.sourceVertexId) {
@@ -101,8 +67,6 @@ function createEdgeLable(edge) {
 }
 
 function createFakeVertex() {
-  fakeNodesCount += 1;
-
   let fakeVertex = {
     id: "fake_vertex" + fakeNodesCount,
     name: "fake_vertex",
@@ -124,7 +88,7 @@ function setStartingEdge(graph, edge, startElementsIds) {
   );
 }
 
-function createGraph(models) {
+export function createGraph(models) {
   fakeNodesCount = 0;
 
   // Create a new directed graph
@@ -177,9 +141,6 @@ function createGraph(models) {
       )
     );
 
-  legendDomain = sharedStatesNames;
-  legendRange = sharedStatesNames.map(name => color(name));
-
   graph.nodes().forEach(function(v) {
     var node = graph.node(v);
     node.rx = node.ry = 5;
@@ -191,7 +152,14 @@ function createGraph(models) {
     });
   });
 
-  return graph;
+  return {
+    graph: graph,
+    legendDomain: [...commonLegendDommain, ...sharedStatesNames],
+    legendRange: [
+      ...commonLegendRange,
+      ...sharedStatesNames.map(name => color(name))
+    ]
+  };
 }
 
 function generateNodeTooltipHTML(graph, d) {
@@ -303,13 +271,8 @@ function addTootips(svg, tooltip, cssSelector, htlmFunction, graph) {
     });
 }
 
-function renderTooltips(svg, graph) {
-  var tooltip = d3
-    .select("body")
-    .append("div")
-    .attr("class", "tooltip")
-    .style("display", "none")
-    .style("opacity", 0);
+export function renderTooltips(svg, graph, tooltip) {
+  tooltip.style("display", "none").style("opacity", 0);
 
   addTootips(svg, tooltip, ".node", generateNodeTooltipHTML, graph);
   addTootips(
@@ -319,86 +282,4 @@ function renderTooltips(svg, graph) {
     generateEdgeTootipHtml,
     graph
   );
-}
-
-function renderLegend() {
-  var svg = d3
-    .select("#legend")
-    .attr("height", (commonLegendDommain.length + legendDomain.length) * 40);
-
-  svg
-    .append("g")
-    .attr("class", "legendQuant")
-    .attr("transform", "translate(20,20)");
-
-  var ordinal = d3
-    .scaleOrdinal()
-    .domain(commonLegendDommain.concat(legendDomain))
-    .range(commonLegendRange.concat(legendRange));
-
-  var legend = d3
-    .legendColor()
-    .title("Graph Legend")
-    .scale(ordinal);
-
-  svg.select(".legendQuant").call(legend);
-}
-
-function renderGraph(container, graph) {
-  const width = container.offsetWidth;
-  const height = container.offsetHeight;
-  //   console.log("select::::");
-  //   if (d3.select(container).select("svg")) {
-  //     console.log("exists");
-  //   } else {
-  //     console.log("does not exist");
-  //   }
-  var svg = d3.select(container).select("svg");
-  if (svg.empty()) {
-    svg = d3.select(container).append("svg");
-    svg.attr("class", "visualizer");
-  }
-  svg.attr("width", width).attr("height", height);
-
-  var inner = svg.select("g");
-  if (inner.empty()) inner = svg.append("g");
-
-  // Set up zoom support
-  var zoom = d3.zoom().on("zoom", function() {
-    inner.attr("transform", d3.event.transform);
-  });
-
-  svg.call(zoom);
-
-  // Create the renderer
-  var render = new dagreD3.render();
-
-  // Run the renderer. This is what draws the final graph.
-  render(inner, graph);
-
-  // Center the graph
-  var initialScale = 1;
-  svg.call(
-    zoom.transform,
-    d3.zoomIdentity
-      .translate(
-        (svg.attr("width") - graph.graph().width * initialScale) / 2,
-        20
-      )
-      .scale(initialScale)
-  );
-
-  renderTooltips(svg, graph);
-  // renderLegend();
-}
-
-export function displayModels(container, models) {
-  var graph = createGraph(models["models"]);
-  renderGraph(container, graph);
-}
-
-function resizeSvg() {
-  var svg = d3
-    .select("svg")
-    .attr("width", document.getElementById("graph-container").offsetWidth);
 }

@@ -1,10 +1,23 @@
+stages:
+  - test
+  - build
+
+
 image: node:latest
+
+cache:
+  key: global-cache
+  paths:
+  - node_modules/
+
+before_script:
+  - npm install
 
 pages:
   stage: build
   script:
-    - npm install
     - npm run build
+    - cp examples/index.html public/
   artifacts:
     paths:
       - public

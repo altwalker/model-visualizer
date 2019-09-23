@@ -1,8 +1,18 @@
 /* Graph SVG */
-svg.visualizer {
+svg.mv-visualizer {
   font: 400 14px "Helvetica Neue", Helvetica;
 }
 
+svg.mv-visualizer text {
+  cursor: default;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+svg.mv-visualizer text::selection {
+  background: none;
+}
 .node rect {
   fill: #f1c40f;
 
@@ -48,6 +58,16 @@ g.edgeLabels {
   stroke-width: 2px;
 }
 
+path.dynamicPath {
+  fill: #7f8c8d;
+
+  stroke: #7f8c8d;
+  stroke-width: 2px;
+}
+path.hidden {
+  stroke-width: 0;
+}
+
 /* Tooltips */
 
 .tooltip {
@@ -82,4 +102,59 @@ g.edgeLabels {
   font-family: monospace;
   background-color: #ecf0f1;
   color: #e74c3c;
+}
+
+.mv-editor {
+  float: right;
+  width: 30%;
+  min-width: 150px;
+  padding-right: 10px;
+}
+
+.mv-viewmode {
+  width: 100%;
+  height: 100%;
+}
+
+.mv-editmode {
+  width: 100%;
+  height: 100%;
+}
+
+.mv-editmode .node rect:hover {
+  fill: #fff70d;
+  cursor: pointer;
+}
+
+.mv-editmode .node.edit rect {
+  fill: #fff70d;
+  stroke: skyblue;
+}
+
+.mv-editmode .edgePath path {
+  stroke-width: 3px;
+  padding: 2px;
+}
+
+.mv-editmode .edgePath path:hover {
+  cursor: pointer;
+  stroke: #f1c40f;
+  fill: #f1c40f;
+}
+
+.mv-editmode .edgePath.edit path {
+  stroke: #f1c40f;
+  fill: #f1c40f;
+}
+.mv-editmode .edgeLabels .label :hover {
+  cursor: pointer;
+  fill: #f1c40f;
+}
+.mv-editmode .edgeLabels .label.edit {
+  fill: #f1c40f;
+  font-weight: 600;
+}
+
+.mv-editmode .dynamicPath {
+  stroke: #f1c40f;
 }
