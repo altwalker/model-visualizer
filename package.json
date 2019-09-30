@@ -5,7 +5,8 @@
   "scripts": {
     "build:dev": "webpack --mode development",
     "build": "webpack --mode production",
-    "dev": "webpack-dev-server --content-base examples/"
+    "dev": "webpack-dev-server --content-base examples/ --host 0.0.0.0",
+    "test": "jest"
   },
   "author": "Altom Consulting",
   "license": "GPL-3.0-only",
@@ -13,10 +14,14 @@
     "@babel/core": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "@vue/cli-plugin-babel": "^3.11.0",
+    "babel-jest": "^24.9.0",
     "babel-loader": "^8.0.6",
     "css-loader": "^3.2.0",
     "dagre-d3": "^0.6.3",
+    "jest": "^24.9.0",
+    "jest-puppeteer": "^4.3.0",
     "mini-css-extract-plugin": "^0.8.0",
+    "puppeteer": "^1.20.0",
     "style-loader": "^1.0.0",
     "vue": "^2.6.10",
     "vue-loader": "^15.7.1",

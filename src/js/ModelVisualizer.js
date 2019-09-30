@@ -48,6 +48,7 @@ export default class ModelVisualizer {
         `,
       methods: {
         modelsChanged: function (models) {
+          data.models = models;
           if (visualizer.onmodelschange) {
             visualizer.onmodelschange(models);
           }
@@ -83,6 +84,9 @@ export default class ModelVisualizer {
   setModels(models) {
     ModelVisualizer.validate(models);
     this.vm.models = models;
+  }
+  getModels() {
+    return JSON.parse(JSON.stringify(this.vm.models));
   }
   /**
    * Switches from editor to viewer

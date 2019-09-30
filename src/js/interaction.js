@@ -1,4 +1,4 @@
-function createDynamicPath(gInteraction, graph) {
+function createDynamicPath(gInteraction, graph, svg) {
   const dPath = {
     path: gInteraction.select("path.dynamicPath"),
 
@@ -11,16 +11,23 @@ function createDynamicPath(gInteraction, graph) {
     startNodeId: null,
     endNodeId: null,
     edgeId: null,
+    getSvgLocation(x, y) {
+      var pt = svg.node().createSVGPoint();
+
+      pt.x = x;
+      pt.y = y;
+
+      return pt.matrixTransform(svg.node().getScreenCTM().inverse());
+    },
+
     activate: function (nodeId, edgeId) {
       this.edgeId = edgeId;
-      const node = graph.node(nodeId);
-      const coords = d3
-        .select(node.elem)
-        .node()
-        .getBoundingClientRect();
+      const node = d3.select(graph.node(nodeId).elem).node();
+      const coords = node.getBoundingClientRect()
+      var location = this.getSvgLocation(coords.x + coords.width / 2, coords.y + coords.height / 2)
 
-      this.endx = this.stx = coords.x + coords.width / 2;
-      this.endy = this.sty = coords.y + coords.height / 2;
+      this.endx = this.stx = location.x;
+      this.endy = this.sty = location.y;
       this.startNodeId = nodeId;
       this.active = true;
     },
@@ -78,7 +85,7 @@ class Interaction {
 export function setupInteraction(svg, graph) {
   const interaction = new Interaction();
 
-  var dLine = createDynamicPath(svg.select("g#interaction"), graph);
+  var dLine = createDynamicPath(svg.select("g#interaction"), graph, svg);
   var createNode = false;
 
   function mousemove() {
@@ -125,7 +132,9 @@ export function setupInteraction(svg, graph) {
   svg.selectAll("g.node .label").attr("pointer-events", "none");
   svg
     .selectAll("g.node")
-    .on("mousedown", nodeId => dLine.activate(nodeId))
+    .on("mousedown", nodeId => {
+      dLine.activate(nodeId)
+    })
     .on("mouseout", mouseout)
     .on("mouseover", mouseover);
 
@@ -136,6 +145,7 @@ export function setupInteraction(svg, graph) {
       createNode = true;
     });
   svg.selectAll(".edgePath, .edgeLabel").on("mousedown", edge => {
+
     dLine.activate(edge.v, edge.name);
   });
   return interaction;

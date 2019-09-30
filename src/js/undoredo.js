@@ -7,7 +7,7 @@ export default class undoredo {
     state = JSON.parse(JSON.stringify(state));
 
     if (JSON.stringify(this.current()) === JSON.stringify(state)) return this;
-    this.states.slice(0, this.currentStateIndex + 1);
+    this.states = this.states.slice(0, this.currentStateIndex + 1);
     this.states.push(state);
     this.currentStateIndex++;
     return this;
