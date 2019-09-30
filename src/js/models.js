@@ -81,9 +81,11 @@ export function validateModels(json) {
   var edgesIds = {};
 
   var hasStartElement = false;
+  var modelNames = []
 
   models.forEach(model => {
     validataModel(model);
+    modelNames.push(model.name)
     var modelVerticesIds = {};
 
     model.vertices.forEach(vertex => {
@@ -91,8 +93,12 @@ export function validateModels(json) {
 
       if (verticesIds[vertex.id]) {
         throw `Vertex id ${
-          vertex.id
+        vertex.id
         } appears at least 2 times all models. Vertex ids should be unique across all models.`;
+      }
+
+      if (edgesIds[vertex.id]) {
+        throw `Duplicate id ${vertex.id}. Edge and vertex should not have the same id.`
       }
 
       verticesIds[vertex.id] = true;
@@ -104,23 +110,27 @@ export function validateModels(json) {
 
       if (edgesIds[edge.id]) {
         throw `Edge id ${
-          edge.id
+        edge.id
         } appears at least 2 times. Edge ids should be unique across all models.`;
+      }
+
+      if (verticesIds[edge.id]) {
+        throw `Duplicate id ${edge.id}. Edge and vertex should not have the same id.`
       }
 
       if (edge.sourceVertexId && !modelVerticesIds[edge.sourceVertexId]) {
         throw `Vertex id ${
-          edge.sourceVertexId
+        edge.sourceVertexId
         } defined as sourceVertexId of edge id ${
-          edge.id
+        edge.id
         } does not exist in vertices definition of model ${model.name}.`;
       }
 
       if (!modelVerticesIds[edge.targetVertexId]) {
         throw `Vertex id ${
-          edge.targetVertexId
+        edge.targetVertexId
         } defined as targetVertexId of edge id ${
-          edge.id
+        edge.id
         } does not exist in vertices definition of model ${model.name}.`;
       }
 
@@ -139,6 +149,8 @@ export function validateModels(json) {
     }
   });
 
+  validateModelNames(modelNames);
+
   if (!hasStartElement) {
     throw "At least one model must have an startElementId.";
   }
@@ -150,7 +162,7 @@ function validataModel(model) {
   }
 
   if (!model.generator) {
-    throw "Each model must a have a generator.";
+    throw "Each model must have a generator.";
   }
 
   if (!model.vertices) {
@@ -182,6 +194,10 @@ function validateEdge(edge) {
   }
 
   if (!edge.targetVertexId) {
-    return "Each edge must have a sourceVertexId and a targetVertexId.";
+    throw "Each edge must have a targetVertexId.";
   }
+}
+
+function validateModelNames(modelNames) {
+  if ((new Set(modelNames)).size !== modelNames.length) { throw "Each model must have an unique name."; }
 }

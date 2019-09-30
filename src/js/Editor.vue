@@ -1,7 +1,7 @@
 <template>
   <div ref="container" class="mv mv-editmode">
     <div class="mv-editor">
-      <button @click="createModel">New model</button>
+      <button id="mv-btn-new-model" @click="createModel">New model</button>
       <label for="currentModel">Select model</label>
       <select v-if="editableModels" v-model="editableModelIndex" id="currentModel">
         <option
@@ -136,9 +136,16 @@ export default {
   watch: {
     models: {
       handler: function() {
+        // do not update editable models if its equal to models
+        if (
+          JSON.stringify(this.models) === JSON.stringify(this.editableModels)
+        ) {
+          return;
+        }
+
         this.preventModelsChangedOnce = true;
         this.editableModels = JSON.parse(JSON.stringify(this.models));
-        if (this.editableModels.models.length > 0) {
+        if (this.editableModelIndex > this.editableModels.models.length - 1) {
           this.editableModelIndex = 0;
         }
       },
@@ -239,8 +246,8 @@ export default {
       this.editableModels.models.push({
         edges: [],
         vertices: [],
-        name: "New model",
-        generator: ""
+        name: "NewModel",
+        generator: "random(edge_coverage(100) && vertex_coverage(100))"
       });
       this.editableModelIndex = this.editableModels.models.length - 1;
     },

@@ -6,3 +6,8 @@ node_modules
 
 # release
 public/
+
+
+# docker
+Dockerfile
+.dockerignore
