@@ -70,11 +70,19 @@ export var defaultModels = {
   ]
 };
 
+class ValidationError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'ValidationError';
+  }
+}
+
+
 export function validateModels(json) {
   let models = json["models"];
 
   if (!models) {
-    throw "Models should not be empty.";
+    throw new ValidationError("Models should not be empty.");
   }
 
   var verticesIds = {};
@@ -92,13 +100,13 @@ export function validateModels(json) {
       validateVertex(vertex);
 
       if (verticesIds[vertex.id]) {
-        throw `Vertex id ${
-        vertex.id
-        } appears at least 2 times all models. Vertex ids should be unique across all models.`;
+        throw new ValidationError(`Vertex id ${
+          vertex.id
+          } appears at least 2 times all models. Vertex ids should be unique across all models.`);
       }
 
       if (edgesIds[vertex.id]) {
-        throw `Duplicate id ${vertex.id}. Edge and vertex should not have the same id.`
+        throw new ValidationError(`Duplicate id ${vertex.id}. Edge and vertex should not have the same id.`)
       }
 
       verticesIds[vertex.id] = true;
@@ -109,29 +117,29 @@ export function validateModels(json) {
       validateEdge(edge);
 
       if (edgesIds[edge.id]) {
-        throw `Edge id ${
-        edge.id
-        } appears at least 2 times. Edge ids should be unique across all models.`;
+        throw new ValidationError(`Edge id ${
+          edge.id
+          } appears at least 2 times. Edge ids should be unique across all models.`);
       }
 
       if (verticesIds[edge.id]) {
-        throw `Duplicate id ${edge.id}. Edge and vertex should not have the same id.`
+        throw new ValidationError(`Duplicate id ${edge.id}. Edge and vertex should not have the same id.`);
       }
 
       if (edge.sourceVertexId && !modelVerticesIds[edge.sourceVertexId]) {
-        throw `Vertex id ${
-        edge.sourceVertexId
-        } defined as sourceVertexId of edge id ${
-        edge.id
-        } does not exist in vertices definition of model ${model.name}.`;
+        throw new ValidationError(`Vertex id ${
+          edge.sourceVertexId
+          } defined as sourceVertexId of edge id ${
+          edge.id
+          } does not exist in vertices definition of model ${model.name}.`);
       }
 
       if (!modelVerticesIds[edge.targetVertexId]) {
-        throw `Vertex id ${
-        edge.targetVertexId
-        } defined as targetVertexId of edge id ${
-        edge.id
-        } does not exist in vertices definition of model ${model.name}.`;
+        throw new ValidationError(`Vertex id ${
+          edge.targetVertexId
+          } defined as targetVertexId of edge id ${
+          edge.id
+          } does not exist in vertices definition of model ${model.name}.`);
       }
 
       edgesIds[edge.id] = true;
@@ -141,7 +149,7 @@ export function validateModels(json) {
       model.startElementId &&
       !(verticesIds[model.startElementId] || edgesIds[model.startElementId])
     ) {
-      throw `startElementId ${model.startElementId} is not a valid element.`;
+      throw new ValidationError(`startElementId ${model.startElementId} is not a valid element.`);
     }
 
     if (model.startElementId) {
@@ -152,52 +160,52 @@ export function validateModels(json) {
   validateModelNames(modelNames);
 
   if (!hasStartElement) {
-    throw "At least one model must have an startElementId.";
+    throw new ValidationError("At least one model must have an startElementId.");
   }
 }
 
 function validataModel(model) {
   if (!model.name) {
-    throw "Each model must have an unique name.";
+    throw new ValidationError("Each model must have an unique name.");
   }
 
   if (!model.generator) {
-    throw "Each model must have a generator.";
+    throw new ValidationError("Each model must have a generator.");
   }
 
   if (!model.vertices) {
-    throw "Each model must have a list of vertices.";
+    throw new ValidationError("Each model must have a list of vertices.");
   }
 
   if (!model.edges) {
-    throw "Each model must have a list of edges.";
+    throw new ValidationError("Each model must have a list of edges.");
   }
 }
 
 function validateVertex(vertex) {
   if (!vertex.id) {
-    throw "Each vertex must have an unique id.";
+    throw new ValidationError("Each vertex must have an unique id.");
   }
 
   if (!vertex.name) {
-    throw "Each vertex must have a name.";
+    throw new ValidationError("Each vertex must have a name.");
   }
 }
 
 function validateEdge(edge) {
   if (!edge.id) {
-    throw "Each edge must have an unique id.";
+    throw new ValidationError("Each edge must have an unique id.");
   }
 
   if (!edge.name) {
-    throw "Each edge must have a name.";
+    throw new ValidationError("Each edge must have a name.");
   }
 
   if (!edge.targetVertexId) {
-    throw "Each edge must have a targetVertexId.";
+    throw new ValidationError("Each edge must have a targetVertexId.");
   }
 }
 
 function validateModelNames(modelNames) {
-  if ((new Set(modelNames)).size !== modelNames.length) { throw "Each model must have an unique name."; }
+  if ((new Set(modelNames)).size !== modelNames.length) { throw new ValidationError("Each model must have an unique name."); }
 }

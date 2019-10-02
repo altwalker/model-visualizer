@@ -7,7 +7,7 @@ test('defaultModels are valid', () => {
 });
 
 test('Empty models', () => {
-    expect(() => validateModels({ name: "Invalid models" })).toThrow("Models should not be empty.")
+    expect(() => validateModels({ name: "Invalid models" })).toThrowError(new Error("Models should not be empty."))
 });
 
 
@@ -18,7 +18,7 @@ test('Each model must have a name', () => {
             {
             }
         ]
-    })).toThrow("Each model must have an unique name.")
+    })).toThrowError(new Error("Each model must have an unique name."))
     expect(() => validateModels({
         name: "TestModel", models: [
             {
@@ -36,7 +36,7 @@ test('Each model must have a name', () => {
                 edges: []
             }
         ]
-    })).toThrow("Each model must have an unique name.")
+    })).toThrowError(new Error("Each model must have an unique name."))
 });
 test('Each model must have a generator', () => {
     expect(() => validateModels({
@@ -45,7 +45,7 @@ test('Each model must have a generator', () => {
                 name: "model1",
             }
         ]
-    })).toThrow("Each model must have a generator.")
+    })).toThrowError(new Error("Each model must have a generator."))
 });
 
 test('Reference vertex in different model', () => {
@@ -64,7 +64,7 @@ test('Reference vertex in different model', () => {
                 edges: [{ id: "e1", "name": "e1", "sourceVertexId": "v1", targetVertexId: "v2" }]
             }
         ]
-    })).toThrow("Vertex id v1 defined as sourceVertexId of edge id e1 does not exist in vertices definition of model model2.")
+    })).toThrowError(new Error("Vertex id v1 defined as sourceVertexId of edge id e1 does not exist in vertices definition of model model2."))
 });
 
 
@@ -79,7 +79,7 @@ test('Invalid vertex reference', () => {
                 edges: [{ id: "e1", "name": "e1", "sourceVertexId": "v1", targetVertexId: "v2" }]
             }
         ]
-    })).toThrow("Vertex id v1 defined as sourceVertexId of edge id e1 does not exist in vertices definition of model model1.")
+    })).toThrowError(new Error("Vertex id v1 defined as sourceVertexId of edge id e1 does not exist in vertices definition of model model1."))
 });
 
 
@@ -97,7 +97,7 @@ test('Same vertex id multiple times', () => {
             },
 
         ]
-    })).toThrow("Vertex id v2 appears at least 2 times all models. Vertex ids should be unique across all models.")
+    })).toThrowError(new Error("Vertex id v2 appears at least 2 times all models. Vertex ids should be unique across all models."))
 });
 
 
@@ -116,7 +116,7 @@ test('Same edge id multiple times', () => {
             },
 
         ]
-    })).toThrow("Edge id e1 appears at least 2 times. Edge ids should be unique across all models.")
+    })).toThrowError(new Error("Edge id e1 appears at least 2 times. Edge ids should be unique across all models."))
 });
 
 
@@ -134,7 +134,7 @@ test('Vertex and  edge same id', () => {
             },
 
         ]
-    })).toThrow("Duplicate id v1. Edge and vertex should not have the same id.")
+    })).toThrowError(new Error("Duplicate id v1. Edge and vertex should not have the same id."))
 });
 
 test('Invalid sourceVertexId', () => {
@@ -151,7 +151,7 @@ test('Invalid sourceVertexId', () => {
             },
 
         ]
-    })).toThrow("Vertex id invalid defined as sourceVertexId of edge id e1 does not exist in vertices definition of model model1.")
+    })).toThrowError(new Error("Vertex id invalid defined as sourceVertexId of edge id e1 does not exist in vertices definition of model model1."))
 });
 
 test('Invalid targetVertexId', () => {
@@ -168,7 +168,7 @@ test('Invalid targetVertexId', () => {
             },
 
         ]
-    })).toThrow("Vertex id invalid defined as targetVertexId of edge id e1 does not exist in vertices definition of model model1.")
+    })).toThrowError(new Error("Vertex id invalid defined as targetVertexId of edge id e1 does not exist in vertices definition of model model1."))
 });
 
 
@@ -184,7 +184,7 @@ test('Each vertex must have a name', () => {
             },
 
         ]
-    })).toThrow("Each vertex must have a name.")
+    })).toThrowError(new Error("Each vertex must have a name."))
 });
 
 test('Each edge must have a name', () => {
@@ -199,7 +199,7 @@ test('Each edge must have a name', () => {
             },
 
         ]
-    })).toThrow("Each edge must have a name.")
+    })).toThrowError(new Error("Each edge must have a name."))
 });
 
 test('Each edge must have a targetVertexId', () => {
@@ -214,5 +214,5 @@ test('Each edge must have a targetVertexId', () => {
             },
 
         ]
-    })).toThrow("Each edge must have a targetVertexId.")
+    })).toThrowError(new Error("Each edge must have a targetVertexId."))
 });
