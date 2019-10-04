@@ -10,23 +10,24 @@
 
 <body style="width: 99vw; height: 99vh; margin:0">
   <button onclick="toggleEditMode()" style="position: fixed">Toggle edit mode</button>
+  <div id="legend" style="position: fixed; bottom:0"></div>
   <div id="visualizer"></div>
+
   <!-- DagreD3 and D3 -->
   <script src="https://d3js.org/d3.v5.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dagre-d3/0.6.3/dagre-d3.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-  <script src=https://s3-us-west-2.amazonaws.com/s.cdpn.io/14082/FileSaver.js> </script> <script
-    src="model-visualizer.js"></script>
+  <script src="model-visualizer.js"></script>
   <script>
     let visualizer = null;
-    let editmode = true;
+    let editMode = true;
     window.onload = function () {
-      visualizer = new ModelVisualizer({ container: "visualizer", editmode: editmode });
+      visualizer = new ModelVisualizer({ container: "visualizer", editMode: editMode, legendContainer: "legend" });
     };
     function toggleEditMode() {
-      editmode = !editmode;
-      visualizer.setEditMode(editmode);
+      editMode = !editMode;
+      visualizer.setEditMode(editMode);
     }
   </script>
 </body>

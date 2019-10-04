@@ -113,11 +113,11 @@ export function createGraph(models) {
   var sharedStatesNames = Object.keys(sharedStates);
 
   // Automatically label each of the nodes
-  vertices.forEach(function(vertex) {
+  vertices.forEach(function (vertex) {
     graph.setNode(vertex.id, createVertexLabel(vertex, startElementsIds));
   });
 
-  edges.forEach(function(edge) {
+  edges.forEach(function (edge) {
     if (edge.sourceVertexId) {
       graph.setEdge(
         edge.sourceVertexId,
@@ -141,7 +141,7 @@ export function createGraph(models) {
       )
     );
 
-  graph.nodes().forEach(function(v) {
+  graph.nodes().forEach(function (v) {
     var node = graph.node(v);
     node.rx = node.ry = 5;
 
@@ -282,4 +282,28 @@ export function renderTooltips(svg, graph, tooltip) {
     generateEdgeTootipHtml,
     graph
   );
+}
+
+export function renderLegend(legendContainer, legendDomain, legendRange) {
+  console.log(legendDomain)
+  console.log(legendRange)
+  let container = d3.select("#" + legendContainer);
+  container.selectAll("svg").remove()
+  let svg = container.append("svg")
+  //.attr("height", (commonLegendDommain.length + legendDomain.length) * 40);
+
+  svg.append("g")
+    .attr("class", "legendQuant")
+    .attr("transform", "translate(20,20)");
+
+  var ordinal = d3.scaleOrdinal()
+    .domain(legendDomain)
+    .range(legendRange);
+
+  var legend = d3.legendColor()
+    .title("Graph Legend")
+    .scale(ordinal);
+
+  svg.select(".legendQuant")
+    .call(legend);
 }

@@ -13,8 +13,9 @@ export default class ModelVisualizer {
    * @param {Object} options - The visualizer options
    * @param {string | HTMLElement} options.container - The container or container id where the model will be rendered
    * @param {Object} [options.models] - The models to be rendered
-   * @param {Boolean} [options.editmode=true] - Enable or disable editmode.
-   * @param {Function} [options.onmodelschange] - Called when the model changes. Called only if editmode is enabled.
+   * @param {Boolean} [options.editMode=true] - Enable or disable editMode.
+   * @param {Function} [options.onModelsChange] - Called when the model changes. Called only if editMode is enabled.
+   * @param {string} options.legendContainer - The container id where the legend will be rendered
    */
   constructor(options) {
     if (!options) {
@@ -31,26 +32,27 @@ export default class ModelVisualizer {
       container = document.getElementById(container);
     }
 
-    this.onmodelschange = options.onmodelschange;
+    this.onModelsChange = options.onModelsChange;
     let visualizer = this;
 
     let data = {
       models: options.models || defaultModels,
-      editmode: options.editmode
+      editMode: options.editMode,
+      legendContainer: options.legendContainer
     };
     ModelVisualizer.validate(data.models);
     this.vm = new Vue({
       components: { Editor, Visualizer },
       data: data,
       template: `
-        <Editor ref='editor' v-if="editmode" :models='models' v-on:change="modelsChanged" />
-        <Visualizer ref='visualizer' v-else :models='models'/>
+        <Editor ref='editor' v-if="editMode" :models='models' v-on:change="modelsChanged" :legend-container="legendContainer" />
+      <Visualizer ref='visualizer' v-else :models='models' :legend-container="legendContainer"/>
         `,
       methods: {
         modelsChanged: function (models) {
           data.models = models;
-          if (visualizer.onmodelschange) {
-            visualizer.onmodelschange(models);
+          if (visualizer.onModelsChange) {
+            visualizer.onModelsChange(models);
           }
         }
       }
@@ -71,7 +73,7 @@ export default class ModelVisualizer {
    * Repaints the model. Call this method in case if container resize
    */
   repaint() {
-    this.vm.editmode
+    this.vm.editMode
       ? this.vm.$refs.editor.paintGraph()
       : this.vm.$refs.visualizer.paintGraph();
   }
@@ -90,16 +92,16 @@ export default class ModelVisualizer {
   }
   /**
    * Switches from editor to viewer
-   * @param {Boolean} editmode
+   * @param {Boolean} editMode
    */
-  setEditMode(editmode) {
-    this.vm.editmode = editmode;
+  setEditMode(editMode) {
+    this.vm.editMode = editMode;
   }
 
   /**
    * Sets the callback used when models are being updated in edit mode.
    */
   setOnModelsChange(callback) {
-    this.onmodelschange = callback;
+    this.onModelsChange = callback;
   }
 }

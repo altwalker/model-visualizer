@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import { createGraph } from "./graph";
+import { createGraph, renderLegend } from "./graph";
 import Edge from "./Edge.vue";
 import Vertex from "./Vertex.vue";
 import Model from "./Model.vue";
@@ -80,7 +80,8 @@ export default {
     };
   },
   props: {
-    models: { type: Object, required: true }
+    models: { type: Object, required: true },
+    legendContainer: { type: String }
   },
   created: function() {
     window.addEventListener("keyup", this.onkeyup);
@@ -210,9 +211,12 @@ export default {
     },
     paintGraph() {
       let models = [this.editableModels.models[this.editableModelIndex]];
-      var { graph } = createGraph(models);
+      var { graph, legendDomain, legendRange } = createGraph(models);
       this.svg = this.renderGraph(this.$refs.container, graph);
       this.renderInteraction(this.svg, graph);
+      if (this.legendContainer) {
+        renderLegend(this.legendContainer, legendDomain, legendRange);
+      }
     },
     selectVertex(id) {
       const vertex = this.getVertex(id);
