@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { createGraph, renderTooltips } from "./graph";
+import { createGraph, renderTooltips, renderLegend } from "./graph";
 
 export default {
   name: "Visualizer",
@@ -18,7 +18,8 @@ export default {
     };
   },
   props: {
-    models: { type: Object, required: true }
+    models: { type: Object, required: true },
+    legendContainer: { type: String }
   },
   mounted: function() {
     this.paintGraph();
@@ -30,8 +31,13 @@ export default {
   },
   methods: {
     paintGraph() {
-      var { graph } = createGraph(this.models.models);
+      var { graph, legendDomain, legendRange } = createGraph(
+        this.models.models
+      );
       this.svg = this.renderGraph(this.$refs.container, graph);
+      if (this.legendContainer) {
+        renderLegend(this.legendContainer, legendDomain, legendRange);
+      }
     },
 
     renderGraph(container, graph) {
@@ -70,7 +76,6 @@ export default {
       );
 
       renderTooltips(svg, graph, tooltip);
-      // renderLegend();
 
       return svg;
     }
