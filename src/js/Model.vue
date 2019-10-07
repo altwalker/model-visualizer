@@ -33,6 +33,7 @@
         <option v-for="id in elementsIds" v-bind:key="id" :value="id">{{id}}</option>
       </select>
     </div>
+    <Actions :value="local.actions" @input="updateActions($event)" />
     <div>
       <button id="mv-btn-delete-model" @click="$emit('delete')">Delete model</button>
     </div>
@@ -40,7 +41,10 @@
 </template>
 
 <script>
+import { cloneDeep, tap } from "lodash";
+import Actions from "./Actions.vue";
 export default {
+  components: { Actions },
   props: {
     value: Object,
     vertices: { type: Array, required: true },
@@ -57,6 +61,12 @@ export default {
   methods: {
     update(key, value) {
       this.$emit("input", { ...this.local, [key]: value });
+    },
+    updateActions(actions) {
+      this.$emit(
+        "input",
+        tap(cloneDeep(this.local), v => (v.actions = actions))
+      );
     }
   }
 };

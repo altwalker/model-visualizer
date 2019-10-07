@@ -1,5 +1,5 @@
 <template>
-  <div class="editedge">
+  <div class="mv-editedge">
     <div>
       <label for="edgeId">Edge id</label>
       <input
@@ -55,13 +55,27 @@
       />
     </div>
     <div>
+      <label for="guard">Guard</label>
+      <input
+        :value="local.guard"
+        @input="update('guard', $event.target.value)"
+        placeholder="Guard"
+        id="guard"
+        type="text"
+      />
+    </div>
+    <Actions :value="local.actions" @input="updateActions($event)" />
+    <div>
       <button id="mv-btn-delete-edge" @click="$emit('delete')">Delete edge</button>
     </div>
   </div>
 </template>
 
 <script>
+import Actions from "./Actions.vue";
+import { cloneDeep, tap, set } from "lodash";
 export default {
+  components: { Actions },
   props: {
     value: Object,
     vertices: {
@@ -76,7 +90,13 @@ export default {
   },
   methods: {
     update(key, value) {
-      this.$emit("input", { ...this.local, [key]: value });
+      this.$emit("input", tap(cloneDeep(this.local), v => set(v, key, value)));
+    },
+    updateActions(actions) {
+      this.$emit(
+        "input",
+        tap(cloneDeep(this.local), v => (v.actions = actions))
+      );
     }
   }
 };

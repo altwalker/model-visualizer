@@ -10,9 +10,9 @@
           v-bind:value="i"
         >{{model.name}}</option>
       </select>
-
+      <button v-if="!editModelMeta" @click="editModelMeta=true">Edit Model</button>
       <Model
-        v-if="editableModelIndex >=0"
+        v-if="editModelMeta && editableModelIndex >=0"
         v-model="editableModels.models[editableModelIndex]"
         :vertices="vertices"
         :edges="edges"
@@ -72,6 +72,7 @@ export default {
   data: function() {
     return {
       svg: null,
+      editModelMeta: true,
       editableModels: null,
       editableEdgeIndex: -1,
       editableVertexIndex: -1,
@@ -172,6 +173,7 @@ export default {
       deep: true
     },
     editableVertexIndex: function(index) {
+      this.editModelMeta = false;
       this.svg.selectAll(".node").classed("edit", false);
 
       if (index >= 0) {
@@ -179,6 +181,7 @@ export default {
       }
     },
     editableEdgeIndex: function(index) {
+      this.editModelMeta = false;
       this.svg.selectAll(".edgePath").classed("edit", false);
       this.svg.selectAll(".edgeLabels .label").classed("edit", false);
       if (index >= 0) {
