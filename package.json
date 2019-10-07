@@ -20,6 +20,7 @@
     "dagre-d3": "^0.6.3",
     "jest": "^24.9.0",
     "jest-puppeteer": "^4.3.0",
+    "lodash": "^4.17.15",
     "mini-css-extract-plugin": "^0.8.0",
     "puppeteer": "^1.20.0",
     "style-loader": "^1.0.0",
