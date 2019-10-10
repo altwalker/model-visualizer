@@ -1,7 +1,4 @@
 describe('legend', () => {
-    let editorSelector = ".mv-editmode .mv-editor"
-    let svgEditModeSelector = ".mv-editmode svg.mv-visualizer"
-    let svgViewModeSelector = ".mv-viewmode svg.mv-visualizer"
     let legendSelector = "#legend"
 
     beforeEach(async () => {
@@ -9,8 +6,7 @@ describe('legend', () => {
     })
 
     test('legend displayed in edit mode', async () => {
-        const legend = await page.$(legendSelector);
-        const legendText = await legend.evaluate(l => l.innerText)
+        const legendText = await page.$eval(legendSelector, l => l.innerText)
         expect(legendText).toContain("Graph Legend")
         expect(legendText).toContain("Start Vertex")
         expect(legendText).toContain("Blocked Vertex")
@@ -21,8 +17,7 @@ describe('legend', () => {
         await page.waitForFunction(() => visualizer !== null)
         await page.evaluate(() => visualizer.setEditMode(false))
 
-        const legend = await page.$(legendSelector);
-        const legendText = await legend.evaluate(l => l.innerText)
+        const legendText = await page.$eval(legendSelector, l => l.innerText)
         expect(legendText).toContain("Graph Legend")
         expect(legendText).toContain("Start Vertex")
         expect(legendText).toContain("Blocked Vertex")

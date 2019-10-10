@@ -8,4 +8,5 @@ module.exports = {
         args: ['--no-sandbox', '--disable-features=VizDisplayCompositor'],
         // headless: false,
     },
+    browser: process.env.PUPPETEER_BROWSER || "chromium"
 }
