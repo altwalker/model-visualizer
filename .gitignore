@@ -11,3 +11,7 @@ public/
 # docker
 Dockerfile
 .dockerignore
+
+
+# project
+screenshots/

@@ -3,9 +3,12 @@ describe('visualizer in editmode', () => {
     let editorSelector = ".mv-editmode .mv-editor"
     beforeEach(async () => {
         await page.goto(PATH, { waitUntil: 'load' })
+        await page.waitForFunction(() => visualizer !== null)
+        await page.waitForSelector(svgSelector, { visible: true })
     })
     test('visualizer rendered', async () => {
         const visualizerSvg = await page.$(svgSelector);
+        await page.screenshot({ path: 'screenshots/visualizer-rendered.png' });
         expect(visualizerSvg).toBeTruthy()
     })
     test('nodes rendererd', async () => {
@@ -25,8 +28,7 @@ describe('visualizer in editmode', () => {
         test("select model", async () => {
             const visualizerSvg = await page.$(svgSelector);
             const editor = await page.$(editorSelector);
-            const modelSelect = await editor.$("#currentModel")
-            await modelSelect.select("1")
+            await page.select("select#currentModel", "1")
             const nodes = await visualizerSvg.$$eval("#graph .nodes .node", nodes => nodes.map(n => n.textContent))
             expect(nodes).toEqual(['vertex_three', 'vertex_four', 'vertex_five'])
         })
