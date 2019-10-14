@@ -86,12 +86,10 @@ export function setupInteraction(svg, graph) {
   const interaction = new Interaction();
 
   var dLine = createDynamicPath(svg.select("g#interaction"), graph, svg);
-  var createNode = false;
 
   function mousemove() {
     var coords = d3.mouse(this);
     dLine.paint(coords);
-    if (createNode) createNode = false;
   }
   function mouseup() {
     if (dLine.active) {
@@ -114,8 +112,6 @@ export function setupInteraction(svg, graph) {
         }
       }
       dLine.hide();
-    } else {
-      if (createNode) interaction.createNode();
     }
   }
   function mouseout() {
@@ -129,24 +125,48 @@ export function setupInteraction(svg, graph) {
     }
   }
 
+  svg.on("mousemove", mousemove)
+    .on("mouseup", mouseup)
   svg.selectAll("g.node .label").attr("pointer-events", "none");
-  svg
-    .selectAll("g.node")
+  svg.selectAll("g.node")
     .on("mousedown", nodeId => {
+      d3.event.stopPropagation()
       dLine.activate(nodeId)
     })
     .on("mouseout", mouseout)
     .on("mouseover", mouseover);
 
-  svg
-    .on("mousemove", mousemove)
-    .on("mouseup", mouseup)
-    .on("mousedown", () => {
-      createNode = true;
-    });
-  svg.selectAll(".edgePath, .edgeLabel").on("mousedown", edge => {
 
-    dLine.activate(edge.v, edge.name);
-  });
+  svg.selectAll(".edgePath, .edgeLabel")
+    .on("mousedown", edge => {
+      d3.event.stopPropagation()
+      dLine.activate(edge.v, edge.name);
+    });
+
+  setupZoom(svg, graph);
+  svg.on("dblclick.zoom",
+    () => {
+      interaction.createNode();
+    })
+
   return interaction;
+}
+
+export function setupZoom(svg, graph) {
+  var inner = svg.select("g#graph");
+  var zoom = d3.zoom()
+    .scaleExtent([0.1, 7])
+    .on("zoom", function () {
+      inner.attr("transform", d3.event.transform)
+    })
+  svg.call(zoom)
+  if (!inner.attr("transform")) {
+    svg.call(
+      zoom.transform,
+      d3.zoomIdentity.translate(
+        (svg.attr("width") - graph.graph().width) / 2,
+        20
+      )
+    );
+  }
 }
