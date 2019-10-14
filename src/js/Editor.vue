@@ -215,8 +215,10 @@ export default {
     paintGraph() {
       let models = [this.editableModels.models[this.editableModelIndex]];
       var { graph, legendDomain, legendRange } = createGraph(models);
-      this.svg = this.renderGraph(this.$refs.container, graph);
-      this.renderInteraction(this.svg, graph);
+
+      this.svg = this.renderGraph(graph);
+      this.renderInteraction(graph);
+
       if (this.legendContainer) {
         renderLegend(this.legendContainer, legendDomain, legendRange);
       }
@@ -289,10 +291,10 @@ export default {
       return this.vertices.find(e => e.id == vertexId);
     },
 
-    renderInteraction(svg, graph) {
+    renderInteraction(graph) {
       let self = this;
 
-      let interaction = setupInteraction(svg, graph);
+      let interaction = setupInteraction(this.svg, graph);
 
       interaction.onUpdateEdge = (edgeid, sourceVertexId, targetVertexId) => {
         let edge = self.getEdge(edgeid);
@@ -314,38 +316,27 @@ export default {
       };
     },
 
-    renderGraph(container, graph) {
+    renderGraph(graph) {
+      let container = this.$refs.container;
       let editor = d3.select(container).select("div.mv-editor");
       let svg = d3.select(container).select("svg");
 
+      // set width and height of svg relative to container and editor
       const width = container.offsetWidth - editor.node().offsetWidth - 1;
       const height = container.offsetHeight;
-
       svg.attr("width", width).attr("height", height);
-
-      var inner = svg.select("g#graph");
-      if (inner.empty()) inner = svg.append("g").attr("id", "graph");
-
-      // Create the renderer
-      var render = new dagreD3.render();
 
       // set transition duration for visibility in the graph
       graph.graph().transition = function(selection) {
         return selection.transition().duration(200);
       };
+
+      // Create the renderer
+      var render = new dagreD3.render();
+      var inner = svg.select("g#graph");
+
       // Run the renderer. This is what draws the final graph.
       render(inner, graph);
-
-      var initialScale = 1;
-      if (isFinite(graph.graph().width)) {
-        inner.attr(
-          "transform",
-          `translate(
-          ${(svg.attr("width") - graph.graph().width * initialScale) / 2},
-          20
-        )`
-        );
-      }
 
       return svg;
     }

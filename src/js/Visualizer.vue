@@ -9,6 +9,7 @@
 
 <script>
 import { createGraph, renderTooltips, renderLegend } from "./graph";
+import { setupZoom } from "./interaction";
 
 export default {
   name: "Visualizer",
@@ -43,37 +44,19 @@ export default {
     renderGraph(container, graph) {
       let svg = d3.select(container).select("svg");
       let tooltip = d3.select(container).select("div.mv-tooltip");
+      var inner = svg.select("g#graph");
 
       const width = container.offsetWidth;
       const height = container.offsetHeight;
 
       svg.attr("width", width).attr("height", height);
 
-      var inner = svg.select("g#graph");
-
-      var zoom = d3.zoom().on("zoom", function() {
-        inner.attr("transform", d3.event.transform);
-      });
-
-      svg.call(zoom);
-
       // Create the renderer
       var render = new dagreD3.render();
-
       // Run the renderer. This is what draws the final graph.
       render(inner, graph);
 
-      // Center the graph
-      var initialScale = 1;
-      svg.call(
-        zoom.transform,
-        d3.zoomIdentity
-          .translate(
-            (svg.attr("width") - graph.graph().width * initialScale) / 2,
-            20
-          )
-          .scale(initialScale)
-      );
+      setupZoom(svg, graph);
 
       renderTooltips(svg, graph, tooltip);
 

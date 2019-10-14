@@ -285,8 +285,6 @@ export function renderTooltips(svg, graph, tooltip) {
 }
 
 export function renderLegend(legendContainer, legendDomain, legendRange) {
-  console.log(legendDomain)
-  console.log(legendRange)
   let container = d3.select("#" + legendContainer);
   container.selectAll("svg").remove()
   let svg = container.append("svg")

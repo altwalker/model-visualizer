@@ -27,7 +27,6 @@ describe('visualizer in editmode', () => {
     describe("model editor", () => {
         test("select model", async () => {
             const visualizerSvg = await page.$(svgSelector);
-            const editor = await page.$(editorSelector);
             await page.select("select#currentModel", "1")
             const nodes = await visualizerSvg.$$eval("#graph .nodes .node", nodes => nodes.map(n => n.textContent))
             expect(nodes).toEqual(['vertex_three', 'vertex_four', 'vertex_five'])
@@ -136,6 +135,14 @@ describe('visualizer in editmode', () => {
             await blockedCheckbox.click()
             const models = await page.evaluate("visualizer.getModels()");
             expect(models.models[0].vertices[0].properties.blocked).toBe(true)
+        })
+        test("create vertex", async () => {
+            await page.mouse.move(100, 100);
+            const graph = await page.$('.mv-visualizer g#graph');
+            await graph.click({ clickCount: 2 });
+
+            const editor = await page.$(editorSelector);
+            expect(await editor.$(".mv-editvertex")).toBeTruthy()
         })
     })
     describe("edge editor", () => {

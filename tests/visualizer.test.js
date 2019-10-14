@@ -19,4 +19,26 @@ describe('visualizer in viewmode', () => {
         await page.waitForSelector(".mv-viewmode .mv-tooltip", { visible: true })
         expect(await page.$eval(".mv-viewmode .mv-tooltip", (t => t.style.display))).toBe("block")
     })
+
+    test('visualizer graph transform is set', async () => {
+        const visualizerSvg = await page.$(svgSelector);
+        const graphTransform = await visualizerSvg.$eval("g#graph", g => g.getAttribute("transform"))
+        expect(graphTransform).toBeTruthy();
+        expect(graphTransform).toContain("scale(1)")
+    })
+
+    test('visualizer graph pan', async () => {
+        const visualizerSvg = await page.$(svgSelector);
+        const graphTransformBefore = await visualizerSvg.$eval("g#graph", g => g.getAttribute("transform"))
+
+        await page.mouse.move(100, 100);
+        await page.mouse.down();
+        await page.mouse.move(120, 120);
+        await page.mouse.up();
+
+        const graphTransformAfter = await visualizerSvg.$eval("g#graph", g => g.getAttribute("transform"))
+        expect(graphTransformBefore).toBeTruthy()
+        expect(graphTransformAfter).toBeTruthy()
+        expect(graphTransformBefore == graphTransformAfter).toBeFalsy()
+    })
 })
