@@ -3,32 +3,24 @@ stages:
   - build
 
 default:
+  image: altwalker/tests:model-visualizer
   cache:
     key: global-
     paths:
       - node_modules/
 
 chromium tests:
-  image: buildkite/puppeteer:latest
   stage: test
   before_script:
-    - apt-get update && apt-get -y install procps
     - npm install
   script:
     - npm run test --ci
 
 firefox tests:
-  image: node:latest
   stage: test
   variables:
-    FIREFOX_VERSION: 69.0.2
     PUPPETEER_BROWSER: firefox
   before_script:
-    - apt-get update -qqy && apt-get -y install procps bzip2 libgtk-3-0 libdbus-glib-1-2
-    - wget --no-verbose -O /tmp/firefox.tar.bz2 https://download-installer.cdn.mozilla.net/pub/firefox/releases/$FIREFOX_VERSION/linux-x86_64/en-US/firefox-$FIREFOX_VERSION.tar.bz2 
-    - rm -rf /opt/firefox && tar -C /opt -xjf /tmp/firefox.tar.bz2 && rm /tmp/firefox.tar.bz2
-    - ln -fs /opt/firefox/firefox /usr/bin/firefox
-    - firefox --version
     - npm install
   script:
     - npm run test --ci

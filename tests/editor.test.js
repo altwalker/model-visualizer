@@ -2,13 +2,14 @@ describe('visualizer in editmode', () => {
     let svgSelector = ".mv-editmode svg.mv-visualizer"
     let editorSelector = ".mv-editmode .mv-editor"
     beforeEach(async () => {
+        jest.setTimeout(30000)
         await page.goto(PATH, { waitUntil: 'load' })
         await page.waitForFunction(() => visualizer !== null)
         await page.waitForSelector(svgSelector, { visible: true })
     })
     test('visualizer rendered', async () => {
         const visualizerSvg = await page.$(svgSelector);
-        await page.screenshot({ path: 'screenshots/visualizer-rendered.png' });
+        // await page.screenshot({ path: 'screenshots/visualizer-rendered.png' });
         expect(visualizerSvg).toBeTruthy()
     })
     test('nodes rendererd', async () => {
@@ -38,7 +39,7 @@ describe('visualizer in editmode', () => {
             await newModel.click()
             const modelSelect = await editor.$("#currentModel")
             const options = await modelSelect.$$eval("option", options => options.map(option => option.textContent))
-            expect(options).toEqual(['First Model', 'Second Model', 'NewModel'])
+            expect(options).toEqual(['FirstModel', 'SecondModel', 'NewModel'])
         })
         test("delete model", async () => {
             const editor = await page.$(editorSelector);
@@ -46,18 +47,18 @@ describe('visualizer in editmode', () => {
             await deleteModel.click()
             const modelSelect = await editor.$("#currentModel")
             const options = await modelSelect.$$eval("option", options => options.map(option => option.textContent))
-            expect(options).toEqual(['Second Model'])
+            expect(options).toEqual(['SecondModel'])
         })
 
         test("rename model", async () => {
             const editor = await page.$(editorSelector);
             const modelnameInput = await editor.$("input#name")
-            await modelnameInput.type(" Modified")
+            await modelnameInput.type("Modified")
 
             const models = await page.evaluate("visualizer.getModels()");
             expect(models).toBeTruthy()
             expect(models["name"]).toBe("Default model")
-            expect(models["models"].map(m => m.name)).toContain("First Model Modified")
+            expect(models["models"].map(m => m.name)).toContain("FirstModelModified")
         })
 
         test("add model action", async () => {
@@ -66,8 +67,9 @@ describe('visualizer in editmode', () => {
             await addAction.click()
 
             const models = await page.evaluate("visualizer.getModels()");
-            expect(models.models[0].actions).toBeTruthy()
-            expect(models.models[0].actions.length).toBe(1)
+            // adding an action should not append an empty action to the model
+            expect(models.models[0].actions).toBeFalsy()
+
         })
         test("edit model action", async () => {
             const editor = await page.$(editorSelector);
@@ -79,6 +81,43 @@ describe('visualizer in editmode', () => {
             const models = await page.evaluate("visualizer.getModels()");
             expect(models.models[0].actions).toBeTruthy()
             expect(models.models[0].actions[0]).toBe("a=b")
+        })
+        test("name validator", async () => {
+            const editor = await page.$(editorSelector);
+
+            const modelnameInput = await editor.$("input#name")
+            await modelnameInput.click({ clickCount: 3 })
+            await page.keyboard.press('Backspace');
+
+            const errorValue = await page.$eval(editorSelector + ' span.error', el => el.textContent);
+            expect(errorValue).toBe("* name is required")
+
+            let hasErrorClass = await page.evaluate(modelName => modelName.classList.contains("error"), modelnameInput)
+            expect(hasErrorClass).toBeTruthy()
+        })
+        test("name validator invalid name", async () => {
+            const editor = await page.$(editorSelector);
+            const modelnameInput = await editor.$("input#name")
+            await modelnameInput.type("#")
+
+            const errorValue = await page.$eval(editorSelector + ' span.error', el => el.textContent);
+            expect(errorValue).toBe("* name should be a valid identifier")
+
+            let hasErrorClass = await page.evaluate(modelName => modelName.classList.contains("error"), modelnameInput)
+            expect(hasErrorClass).toBeTruthy()
+        })
+        test("generator validator", async () => {
+            const editor = await page.$(editorSelector);
+
+            const generatorInput = await editor.$("input#generator")
+            await generatorInput.click({ clickCount: 3 })
+            await page.keyboard.press('Backspace');
+
+            const errorValue = await page.$eval(editorSelector + ' span.error', el => el.textContent);
+            expect(errorValue).toBe("* generator is required")
+
+            let hasErrorClass = await page.evaluate(generator => generator.classList.contains("error"), generatorInput)
+            expect(hasErrorClass).toBeTruthy()
         })
     })
 
@@ -136,6 +175,40 @@ describe('visualizer in editmode', () => {
             const models = await page.evaluate("visualizer.getModels()");
             expect(models.models[0].vertices[0].properties.blocked).toBe(true)
         })
+
+
+        test("name validator", async () => {
+            const visualizerSvg = await page.$(svgSelector);
+            const editor = await page.$(editorSelector);
+            let v0 = await visualizerSvg.$("#v0")
+            await v0.click()
+            const vertexEdit = await editor.$(".mv-editvertex");
+            const nameInput = await vertexEdit.$("#name")
+            await nameInput.click({ clickCount: 3 })
+            await page.keyboard.press('Backspace');
+
+            const errorValue = await page.$eval(editorSelector + ' span.error', el => el.textContent);
+            expect(errorValue).toBe("* name is required")
+
+            let hasErrorClass = await page.evaluate(modelName => modelName.classList.contains("error"), nameInput)
+            expect(hasErrorClass).toBeTruthy()
+        })
+        test("name validator invalid name", async () => {
+            const visualizerSvg = await page.$(svgSelector);
+            const editor = await page.$(editorSelector);
+            let v0 = await visualizerSvg.$("#v0")
+            await v0.click()
+            const vertexEdit = await editor.$(".mv-editvertex");
+            const nameInput = await vertexEdit.$("#name")
+            await nameInput.type("#")
+
+            const errorValue = await page.$eval(editorSelector + ' span.error', el => el.textContent);
+            expect(errorValue).toBe("* name should be a valid identifier")
+
+            let hasErrorClass = await page.evaluate(modelName => modelName.classList.contains("error"), nameInput)
+            expect(hasErrorClass).toBeTruthy()
+        })
+
         test("create vertex", async () => {
             await page.mouse.move(100, 100);
             const graph = await page.$('.mv-visualizer g#graph');
@@ -174,9 +247,8 @@ describe('visualizer in editmode', () => {
             await addAction.click()
 
             const models = await page.evaluate("visualizer.getModels()");
-            expect(models.models[0].edges[0].actions).toBeTruthy()
-            expect(models.models[0].edges[0].actions.length).toBe(1)
-
+            // adding an action should not append an empty action to the edge
+            expect(models.models[0].edges[0].actions).toBeFalsy()
         })
 
         test("edit action", async () => {
@@ -211,6 +283,40 @@ describe('visualizer in editmode', () => {
 
             const models = await page.evaluate("visualizer.getModels()");
             expect(models.models[0].edges[0].guard).toBe("e==0;")
+        })
+
+        test("name validator", async () => {
+            const visualizerSvg = await page.$(svgSelector);
+            const editor = await page.$(editorSelector);
+            let e0Label = await visualizerSvg.$("#label_e0")
+            await e0Label.click()
+
+            const edgeEdit = await editor.$(".mv-editedge");
+            const nameInput = await edgeEdit.$("#name")
+            await nameInput.click({ clickCount: 3 })
+            await page.keyboard.press('Backspace');
+
+            const errorValue = await page.$eval(editorSelector + ' span.error', el => el.textContent);
+            expect(errorValue).toBe("* name is required")
+
+            let hasErrorClass = await page.evaluate(modelName => modelName.classList.contains("error"), nameInput)
+            expect(hasErrorClass).toBeTruthy()
+        })
+        test("name validator invalid name", async () => {
+            const visualizerSvg = await page.$(svgSelector);
+            const editor = await page.$(editorSelector);
+            let e0Label = await visualizerSvg.$("#label_e0")
+            await e0Label.click()
+
+            const edgeEdit = await editor.$(".mv-editedge");
+            const nameInput = await edgeEdit.$("#name")
+            await nameInput.type("#")
+
+            const errorValue = await page.$eval(editorSelector + ' span.error', el => el.textContent);
+            expect(errorValue).toBe("* name should be a valid identifier")
+
+            let hasErrorClass = await page.evaluate(modelName => modelName.classList.contains("error"), nameInput)
+            expect(hasErrorClass).toBeTruthy()
         })
     })
 })

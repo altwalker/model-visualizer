@@ -1,23 +1,28 @@
 <template>
   <div class="mv-editmodel">
+    <h2>Model</h2>
     <div>
       <label for="name">Name</label>
+      <span v-if="nameError" class="error">{{nameError}}</span>
       <input
-        :value="local.name"
-        @input="update('name', $event.target.value)"
-        placeholder="name"
+        v-model="local.name"
+        @input="validateName($event.target.value) && update('name', $event.target.value)"
+        placeholder="Name"
         id="name"
         type="text"
+        :class="nameError&&'error'"
       />
     </div>
     <div>
       <label for="generator">Generator</label>
+      <span v-if="generatorError" class="error">{{generatorError}}</span>
       <input
-        :value="local.generator"
-        @input="update('generator', $event.target.value)"
+        v-model="local.generator"
+        @input="validateGenerator($event.target.value) && update('generator', $event.target.value)"
         placeholder="generator(stop_condition)"
         id="generator"
         type="text"
+        :class="generatorError&&'error'"
       />
     </div>
     <div>
@@ -43,6 +48,7 @@
 <script>
 import { cloneDeep, tap } from "lodash";
 import Actions from "./Actions.vue";
+import { isNameValid } from "./models";
 export default {
   components: { Actions },
   props: {
@@ -50,9 +56,13 @@ export default {
     vertices: { type: Array, required: true },
     edges: { type: Array, required: true }
   },
+  data: () => ({
+    nameError: "",
+    generatorError: ""
+  }),
   computed: {
     local() {
-      return this.value;
+      return cloneDeep(this.value);
     },
     elementsIds: function() {
       return [...this.vertices.map(v => v.id), ...this.edges.map(e => e.id)];
@@ -67,6 +77,28 @@ export default {
         "input",
         tap(cloneDeep(this.local), v => (v.actions = actions))
       );
+    },
+    validateName(name) {
+      if (!name) {
+        this.nameError = "* name is required";
+        return false;
+      }
+      if (!isNameValid(name)) {
+        this.nameError = "* name should be a valid identifier";
+        return false;
+      }
+
+      this.nameError = "";
+      return true;
+    },
+    validateGenerator(generator) {
+      if (!generator) {
+        this.generatorError = "* generator is required";
+        return false;
+      }
+
+      this.generatorError = "";
+      return true;
     }
   }
 };
