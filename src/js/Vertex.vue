@@ -1,24 +1,27 @@
 <template>
   <div class="mv-editvertex">
+    <h2>Vertex</h2>
     <div>
-      <label for="vertexId">Vertex id</label>
+      <label for="vertexId">Id</label>
       <input
         :value="local.id"
         @input="update('id', $event.target.value)"
-        placeholder="Vertex id"
+        placeholder="Id"
         id="vertexId"
         type="text"
         disabled
       />
     </div>
     <div>
-      <label for="name">Vertex name</label>
+      <label for="name">Name</label>
+      <span v-if="nameError" class="error">{{nameError}}</span>
       <input
-        :value="local.name"
-        @input="update('name', $event.target.value)"
-        placeholder="Vertex name"
+        v-model="local.name"
+        @input="validateName($event.target.value) && update('name', $event.target.value)"
+        placeholder="Name"
         id="name"
         type="text"
+        :class="nameError&&'error'"
       />
     </div>
     <div>
@@ -42,23 +45,40 @@
       />
     </div>
     <div>
-      <button id="mv-btn-delete-edge" @click="$emit('delete')">Delete vertex</button>
+      <button id="mv-btn-delete-vertex" @click="$emit('delete')">Delete</button>
     </div>
   </div>
 </template>
 
 <script>
 import { cloneDeep, tap, set } from "lodash";
+import { isNameValid } from "./models";
 export default {
   props: ["value"],
+  data: () => ({
+    nameError: ""
+  }),
   computed: {
     local() {
-      return this.value;
+      return cloneDeep(this.value);
     }
   },
   methods: {
     update(key, value) {
       this.$emit("input", tap(cloneDeep(this.local), v => set(v, key, value)));
+    },
+    validateName(name) {
+      if (!name) {
+        this.nameError = "* name is required";
+        return false;
+      }
+      if (!isNameValid(name)) {
+        this.nameError = "* name should be a valid identifier";
+        return false;
+      }
+
+      this.nameError = "";
+      return true;
     }
   }
 };

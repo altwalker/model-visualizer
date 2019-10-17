@@ -1,7 +1,8 @@
 <template>
   <div class="mv-editedge">
+    <h2>Edge</h2>
     <div>
-      <label for="edgeId">Edge id</label>
+      <label for="edgeId">Id</label>
       <input
         :value="local.id"
         @input="update('id', $event.target.value)"
@@ -12,7 +13,7 @@
       />
     </div>
     <div>
-      <label for="source">Source vertex id</label>
+      <label for="source">Source vertex</label>
       <select
         :value="local.sourceVertexId"
         @input="update('sourceVertexId', $event.target.value)"
@@ -29,7 +30,7 @@
       </select>
     </div>
     <div>
-      <label for="target">Target vertex id</label>
+      <label for="target">Target vertex</label>
       <select
         :value="local.targetVertexId"
         @input="update('targetVertexId', $event.target.value)"
@@ -45,13 +46,15 @@
       </select>
     </div>
     <div>
-      <label for="name">Edge name</label>
+      <label for="name">Name</label>
+      <span v-if="nameError" class="error">{{nameError}}</span>
       <input
-        :value="local.name"
-        @input="update('name', $event.target.value)"
-        placeholder="Edge name"
+        v-model="local.name"
+        @input="validateName($event.target.value) && update('name', $event.target.value)"
+        placeholder="Name"
         id="name"
         type="text"
+        :class="nameError&&'error'"
       />
     </div>
     <div>
@@ -74,6 +77,7 @@
 <script>
 import Actions from "./Actions.vue";
 import { cloneDeep, tap, set } from "lodash";
+import { isNameValid } from "./models";
 export default {
   components: { Actions },
   props: {
@@ -83,9 +87,12 @@ export default {
       required: true
     }
   },
+  data: () => ({
+    nameError: ""
+  }),
   computed: {
     local() {
-      return this.value;
+      return cloneDeep(this.value);
     }
   },
   methods: {
@@ -97,6 +104,19 @@ export default {
         "input",
         tap(cloneDeep(this.local), v => (v.actions = actions))
       );
+    },
+    validateName(name) {
+      if (!name) {
+        this.nameError = "* name is required";
+        return false;
+      }
+      if (!isNameValid(name)) {
+        this.nameError = "* name should be a valid identifier";
+        return false;
+      }
+
+      this.nameError = "";
+      return true;
     }
   }
 };

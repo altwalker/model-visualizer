@@ -2,7 +2,7 @@ export var defaultModels = {
   name: "Default model",
   models: [
     {
-      name: "First Model",
+      name: "FirstModel",
       generator: "random(edge_coverage(100) && vertex_coverage(100))",
       startElementId: "v0",
       vertices: [
@@ -29,7 +29,7 @@ export var defaultModels = {
       ]
     },
     {
-      name: "Second Model",
+      name: "SecondModel",
       generator: "random(edge_coverage(100) && vertex_coverage(100))",
 
       vertices: [
@@ -70,7 +70,20 @@ export var defaultModels = {
   ]
 };
 
-class ValidationError extends Error {
+const RESERVED_WORDS =
+  ['as', 'for', 'and', 'yield', 'global', 'break', 'return', 'else', 'class', 'except', 'from', 'while', 'none',
+    'not', 'await', 'true', 'elif', 'pass', 'or', 'def', 'del', 'import', 'false', 'continue', 'assert', 'is',
+    'lambda', 'nonlocal', 'async', 'finally', 'if', 'in', 'try', 'with', 'raise', "abstract", "add", "alias", "as",
+    "ascending", "async", "await", "base", "bool", "break", "by", "byte", "case", "catch", "char", "checked", "class",
+    "const", "continue", "decimal", "default", "delegate", "descending", "do", "double", "dynamic", "else", "enum",
+    "equals", "event", "explicit", "extrem", "false", "finally", "fixed", "float", "for", "foreach", "from", "get",
+    "global", "goto", "group", "if", "implicit", "in", "int", "interface", "internal", "into", "is", "join", "let",
+    "lock", "long", "nameof", "namespace", "new", "null", "object", "on", "operator", "orderby", "out", "override",
+    "params", "partial", "private", "protected", "public", "readonly", "ref", "remove", "return", "sbyte", "sealed",
+    "select", "set", "short", "static", "struct", "switch", "this", "throw", "true", "try", "typeof", "uint", "ulong",
+    "unchecked", "value", "var", "virtual", "void", "volatile", "when", "where", "while", "yield"]
+
+export class ValidationError extends Error {
   constructor(message) {
     super(message);
     this.name = 'ValidationError';
@@ -168,6 +181,8 @@ function validataModel(model) {
   if (!model.name) {
     throw new ValidationError("Each model must have an unique name.");
   }
+  if (!isNameValid(model.name))
+    throw new ValidationError(`Invalid model name: ${model.name}.`);
 
   if (!model.generator) {
     throw new ValidationError("Each model must have a generator.");
@@ -190,6 +205,9 @@ function validateVertex(vertex) {
   if (!vertex.name) {
     throw new ValidationError("Each vertex must have a name.");
   }
+
+  if (!isNameValid(vertex.name))
+    throw new ValidationError(`Invalid vertex name: ${vertex.name}.`);
 }
 
 function validateEdge(edge) {
@@ -201,6 +219,9 @@ function validateEdge(edge) {
     throw new ValidationError("Each edge must have a name.");
   }
 
+  if (!isNameValid(edge.name))
+    throw new ValidationError(`Invalid edge name: ${edge.name}.`);
+
   if (!edge.targetVertexId) {
     throw new ValidationError("Each edge must have a targetVertexId.");
   }
@@ -208,4 +229,15 @@ function validateEdge(edge) {
 
 function validateModelNames(modelNames) {
   if ((new Set(modelNames)).size !== modelNames.length) { throw new ValidationError("Each model must have an unique name."); }
+}
+
+export function isNameValid(name) {
+  const isIdentifier = /^[_a-zA-Z]\w*$/
+  if (!isIdentifier.test(name))
+    return false;
+
+  if (RESERVED_WORDS.includes(name))
+    return false;
+
+  return true;
 }
