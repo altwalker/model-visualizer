@@ -10,7 +10,7 @@
           v-bind:value="i"
         >{{model.name}}</option>
       </select>
-      <button v-if="!editModelMeta" @click="editModelMeta=true">Edit Model</button>
+
       <Model
         v-if="editModelMeta && editableModelIndex >=0"
         v-model="editableModels.models[editableModelIndex]"
@@ -72,7 +72,6 @@ export default {
   data: function() {
     return {
       svg: null,
-      editModelMeta: true,
       editableModels: null,
       editableEdgeIndex: -1,
       editableVertexIndex: -1,
@@ -133,6 +132,9 @@ export default {
         acc.push(...model.vertices.map(v => v.id));
         return acc;
       }, []);
+    },
+    editModelMeta() {
+      return this.editableVertexIndex < 0 && this.editableEdgeIndex < 0;
     }
   },
   watch: {
@@ -173,7 +175,6 @@ export default {
       deep: true
     },
     editableVertexIndex: function(index) {
-      this.editModelMeta = false;
       this.svg.selectAll(".node").classed("edit", false);
 
       if (index >= 0) {
@@ -181,7 +182,6 @@ export default {
       }
     },
     editableEdgeIndex: function(index) {
-      this.editModelMeta = false;
       this.svg.selectAll(".edgePath").classed("edit", false);
       this.svg.selectAll(".edgeLabels .label").classed("edit", false);
       if (index >= 0) {
@@ -313,6 +313,10 @@ export default {
       };
       interaction.onCreateNode = () => {
         self.createVertex();
+      };
+      interaction.onSelectModel = () => {
+        this.editableVertexIndex = -1;
+        this.editableEdgeIndex = -1;
       };
     },
 
