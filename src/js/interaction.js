@@ -63,6 +63,7 @@ class Interaction {
     this.onUpdateEdge = undefined;
     this.onCreateEdge = undefined;
     this.onSelectEdge = undefined;
+    this.onSelectModel = undefined;
   }
 
   updateEdge(edgeId, startNodeId, endNodeId) {
@@ -79,6 +80,9 @@ class Interaction {
   }
   createNode() {
     if (this.onCreateNode) this.onCreateNode();
+  }
+  selectModel() {
+    if (this.onSelectModel) this.onSelectModel();
   }
 }
 
@@ -127,6 +131,7 @@ export function setupInteraction(svg, graph) {
 
   svg.on("mousemove", mousemove)
     .on("mouseup", mouseup)
+    .on("mousedown", () => { interaction.selectModel(); })
   svg.selectAll("g.node .label").attr("pointer-events", "none");
   svg.selectAll("g.node")
     .on("mousedown", nodeId => {
