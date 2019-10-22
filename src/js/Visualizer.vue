@@ -20,7 +20,8 @@ export default {
   },
   props: {
     models: { type: Object, required: true },
-    legendContainer: { type: String }
+    legendContainer: { type: String },
+    graphLayoutOptions: { type: Object }
   },
   mounted: function() {
     this.paintGraph();
@@ -28,12 +29,16 @@ export default {
   watch: {
     models: function() {
       this.paintGraph();
+    },
+    graphLayoutOptions: function() {
+      this.paintGraph();
     }
   },
   methods: {
     paintGraph() {
       var { graph, legendDomain, legendRange } = createGraph(
-        this.models.models
+        this.models.models,
+        this.graphLayoutOptions
       );
       this.svg = this.renderGraph(this.$refs.container, graph);
       if (this.legendContainer) {

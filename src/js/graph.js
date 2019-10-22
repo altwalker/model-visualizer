@@ -88,11 +88,11 @@ function setStartingEdge(graph, edge, startElementsIds) {
   );
 }
 
-export function createGraph(models) {
+export function createGraph(models, graphOptions) {
   fakeNodesCount = 0;
 
   // Create a new directed graph
-  var graph = new dagreD3.graphlib.Graph({ multigraph: true }).setGraph({});
+  var graph = new dagreD3.graphlib.Graph({ multigraph: true }).setGraph(graphOptions || {});
 
   var vertices = models.reduce((acc, cur) => acc.concat(cur.vertices), []);
   var edges = models.reduce((acc, cur) => acc.concat(cur.edges), []);
@@ -151,7 +151,6 @@ export function createGraph(models) {
       }
     });
   });
-
   return {
     graph: graph,
     legendDomain: [...commonLegendDommain, ...sharedStatesNames],
@@ -288,7 +287,6 @@ export function renderLegend(legendContainer, legendDomain, legendRange) {
   let container = d3.select("#" + legendContainer);
   container.selectAll("svg").remove()
   let svg = container.append("svg")
-  //.attr("height", (commonLegendDommain.length + legendDomain.length) * 40);
 
   svg.append("g")
     .attr("class", "legendQuant")

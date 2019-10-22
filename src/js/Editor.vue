@@ -81,7 +81,8 @@ export default {
   },
   props: {
     models: { type: Object, required: true },
-    legendContainer: { type: String }
+    legendContainer: { type: String },
+    graphLayoutOptions: { type: Object }
   },
   created: function() {
     window.addEventListener("keyup", this.onkeyup);
@@ -161,6 +162,12 @@ export default {
 
       this.paintGraph();
     },
+    graphLayoutOptions: function() {
+      this.editableVertexIndex = -1;
+      this.editableEdgeIndex = -1;
+      this.paintGraph();
+    },
+
     //called every time when data, computed or props change
     editableModels: {
       handler: function(value) {
@@ -214,7 +221,10 @@ export default {
     },
     paintGraph() {
       let models = [this.editableModels.models[this.editableModelIndex]];
-      var { graph, legendDomain, legendRange } = createGraph(models);
+      var { graph, legendDomain, legendRange } = createGraph(
+        models,
+        this.graphLayoutOptions
+      );
 
       this.svg = this.renderGraph(graph);
       this.renderInteraction(graph);

@@ -1,3 +1,8 @@
+async function vueNextTick() {
+    await page.evaluate(async () => {
+        await visualizer.vm.$nextTick()
+    })
+}
 describe('visualizer in editmode', () => {
     let svgSelector = ".mv-editmode svg.mv-visualizer"
     let editorSelector = ".mv-editmode .mv-editor"
@@ -23,6 +28,15 @@ describe('visualizer in editmode', () => {
     test('editor rendered', async () => {
         const editor = await page.$(editorSelector);
         expect(editor).toBeTruthy()
+    })
+
+    test('set graphLayoutOptions', async () => {
+        const visualizerSvg = await page.$(svgSelector);
+        let tBefore = await visualizerSvg.$eval("#v0", n => n.getAttribute("transform"))
+        await page.evaluate(() => visualizer.setGraphLayoutOptions({ marginx: 100 }))
+        await vueNextTick()
+        let tAfter = await visualizerSvg.$eval("#v0", n => n.getAttribute("transform"))
+        expect(tBefore).not.toEqual(tAfter)
     })
 
     describe("model editor", () => {
