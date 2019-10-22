@@ -41,4 +41,12 @@ describe('visualizer in viewmode', () => {
         expect(graphTransformAfter).toBeTruthy()
         expect(graphTransformBefore == graphTransformAfter).toBeFalsy()
     })
+
+    test('set graphLayoutOptions', async () => {
+        const visualizerSvg = await page.$(svgSelector);
+        let tBefore = await visualizerSvg.$eval("#v0", n => n.getAttribute("transform"))
+        await page.evaluate(() => visualizer.setGraphLayoutOptions({ marginx: 100 }))
+        let tAfter = await visualizerSvg.$eval("#v0", n => n.getAttribute("transform"))
+        expect(tBefore).not.toEqual(tAfter)
+    })
 })
