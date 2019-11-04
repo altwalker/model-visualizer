@@ -2,7 +2,7 @@ import dagreD3 from "dagre-d3";
 
 let fakeNodesCount = 0;
 const commonLegendDommain = ["Start Vertex", "Blocked Vertex", "Fake Vertex"];
-const commonLegendRange = ["#27ae60", "#7f8c8d", "#3498db"];
+const commonLegendRange = ["#b7e2b1", "#7f8c8d", "#3498db"];
 
 function createVertexLabel(vertex, startElementsIds) {
   const nodeLabelClass = "node-label";
@@ -111,10 +111,11 @@ export function createGraph(models, graphOptions) {
   }, {});
 
   var sharedStatesNames = Object.keys(sharedStates);
-
+  var colors = {}
   // Automatically label each of the nodes
   vertices.forEach(function (vertex) {
     graph.setNode(vertex.id, createVertexLabel(vertex, startElementsIds));
+    if (vertex.properties && vertex.properties.color) { colors[vertex.id] = vertex.properties.color; }
   });
 
   edges.forEach(function (edge) {
@@ -136,11 +137,13 @@ export function createGraph(models, graphOptions) {
     .domain(sharedStatesNames)
     .range(
       d3.quantize(
-        t => d3.interpolateWarm(t * 0.4 + 0.3),
+        t => {
+          return d3.interpolateSpectral(t * 0.4 + 0.3)
+        },
         Math.max(sharedStatesNames.length, 2)
       )
     );
-
+  console.log(colors)
   graph.nodes().forEach(function (v) {
     var node = graph.node(v);
     node.rx = node.ry = 5;
@@ -150,6 +153,7 @@ export function createGraph(models, graphOptions) {
         node.style = "fill: " + color(key);
       }
     });
+    if (colors[v]) { node.style = "fill: " + colors[v] + "!important"; }
   });
   return {
     graph: graph,

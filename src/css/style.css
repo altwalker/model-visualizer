@@ -13,60 +13,8 @@ svg.mv-visualizer text {
 svg.mv-visualizer text::selection {
   background: none;
 }
-.node rect {
-  fill: #f1c40f;
 
-  stroke: #2c3e50;
-  stroke-width: 2px;
-}
 
-g.node-label {
-  fill: #000;
-  font-size: 1.2em;
-  font-weight: 400;
-}
-
-g.node-start > rect {
-  fill: #27ae60;
-}
-
-g.node-fake {
-  fill: #ecf0f1;
-}
-
-g.node-fake > rect {
-  fill: #3498db;
-}
-
-g.node-blocked {
-  font-weight: 600;
-}
-
-g.node-blocked > rect {
-  fill: #7f8c8d;
-}
-
-g.edgeLabels {
-  font-size: 1.2em;
-  font-weight: 400;
-}
-
-.edgePath path {
-  fill: #7f8c8d;
-
-  stroke: #7f8c8d;
-  stroke-width: 2px;
-}
-
-path.dynamicPath {
-  fill: #7f8c8d;
-
-  stroke: #7f8c8d;
-  stroke-width: 2px;
-}
-path.hidden {
-  stroke-width: 0;
-}
 
 /* Tooltips */
 
@@ -104,57 +52,110 @@ path.hidden {
   color: #e74c3c;
 }
 
-.mv-editor {
-  float: right;
-  width: 30%;
-  min-width: 150px;
-  padding-right: 10px;
+/* Visualizer view and edit mode */
+
+.mv-visualizer .node > rect {
+  fill: #b5d4e9;
+  stroke: #000;
 }
+
+.mv-visualizer .node-label {
+  fill: #000;
+  font-size: 1.2em;
+  font-weight: 400;
+}
+
+.mv-visualizer .node-start > rect {
+  fill: #b7e2b1;
+}
+
+.mv-visualizer .node-fake {
+  fill: #ecf0f1;
+}
+
+.mv-visualizer .node-fake > rect {
+  fill: #3498db;
+}
+
+.mv-visualizer .node-blocked {
+  font-weight: 400;
+}
+
+.mv-visualizer .node-blocked > rect {
+  fill: #7f8c8d;
+}
+
+.mv-visualizer .edgeLabels {
+  font-size: 1.2em;
+  font-weight: 400;
+}
+
+.mv-visualizer .edgePath path {
+  stroke: #999;
+  fill: #999;
+  stroke-width: 2.5px;
+}
+
+/******/
+
 
 .mv-viewmode {
   width: 100%;
   height: 100%;
 }
 
+/** Visualizer in editmode **/
+
 .mv-editmode {
   width: 100%;
   height: 100%;
 }
 
-.mv-editmode .node rect:hover {
-  fill: #fff70d;
+.mv-editmode .mv-editor {
+  float: right;
+  width: 30%;
+  min-width: 150px;
+  padding-right: 10px;
+}
+
+.mv-editmode .mv-visualizer .node > rect:hover {
+  stroke-width: 1.75;
+  fill: #17becf!important;
   cursor: pointer;
 }
 
-.mv-editmode .node.edit rect {
-  fill: #fff70d;
-  stroke: skyblue;
+.mv-editmode .mv-visualizer .node.edit rect {
+  stroke-width: 1.75;
+  fill: #17becf!important;
 }
 
-.mv-editmode .edgePath path {
-  stroke-width: 3px;
-  padding: 2px;
-}
 
-.mv-editmode .edgePath path:hover {
+.mv-editmode .mv-visualizer .edgePath:hover path {
   cursor: pointer;
-  stroke: #f1c40f;
-  fill: #f1c40f;
+  fill: rgb(31, 43, 56);
+  stroke: rgb(31, 43, 56);
 }
 
-.mv-editmode .edgePath.edit path {
-  stroke: #f1c40f;
-  fill: #f1c40f;
+.mv-editmode .mv-visualizer .edgePath.edit path {
+  stroke: rgb(31, 43, 56);
+  fill: rgb(31, 43, 56);
+  font-weight: 600;
 }
-.mv-editmode .edgeLabels .label :hover {
+.mv-editmode .mv-visualizer .edgeLabels .label :hover {
   cursor: pointer;
-  fill: #f1c40f;
+  font-weight: 600;
+  fill: rgb(31, 43, 56);
 }
-.mv-editmode .edgeLabels .label.edit {
-  fill: #f1c40f;
+.mv-editmode .mv-visualizer .edgeLabels .label.edit {
+  fill: rgb(31, 43, 56);
   font-weight: 600;
 }
 
-.mv-editmode .dynamicPath {
-  stroke: #f1c40f;
+.mv-editmode .mv-visualizer .dynamicPath {
+  fill: rgb(31, 43, 56);
+  stroke: rgb(31, 43, 56);
+  stroke-width: 3px;
+}
+.mv-editmode .mv-visualizer .dynamicPath.hidden {
+  stroke-width: 0;
 }
