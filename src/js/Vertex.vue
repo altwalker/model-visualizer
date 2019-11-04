@@ -45,6 +45,15 @@
       />
     </div>
     <div>
+      <label for="color">Color</label>
+      <input
+        id="color"
+        type="color"
+        :value="local.properties&&local.properties.color"
+        @input="update('properties.color', $event.target.value)"
+      />
+    </div>
+    <div>
       <button id="mv-btn-delete-vertex" @click="$emit('delete')">Delete</button>
     </div>
   </div>

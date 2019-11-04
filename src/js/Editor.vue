@@ -161,6 +161,7 @@ export default {
       this.editableEdgeIndex = -1;
 
       this.paintGraph();
+      this.personalizeGraph();
     },
     graphLayoutOptions: function() {
       this.editableVertexIndex = -1;
@@ -177,24 +178,16 @@ export default {
           this.$emit("change", JSON.parse(JSON.stringify(value)));
         }
         this.paintGraph();
+        this.personalizeGraph();
         this.undoredo.push(this.editableModels);
       },
       deep: true
     },
     editableVertexIndex: function(index) {
-      this.svg.selectAll(".node").classed("edit", false);
-
-      if (index >= 0) {
-        this.svg.select("#" + this.vertices[index].id).classed("edit", true);
-      }
+      this.personalizeGraph();
     },
     editableEdgeIndex: function(index) {
-      this.svg.selectAll(".edgePath").classed("edit", false);
-      this.svg.selectAll(".edgeLabels .label").classed("edit", false);
-      if (index >= 0) {
-        this.svg.select("#" + this.edges[index].id).classed("edit", true);
-        this.svg.select("#label_" + this.edges[index].id).classed("edit", true);
-      }
+      this.personalizeGraph();
     }
   },
   methods: {
@@ -231,6 +224,27 @@ export default {
 
       if (this.legendContainer) {
         renderLegend(this.legendContainer, legendDomain, legendRange);
+      }
+    },
+    personalizeGraph() {
+      this.svg.selectAll(".node").classed("edit", false);
+      // select vertex
+      if (this.editableVertexIndex >= 0) {
+        this.svg
+          .select("#" + this.vertices[this.editableVertexIndex].id)
+          .classed("edit", true);
+      }
+
+      // select edge
+      this.svg.selectAll(".edgePath").classed("edit", false);
+      this.svg.selectAll(".edgeLabels .label").classed("edit", false);
+      if (this.editableEdgeIndex >= 0) {
+        this.svg
+          .select("#" + this.edges[this.editableEdgeIndex].id)
+          .classed("edit", true);
+        this.svg
+          .select("#label_" + this.edges[this.editableEdgeIndex].id)
+          .classed("edit", true);
       }
     },
     selectVertex(id) {
