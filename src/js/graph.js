@@ -143,7 +143,6 @@ export function createGraph(models, graphOptions) {
         Math.max(sharedStatesNames.length, 2)
       )
     );
-  console.log(colors)
   graph.nodes().forEach(function (v) {
     var node = graph.node(v);
     node.rx = node.ry = 5;

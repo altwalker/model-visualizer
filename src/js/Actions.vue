@@ -1,20 +1,15 @@
 <template>
   <div>
     <label>Actions</label>
-    <div v-for="(action,i) in local" v-bind:key="i">
-      <a class="button mv-remove-action" @click="removeAction(i)">-</a>
-      <span v-if="action.error" class="error">{{action.error}}</span>
-
-      <input
-        v-model="action.value"
-        @input="validateAction(i,$event.target.value ) && editAction(i,$event.target.value)"
-        placeholder="Action"
-        class="mv-edit-action"
-        type="text"
-        :class="action.error&&'error'"
-      />
+    <div v-for="(action,i) in local" v-bind:key="i" class="mv-edit-action">
+      <a href="#" class="button mv-remove-action" @click="removeAction(i)">x</a>
+      <span class="mv-action">{{action}}</span>
     </div>
-    <a class="button mv-add-action" @click="addAction">+</a>
+    <div class="mv-new-action">
+      <input v-model="newAction" placeholder="Action" type="text" />
+      <a href="#" class="button mv-add-action" @click="addAction">+</a>
+      <span v-if="error" class="error">{{error}}</span>
+    </div>
   </div>
 </template>
 <script>
@@ -24,34 +19,34 @@ export default {
     value: Array
   },
   data: () => ({
-    local: []
+    newAction: "",
+    error: ""
   }),
-  mounted() {
-    let values = cloneDeep(this.value) || [];
-    for (let val of values) {
-      this.local.push({ value: val, error: "" });
+  computed: {
+    local() {
+      return this.value || [];
     }
   },
   methods: {
-    validateAction(index, value) {
-      if (!value) {
-        this.local[index].error = "* action should not be empty";
-        return false;
-      }
-      this.local[index].error = "";
-      return true;
-    },
-    editAction(i, value) {
-      this.$emit(
-        "input",
-        tap(cloneDeep(this.local).map(v => v.value), v => (v[i] = value))
-      );
-    },
     addAction() {
-      this.local.push({ value: "", error: "" });
+      if (this.validateAction(this.newAction)) {
+        this.$emit(
+          "input",
+          tap(cloneDeep(this.local), v => v.push(this.newAction))
+        );
+        this.newAction = "";
+      }
     },
     removeAction(index) {
       this.$emit("input", tap(cloneDeep(this.local), v => v.splice(index, 1)));
+    },
+    validateAction(action) {
+      if (!action) {
+        this.error = "Action should not be empty.";
+        return false;
+      }
+      this.error = "";
+      return true;
     }
   }
 };

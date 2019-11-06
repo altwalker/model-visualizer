@@ -155,6 +155,9 @@ function validateEdge(edge) {
   if (!edge.targetVertexId) {
     throw new ValidationError("Each edge must have a targetVertexId.");
   }
+  if (edge.weight && !isWeightValid(edge.weight)) {
+    throw new ValidationError("Weight should be between 0 and 1.")
+  }
 }
 
 function validateModelNames(modelNames) {
@@ -169,5 +172,12 @@ export function isNameValid(name) {
   if (RESERVED_WORDS.includes(name))
     return false;
 
+  return true;
+}
+export function isWeightValid(weight) {
+  if (weight === 0)
+    return true;
+  if (!weight || weight < 0 || weight > 1)
+    return false;
   return true;
 }

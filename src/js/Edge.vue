@@ -47,7 +47,6 @@
     </div>
     <div>
       <label for="name">Name</label>
-      <span v-if="nameError" class="error">{{nameError}}</span>
       <input
         v-model="local.name"
         @input="validateName($event.target.value) && update('name', $event.target.value)"
@@ -56,17 +55,42 @@
         type="text"
         :class="nameError&&'error'"
       />
+      <span v-if="nameError" class="error">{{nameError}}</span>
     </div>
     <div>
       <label for="guard">Guard</label>
       <input
         :value="local.guard"
         @input="update('guard', $event.target.value)"
-        placeholder="Guard"
         id="guard"
         type="text"
       />
     </div>
+    <div>
+      <label for="weight">Weight</label>
+      <input
+        v-model="local.weight"
+        @input="validateWeight(parseFloat($event.target.value)) && update('weight', parseFloat($event.target.value))"
+        id="weight"
+        type="number"
+        min="0"
+        max="1"
+        step="0.1"
+      />
+      <span v-if="weightError" class="error">{{weightError}}</span>
+    </div>
+    <div>
+      <label for="dependency">Dependency</label>
+      <input
+        v-model="local.dependency"
+        @input="validateDependency(parseInt($event.target.value)) && update('dependency', parseInt($event.target.value))"
+        id="dependency"
+        type="number"
+        min="0"
+      />
+      <span v-if="dependencyError" class="error">{{dependencyError}}</span>
+    </div>
+
     <Actions :value="local.actions" @input="updateActions($event)" />
     <div>
       <button id="mv-btn-delete-edge" @click="$emit('delete')">Delete edge</button>
@@ -76,8 +100,8 @@
 
 <script>
 import Actions from "./Actions.vue";
-import { cloneDeep, tap, set } from "lodash";
-import { isNameValid } from "./models";
+import { cloneDeep, tap, set, unset } from "lodash";
+import { isNameValid, isWeightValid } from "./models";
 export default {
   components: { Actions },
   props: {
@@ -88,7 +112,9 @@ export default {
     }
   },
   data: () => ({
-    nameError: ""
+    nameError: "",
+    dependencyError: "",
+    weightError: ""
   }),
   computed: {
     local() {
@@ -97,7 +123,17 @@ export default {
   },
   methods: {
     update(key, value) {
-      this.$emit("input", tap(cloneDeep(this.local), v => set(v, key, value)));
+      if (!value && value !== 0) {
+        this.$emit(
+          "input",
+          tap(cloneDeep(this.local), v => unset(v, key, value))
+        );
+      } else {
+        this.$emit(
+          "input",
+          tap(cloneDeep(this.local), v => set(v, key, value))
+        );
+      }
     },
     updateActions(actions) {
       this.$emit(
@@ -116,6 +152,26 @@ export default {
       }
 
       this.nameError = "";
+      return true;
+    },
+    validateWeight(weight) {
+      if (!isWeightValid(weight)) {
+        this.weightError = "* weight should be between 0 and 1";
+        return false;
+      }
+      this.weightError = "";
+      return true;
+    },
+    validateDependency(dependency) {
+      if (isNaN(dependency)) {
+        this.dependencyError = "* dependency must be a number";
+        return false;
+      }
+      if (0 > dependency) {
+        this.dependencyError = "* dependency cannot be negative";
+        return false;
+      }
+      this.dependencyError = "";
       return true;
     }
   }

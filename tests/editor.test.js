@@ -87,10 +87,12 @@ describe('visualizer in editmode', () => {
         })
         test("edit model action", async () => {
             const editor = await page.$(editorSelector);
+
+            const actionInput = await editor.$(".mv-new-action input")
+            await actionInput.type("a=b")
+
             const addAction = await editor.$(".mv-add-action")
             await addAction.click()
-            const actionInput = await editor.$(".mv-edit-action")
-            await actionInput.type("a=b")
 
             const models = await page.evaluate("visualizer.getModels()");
             expect(models.models[0].actions).toBeTruthy()
@@ -233,6 +235,18 @@ describe('visualizer in editmode', () => {
         })
     })
     describe("edge editor", () => {
+        let selectEdge = async function () {
+            const visualizerSvg = await page.$(svgSelector);
+            let e0Label = await visualizerSvg.$("#label_e0")
+            await e0Label.click()
+
+            // editor is displayed
+            const editor = await page.$(editorSelector);
+            const edgeEditor = await editor.$(".mv-editedge")
+            expect(edgeEditor).toBeTruthy()
+            return edgeEditor;
+        }
+
         test("select edge", async () => {
             const visualizerSvg = await page.$(svgSelector);
             let e0Label = await visualizerSvg.$("#label_e0")
@@ -248,16 +262,10 @@ describe('visualizer in editmode', () => {
             const editor = await page.$(editorSelector);
             expect(await editor.$(".mv-editedge")).toBeTruthy()
         })
-        test("add edge action", async () => {
-            const visualizerSvg = await page.$(svgSelector);
-            let e0Label = await visualizerSvg.$("#label_e0")
+        test("add edge empty action", async () => {
+            const edgeEditor = await selectEdge()
 
-            await e0Label.click()
-            // editor is displayed
-            const editor = await page.$(editorSelector);
-            const edgeEdit = await editor.$(".mv-editedge");
-
-            const addAction = await edgeEdit.$(".mv-add-action")
+            const addAction = await edgeEditor.$(".mv-add-action")
             await addAction.click()
 
             const models = await page.evaluate("visualizer.getModels()");
@@ -265,20 +273,14 @@ describe('visualizer in editmode', () => {
             expect(models.models[0].edges[0].actions).toBeFalsy()
         })
 
-        test("edit action", async () => {
+        test("edit edge action", async () => {
+            const edgeEditor = await selectEdge()
 
-            const visualizerSvg = await page.$(svgSelector);
-            let e0Label = await visualizerSvg.$("#label_e0")
-
-            await e0Label.click()
-            // editor is displayed
-            const editor = await page.$(editorSelector);
-            const edgeEdit = await editor.$(".mv-editedge");
-
-            const addAction = await edgeEdit.$(".mv-add-action")
-            await addAction.click()
-            const actionInput = await edgeEdit.$(".mv-edit-action")
+            const actionInput = await edgeEditor.$(".mv-new-action input")
             await actionInput.type("a=b")
+
+            const addAction = await edgeEditor.$(".mv-add-action")
+            await addAction.click()
 
             const models = await page.evaluate("visualizer.getModels()");
             expect(models.models[0].edges[0].actions).toBeTruthy()
@@ -286,13 +288,9 @@ describe('visualizer in editmode', () => {
         })
 
         test("edge guard", async () => {
-            const visualizerSvg = await page.$(svgSelector);
-            const editor = await page.$(editorSelector);
-            let e0Label = await visualizerSvg.$("#label_e0")
-            await e0Label.click()
+            const edgeEditor = await selectEdge()
 
-            const edgeEdit = await editor.$(".mv-editedge");
-            const guardInput = await edgeEdit.$("#guard")
+            const guardInput = await edgeEditor.$("#guard")
             await guardInput.type("e==0;")
 
             const models = await page.evaluate("visualizer.getModels()");
@@ -300,13 +298,8 @@ describe('visualizer in editmode', () => {
         })
 
         test("name validator", async () => {
-            const visualizerSvg = await page.$(svgSelector);
-            const editor = await page.$(editorSelector);
-            let e0Label = await visualizerSvg.$("#label_e0")
-            await e0Label.click()
-
-            const edgeEdit = await editor.$(".mv-editedge");
-            const nameInput = await edgeEdit.$("#name")
+            const edgeEditor = await selectEdge()
+            const nameInput = await edgeEditor.$("#name")
             await nameInput.click({ clickCount: 3 })
             await page.keyboard.press('Backspace');
 
@@ -317,13 +310,9 @@ describe('visualizer in editmode', () => {
             expect(hasErrorClass).toBeTruthy()
         })
         test("name validator invalid name", async () => {
-            const visualizerSvg = await page.$(svgSelector);
-            const editor = await page.$(editorSelector);
-            let e0Label = await visualizerSvg.$("#label_e0")
-            await e0Label.click()
+            const edgeEditor = await selectEdge()
 
-            const edgeEdit = await editor.$(".mv-editedge");
-            const nameInput = await edgeEdit.$("#name")
+            const nameInput = await edgeEditor.$("#name")
             await nameInput.type("#")
 
             const errorValue = await page.$eval(editorSelector + ' span.error', el => el.textContent);
@@ -331,6 +320,47 @@ describe('visualizer in editmode', () => {
 
             let hasErrorClass = await page.evaluate(modelName => modelName.classList.contains("error"), nameInput)
             expect(hasErrorClass).toBeTruthy()
+        })
+
+        test("valid weight", async () => {
+            const edgeEditor = await selectEdge()
+            const weightInput = await edgeEditor.$("#weight")
+            await weightInput.type("0.5")
+
+            const models = await page.evaluate("visualizer.getModels()");
+            expect(models.models[0].edges[0].weight).toBe(0.5)
+        })
+        test("invalid weight", async () => {
+            const edgeEditor = await selectEdge()
+            const weightInput = await edgeEditor.$("#weight")
+            await weightInput.type("-1")
+
+
+            const errorValue = await page.$eval(editorSelector + ' span.error', el => el.textContent);
+            expect(errorValue).toBe("* weight should be between 0 and 1")
+            const models = await page.evaluate("visualizer.getModels()");
+            expect(models.models[0].edges[0].weight).toBe(undefined)
+
+        })
+        test("valid dependency", async () => {
+            const edgeEditor = await selectEdge()
+            const weightInput = await edgeEditor.$("#dependency")
+            await weightInput.type("75")
+
+            const models = await page.evaluate("visualizer.getModels()");
+            expect(models.models[0].edges[0].dependency).toBe(75)
+
+        })
+
+        test("invalid dependency", async () => {
+            const edgeEditor = await selectEdge()
+            const weightInput = await edgeEditor.$("#dependency")
+            await weightInput.type("-1")
+
+            const errorValue = await page.$eval(editorSelector + ' span.error', el => el.textContent);
+            expect(errorValue).toBe("* dependency cannot be negative")
+            const models = await page.evaluate("visualizer.getModels()");
+            expect(models.models[0].edges[0].dependency).toBe(undefined)
         })
     })
 })
