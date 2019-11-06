@@ -151,7 +151,7 @@ describe('visualizer in editmode', () => {
 
             // editor is displayed
             const editor = await page.$(editorSelector);
-            expect(await editor.$(".mv-editvertex")).toBeTruthy()
+            expect(await editor.$(".mv-edit-vertex")).toBeTruthy()
         })
 
         test("vertex name", async () => {
@@ -159,7 +159,7 @@ describe('visualizer in editmode', () => {
             const editor = await page.$(editorSelector);
             let v0 = await visualizerSvg.$("#v0")
             await v0.click()
-            const vertexEdit = await editor.$(".mv-editvertex");
+            const vertexEdit = await editor.$(".mv-edit-vertex");
             const nameInput = await vertexEdit.$("#name")
 
             await nameInput.type("_name_changed")
@@ -172,7 +172,7 @@ describe('visualizer in editmode', () => {
             const editor = await page.$(editorSelector);
             let v0 = await visualizerSvg.$("#v0")
             await v0.click()
-            const vertexEdit = await editor.$(".mv-editvertex");
+            const vertexEdit = await editor.$(".mv-edit-vertex");
             const sharedStateInput = await vertexEdit.$("#sharedState")
 
             await sharedStateInput.type("mysharedstate")
@@ -184,7 +184,7 @@ describe('visualizer in editmode', () => {
             const editor = await page.$(editorSelector);
             let v0 = await visualizerSvg.$("#v0")
             await v0.click()
-            const vertexEdit = await editor.$(".mv-editvertex");
+            const vertexEdit = await editor.$(".mv-edit-vertex");
             const blockedCheckbox = await vertexEdit.$("#blocked")
 
             await blockedCheckbox.click()
@@ -198,7 +198,7 @@ describe('visualizer in editmode', () => {
             const editor = await page.$(editorSelector);
             let v0 = await visualizerSvg.$("#v0")
             await v0.click()
-            const vertexEdit = await editor.$(".mv-editvertex");
+            const vertexEdit = await editor.$(".mv-edit-vertex");
             const nameInput = await vertexEdit.$("#name")
             await nameInput.click({ clickCount: 3 })
             await page.keyboard.press('Backspace');
@@ -214,7 +214,7 @@ describe('visualizer in editmode', () => {
             const editor = await page.$(editorSelector);
             let v0 = await visualizerSvg.$("#v0")
             await v0.click()
-            const vertexEdit = await editor.$(".mv-editvertex");
+            const vertexEdit = await editor.$(".mv-edit-vertex");
             const nameInput = await vertexEdit.$("#name")
             await nameInput.type("#")
 
@@ -231,7 +231,7 @@ describe('visualizer in editmode', () => {
             await graph.click({ clickCount: 2 });
 
             const editor = await page.$(editorSelector);
-            expect(await editor.$(".mv-editvertex")).toBeTruthy()
+            expect(await editor.$(".mv-edit-vertex")).toBeTruthy()
         })
     })
     describe("edge editor", () => {
@@ -242,7 +242,7 @@ describe('visualizer in editmode', () => {
 
             // editor is displayed
             const editor = await page.$(editorSelector);
-            const edgeEditor = await editor.$(".mv-editedge")
+            const edgeEditor = await editor.$(".mv-edit-edge")
             expect(edgeEditor).toBeTruthy()
             return edgeEditor;
         }
@@ -260,7 +260,7 @@ describe('visualizer in editmode', () => {
 
             // editor is displayed
             const editor = await page.$(editorSelector);
-            expect(await editor.$(".mv-editedge")).toBeTruthy()
+            expect(await editor.$(".mv-edit-edge")).toBeTruthy()
         })
         test("add edge empty action", async () => {
             const edgeEditor = await selectEdge()

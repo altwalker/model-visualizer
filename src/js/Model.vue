@@ -1,7 +1,7 @@
 <template>
-  <div class="mv-editmodel">
+  <div class="mv-edit-model">
     <h2>Model</h2>
-    <div>
+    <div class="mv-model-name">
       <label for="name">Name</label>
       <span v-if="nameError" class="error">{{nameError}}</span>
       <input
@@ -13,7 +13,7 @@
         :class="nameError&&'error'"
       />
     </div>
-    <div>
+    <div class="mv-model-generator">
       <label for="generator">Generator</label>
       <span v-if="generatorError" class="error">{{generatorError}}</span>
       <input
@@ -25,7 +25,7 @@
         :class="generatorError&&'error'"
       />
     </div>
-    <div>
+    <div class="mv-model-start-element">
       <label for="startElementId">Start element id</label>
       <select
         :value="local.startElementId"
@@ -40,7 +40,7 @@
     </div>
     <Actions :value="local.actions" @input="updateActions($event)" />
     <div>
-      <button id="mv-btn-delete-model" @click="$emit('delete')">Delete model</button>
+      <button id="mv-btn-delete-model" @click="$emit('delete')">Delete</button>
     </div>
   </div>
 </template>
