@@ -1,7 +1,7 @@
 <template>
-  <div class="mv-editvertex">
+  <div class="mv-edit-vertex">
     <h2>Vertex</h2>
-    <div>
+    <div class="mv-vertex-id">
       <label for="vertexId">Id</label>
       <input
         :value="local.id"
@@ -12,7 +12,7 @@
         disabled
       />
     </div>
-    <div>
+    <div class="mv-vertex-name">
       <label for="name">Name</label>
       <span v-if="nameError" class="error">{{nameError}}</span>
       <input
@@ -24,7 +24,7 @@
         :class="nameError&&'error'"
       />
     </div>
-    <div>
+    <div class="mv-vertex-shared-state">
       <label for="sharedState">Shared state</label>
       <input
         :value="local.sharedState"
@@ -34,7 +34,7 @@
         type="text"
       />
     </div>
-    <div>
+    <div class="mv-vertex-blocked">
       <label for="blocked">Blocked</label>
       <input
         :checked="local.properties&&local.properties.blocked"
@@ -44,7 +44,7 @@
         type="checkbox"
       />
     </div>
-    <div>
+    <div class="mv-vertex-color">
       <label for="color">Color</label>
       <input
         id="color"

@@ -1,7 +1,7 @@
 <template>
-  <div class="mv-editedge">
+  <div class="mv-edit-edge">
     <h2>Edge</h2>
-    <div>
+    <div class="mv-edge-id">
       <label for="edgeId">Id</label>
       <input
         :value="local.id"
@@ -12,7 +12,19 @@
         disabled
       />
     </div>
-    <div>
+    <div class="mv-edge-name">
+      <label for="name">Name</label>
+      <input
+        v-model="local.name"
+        @input="validateName($event.target.value) && update('name', $event.target.value)"
+        placeholder="Name"
+        id="name"
+        type="text"
+        :class="nameError&&'error'"
+      />
+      <span v-if="nameError" class="error">{{nameError}}</span>
+    </div>
+    <div class="mv-edge-source-vertex">
       <label for="source">Source vertex</label>
       <select
         :value="local.sourceVertexId"
@@ -29,7 +41,7 @@
         >{{vertex.id}} - {{vertex.name}}</option>
       </select>
     </div>
-    <div>
+    <div class="mv-edge-target-vertex">
       <label for="target">Target vertex</label>
       <select
         :value="local.targetVertexId"
@@ -45,19 +57,7 @@
         >{{vertex.id}} - {{vertex.name}}</option>
       </select>
     </div>
-    <div>
-      <label for="name">Name</label>
-      <input
-        v-model="local.name"
-        @input="validateName($event.target.value) && update('name', $event.target.value)"
-        placeholder="Name"
-        id="name"
-        type="text"
-        :class="nameError&&'error'"
-      />
-      <span v-if="nameError" class="error">{{nameError}}</span>
-    </div>
-    <div>
+    <div class="mv-edge-guard">
       <label for="guard">Guard</label>
       <input
         :value="local.guard"
@@ -66,7 +66,7 @@
         type="text"
       />
     </div>
-    <div>
+    <div class="mv-edge-weight">
       <label for="weight">Weight</label>
       <input
         v-model="local.weight"
@@ -79,7 +79,7 @@
       />
       <span v-if="weightError" class="error">{{weightError}}</span>
     </div>
-    <div>
+    <div class="mv-edge-dependency">
       <label for="dependency">Dependency</label>
       <input
         v-model="local.dependency"

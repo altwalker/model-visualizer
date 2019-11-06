@@ -43,7 +43,7 @@ Place the following `<script>`s near the end of your pages, right before the clo
 The following code initializes `ModelVisualizer` in `editmode` inside the element with the id `visualizer`, using default models defined in the library.
 
 ```js
-let visualizer = new ModelVisualizer({container: "visualizer", editmode: false});
+let visualizer = new ModelVisualizer({container: "visualizer", editMode: false});
 ```
 
 Yo can find a working example [here](https://altom.gitlab.io/altwalker/model-visualizer/).
