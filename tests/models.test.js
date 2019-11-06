@@ -1,4 +1,4 @@
-import { defaultModels, validateModels, isNameValid, ValidationError } from "../src/js/models"
+import { defaultModels, validateModels, isNameValid, ValidationError, isWeightValid } from "../src/js/models"
 
 describe("validateModels", () => {
     test('defaultModels are valid', () => {
@@ -246,5 +246,20 @@ describe("isNamevalid", () => {
         expect(isNameValid("new")).toBe(false)
         expect(isNameValid("struct")).toBe(false)
         expect(isNameValid("lambda")).toBe(false)
+    })
+})
+
+
+describe("isWeightValid", () => {
+    test('valid weight', () => {
+        expect(isWeightValid(0)).toBe(true)
+        expect(isWeightValid(1)).toBe(true)
+        expect(isWeightValid(0.33)).toBe(true)
+    })
+    test('invalid weight', () => {
+        expect(isWeightValid("")).toBe(false)
+        expect(isWeightValid(1.1)).toBe(false)
+        expect(isWeightValid(NaN)).toBe(false)
+        expect(isWeightValid(undefined)).toBe(false)
     })
 })
