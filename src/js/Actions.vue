@@ -1,7 +1,7 @@
 <template>
   <div class="mv-edit-action">
     <label>Actions</label>
-    <div v-for="(action,i) in local" v-bind:key="i" class="mv-edit-action">
+    <div v-for="(action,i) in local" v-bind:key="i" class="mv-added-action">
       <a href="#" class="button mv-remove-action" @click="removeAction(i)">x</a>
       <span class="mv-action">{{action}}</span>
     </div>
