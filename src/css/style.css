@@ -66,7 +66,7 @@ svg.mv-visualizer text::selection {
 }
 
 .mv-visualizer .node-start > rect {
-  fill: #b7e2b1;
+  fill: #1b9e77;
 }
 
 .mv-visualizer .node-fake {
