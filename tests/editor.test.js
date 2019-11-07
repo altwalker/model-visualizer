@@ -53,7 +53,7 @@ describe('visualizer in editmode', () => {
             await newModel.click()
             const modelSelect = await editor.$("#currentModel")
             const options = await modelSelect.$$eval("option", options => options.map(option => option.textContent))
-            expect(options).toEqual(['FirstModel', 'SecondModel', 'NewModel'])
+            expect(options).toEqual(['FirstModel', 'SecondModel', 'NewModel0'])
         })
         test("delete model", async () => {
             const editor = await page.$(editorSelector);
