@@ -76,6 +76,7 @@ export default {
       editableEdgeIndex: -1,
       editableVertexIndex: -1,
       editableModelIndex: -1,
+      createdModelsCount: 0,
       preventModelsChangedOnce: true
     };
   },
@@ -279,9 +280,11 @@ export default {
       this.editableModels.models.push({
         edges: [],
         vertices: [],
-        name: "NewModel",
+        name: "NewModel" + this.createdModelsCount,
         generator: "random(edge_coverage(100) && vertex_coverage(100))"
       });
+
+      this.createdModelsCount += 1;
       this.editableModelIndex = this.editableModels.models.length - 1;
     },
     createVertex() {
