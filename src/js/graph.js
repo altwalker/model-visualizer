@@ -2,7 +2,7 @@ import dagreD3 from "dagre-d3";
 
 let fakeNodesCount = 0;
 const commonLegendDommain = ["Start Vertex", "Blocked Vertex", "Fake Vertex"];
-const commonLegendRange = ["#b7e2b1", "#7f8c8d", "#3498db"];
+const commonLegendRange = ["#1b9e77", "#7f8c8d", "#3498db"];
 
 function createVertexLabel(vertex, startElementsIds) {
   const nodeLabelClass = "node-label";
