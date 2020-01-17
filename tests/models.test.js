@@ -1,4 +1,4 @@
-import { defaultModels, validateModels, isNameValid, ValidationError, isWeightValid } from "../src/js/models"
+import { defaultModels, validateModels, isNameValid, ValidationError, isWeightValid, PlottingError } from "../src/js/models"
 
 describe("validateModels", () => {
     test('defaultModels are valid', () => {
@@ -11,15 +11,15 @@ describe("validateModels", () => {
     });
 
     test('Each model must have a name', () => {
-        expect(() => validateModels({
-            name: "TestModel", models: [
-                {
-                }
-            ]
-        })).toThrowError(new Error("Each model must have an unique name."))
-        expect(() => validateModels({
-            name: "TestModel", models: [
-                {
+        let f = () => validateModels({
+            name: "TestModel",
+            models: [{}]
+        })
+        expect(f).toThrowError(new Error("Each model must have a unique name."))
+        expect(f).toThrowError(ValidationError)
+        f = () => validateModels({
+            name: "TestModel",
+            models: [{
                     name: "name1",
                     generator: "random(never)",
                     startElementId: "v1",
@@ -34,22 +34,25 @@ describe("validateModels", () => {
                     edges: []
                 }
             ]
-        })).toThrowError(new Error("Each model must have an unique name."))
+        })
+        expect(f).toThrowError(new Error("Each model must have a unique name."))
+        expect(f).toThrowError(ValidationError)
     });
     test('Each model must have a generator', () => {
-        expect(() => validateModels({
-            name: "TestModel", models: [
-                {
-                    name: "model1",
-                }
-            ]
-        })).toThrowError(new Error("Each model must have a generator."))
+        let f = () => validateModels({
+            name: "TestModel",
+            models: [{
+                name: "model1",
+            }]
+        })
+        expect(f).toThrowError(new Error("Each model must have a generator."))
+        expect(f).toThrowError(ValidationError)
     });
 
     test('Reference vertex in different model', () => {
-        expect(() => validateModels({
-            name: "TestModel", models: [
-                {
+        let f = () => validateModels({
+            name: "TestModel",
+            models: [{
                     name: "model1",
                     generator: "random(never)",
                     vertices: [{ id: "v1", name: "v1" }],
@@ -62,31 +65,33 @@ describe("validateModels", () => {
                     edges: [{ id: "e1", "name": "e1", "sourceVertexId": "v1", targetVertexId: "v2" }]
                 }
             ]
-        })).toThrowError(new Error("Vertex id v1 defined as sourceVertexId of edge id e1 does not exist in vertices definition of model model2."))
+        })
+        expect(f).toThrowError(new Error("Vertex id v1 defined as sourceVertexId of edge id e1 does not exist in vertices definition of model model2."))
+        expect(f).toThrowError(ValidationError)
     });
 
 
-
     test('Invalid vertex reference', () => {
-        expect(() => validateModels({
-            name: "TestModel", models: [
-                {
-                    name: "model1",
-                    generator: "random(never)",
-                    vertices: [{ id: "v2", name: "v2" }, { id: "v3", name: "v3" }],
-                    edges: [{ id: "e1", "name": "e1", "sourceVertexId": "v1", targetVertexId: "v2" }]
-                }
-            ]
-        })).toThrowError(new Error("Vertex id v1 defined as sourceVertexId of edge id e1 does not exist in vertices definition of model model1."))
+        let f = () => validateModels({
+            name: "TestModel",
+            models: [{
+                name: "model1",
+                generator: "random(never)",
+                vertices: [{ id: "v2", name: "v2" }, { id: "v3", name: "v3" }],
+                edges: [{ id: "e1", "name": "e1", "sourceVertexId": "v1", targetVertexId: "v2" }]
+            }]
+        })
+        expect(f).toThrowError(new Error("Vertex id v1 defined as sourceVertexId of edge id e1 does not exist in vertices definition of model model1."))
+        expect(f).toThrowError(ValidationError)
     });
 
 
 
 
     test('Same vertex id multiple times', () => {
-        expect(() => validateModels({
-            name: "TestModel", models: [
-                {
+        let f = () => validateModels({
+            name: "TestModel",
+            models: [{
                     name: "model1",
                     generator: "random(never)",
                     vertices: [{ id: "v2", name: "v2" }, { id: "v3", name: "v3" }, { id: "v2", name: "v2" }, { id: "v2", name: "v2" }],
@@ -95,14 +100,16 @@ describe("validateModels", () => {
                 },
 
             ]
-        })).toThrowError(new Error("Vertex id v2 appears at least 2 times all models. Vertex ids should be unique across all models."))
+        })
+        expect(f).toThrowError(new Error("Vertex id v2 appears at least 2 times in all models. Vertex id should be unique across all models."))
+        expect(f).toThrowError(PlottingError)
     });
 
 
     test('Same edge id multiple times', () => {
-        expect(() => validateModels({
-            name: "TestModel", models: [
-                {
+        let f = () => validateModels({
+            name: "TestModel",
+            models: [{
                     name: "model1",
                     generator: "random(never)",
                     vertices: [{ id: "v2", name: "v2" }, { id: "v3", name: "v3" }],
@@ -114,14 +121,16 @@ describe("validateModels", () => {
                 },
 
             ]
-        })).toThrowError(new Error("Edge id e1 appears at least 2 times. Edge ids should be unique across all models."))
+        })
+        expect(f).toThrowError(new Error("Edge id e1 appears at least 2 times. Edge ids should be unique across all models."))
+        expect(f).toThrowError(PlottingError)
     });
 
 
-    test('Vertex and  edge same id', () => {
-        expect(() => validateModels({
-            name: "TestModel", models: [
-                {
+    test('Vertex and edge same id', () => {
+        let f = () => validateModels({
+            name: "TestModel",
+            models: [{
                     name: "model1",
                     generator: "random(never)",
                     vertices: [{ id: "v1", name: "v1" }],
@@ -132,13 +141,15 @@ describe("validateModels", () => {
                 },
 
             ]
-        })).toThrowError(new Error("Duplicate id v1. Edge and vertex should not have the same id."))
+        })
+        expect(f).toThrowError(new Error("Duplicate id v1. Edges and vertices should have unique ids."))
+        expect(f).toThrowError(PlottingError)
     });
 
     test('Invalid sourceVertexId', () => {
-        expect(() => validateModels({
-            name: "TestModel", models: [
-                {
+        let f = () => validateModels({
+            name: "TestModel",
+            models: [{
                     name: "model1",
                     generator: "random(never)",
                     vertices: [{ id: "v2", name: "v2" }, { id: "v3", name: "v3" }],
@@ -149,13 +160,15 @@ describe("validateModels", () => {
                 },
 
             ]
-        })).toThrowError(new Error("Vertex id invalid defined as sourceVertexId of edge id e1 does not exist in vertices definition of model model1."))
+        })
+        expect(f).toThrowError(new Error("Vertex id invalid defined as sourceVertexId of edge id e1 does not exist in vertices definition of model model1."))
+        expect(f).toThrowError(ValidationError)
     });
 
     test('Invalid targetVertexId', () => {
-        expect(() => validateModels({
-            name: "TestModel", models: [
-                {
+        let f = () => validateModels({
+            name: "TestModel",
+            models: [{
                     name: "model1",
                     generator: "random(never)",
                     vertices: [{ id: "v2", name: "v2" }, { id: "v3", name: "v3" }],
@@ -166,14 +179,45 @@ describe("validateModels", () => {
                 },
 
             ]
-        })).toThrowError(new Error("Vertex id invalid defined as targetVertexId of edge id e1 does not exist in vertices definition of model model1."))
+        })
+        expect(f).toThrowError(new Error("Vertex id invalid defined as targetVertexId of edge id e1 does not exist in vertices definition of model model1."))
+        expect(f).toThrowError(ValidationError)
+    });
+    test('Each edge and vertex must have a unique id', () => {
+        let f = () => validateModels({
+            name: "TestModel",
+            models: [{
+                    name: "model1",
+                    generator: "random(never)",
+                    vertices: [{ id: "v2", name: "v2" }, { id: "", name: "v3" }],
+                    startElementId: "v2",
+                    edges: []
+                },
+
+            ]
+        })
+        expect(f).toThrowError(new Error("Each vertex must have a unique id."))
+        expect(f).toThrowError(PlottingError)
+        f = () => validateModels({
+            name: "TestModel",
+            models: [{
+                    name: "model1",
+                    generator: "random(never)",
+                    vertices: [{ id: "v2", name: "v2" }, { id: "v3", name: "v3" }],
+                    startElementId: "v2",
+                    edges: [{ id: "", sourceVertexId: "v2", targetVertexId: "v3" }]
+                },
+
+            ]
+        })
+        expect(f).toThrowError(new ValidationError("Each edge must have a unique id."))
+        expect(f).toThrowError(PlottingError)
     });
 
-
     test('Each vertex must have a valid name', () => {
-        expect(() => validateModels({
-            name: "TestModel", models: [
-                {
+        let f = () => validateModels({
+            name: "TestModel",
+            models: [{
                     name: "model1",
                     generator: "random(never)",
                     vertices: [{ id: "v2", name: "" }, { id: "v3", name: "v3" }],
@@ -182,10 +226,12 @@ describe("validateModels", () => {
                 },
 
             ]
-        })).toThrowError(new Error("Each vertex must have a name."))
-        expect(() => validateModels({
-            name: "TestModel", models: [
-                {
+        })
+        expect(f).toThrowError(new Error("Each vertex must have a name."))
+        expect(f).toThrowError(ValidationError)
+        f = () => validateModels({
+            name: "TestModel",
+            models: [{
                     name: "model1",
                     generator: "random(never)",
                     vertices: [{ id: "v2", name: "#invalid" }],
@@ -194,13 +240,15 @@ describe("validateModels", () => {
                 },
 
             ]
-        })).toThrowError(new ValidationError("Invalid vertex name: #invalid."))
+        })
+        expect(f).toThrowError(new ValidationError("Invalid vertex name: #invalid."))
+        expect(f).toThrowError(ValidationError)
     });
 
     test('Each edge must have a name', () => {
-        expect(() => validateModels({
-            name: "TestModel", models: [
-                {
+        let f = () => validateModels({
+            name: "TestModel",
+            models: [{
                     name: "model1",
                     generator: "random(never)",
                     vertices: [{ id: "v2", name: "v2" }, { id: "v3", name: "v3" }],
@@ -209,13 +257,15 @@ describe("validateModels", () => {
                 },
 
             ]
-        })).toThrowError(new Error("Each edge must have a name."))
+        })
+        expect(f).toThrowError(new Error("Each edge must have a name."))
+        expect(f).toThrowError(ValidationError)
     });
 
     test('Each edge must have a targetVertexId', () => {
-        expect(() => validateModels({
-            name: "TestModel", models: [
-                {
+        let f = () => validateModels({
+            name: "TestModel",
+            models: [{
                     name: "model1",
                     generator: "random(never)",
                     vertices: [{ id: "v2", name: "v2" }, { id: "v3", name: "v3" }],
@@ -224,7 +274,9 @@ describe("validateModels", () => {
                 },
 
             ]
-        })).toThrowError(new Error("Each edge must have a targetVertexId."))
+        })
+        expect(f).toThrowError(new Error("Each edge must have a targetVertexId."))
+        expect(f).toThrowError(ValidationError)
     });
 });
 
