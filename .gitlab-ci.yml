@@ -62,9 +62,9 @@ docs:
   script:
     - cd docs
     - make html
-  after_script:
+    - ls -alt _build/html
     - cp -r _build/html ../documentation
-
+    
 pages:
   image: alpine:3.7
   stage: deploy
