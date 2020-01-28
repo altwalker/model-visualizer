@@ -5,13 +5,14 @@
 node_modules
 
 # release
-public/
-
+public
 
 # docker
 Dockerfile
 .dockerignore
 
-
 # project
-screenshots/
+screenshots
+
+# sphinx docs
+docs/_build

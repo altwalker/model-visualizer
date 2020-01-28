@@ -1,6 +1,8 @@
 stages:
   - test
   - build
+  - docs
+  - deploy
 
 default:
   image: altwalker/tests:model-visualizer
@@ -18,26 +20,60 @@ chromium tests:
 
 firefox tests:
   stage: test
+  artifacts:
+    paths:
+      - screenshots/
+    when: always
   variables:
     PUPPETEER_BROWSER: firefox
   before_script:
     - npm install
   script:
     - npm run test --ci
-  artifacts:
-    paths:
-      - screenshots/
-    when: always
 
-pages:
+build:
   image: node:stretch-slim
   stage: build
-  script:
+  only:
+    - master
+  artifacts:
+    paths:
+      - build
+  before_script:
     - npm install
+  script:
     - npm run build
-    - cp examples/index.html public/
+  after_script:
+    - cp -r public build
+
+docs:
+  image: python:3.8
+  stage: docs
+  only:
+    - master
+  artifacts:
+    paths:
+      - documentation
+  before_script:
+    - apt-get install -y nodejs
+    - pip install -r requirements.txt
+  script:
+    - cd docs
+    - make html
+  after_script:
+    - cp -r _build/html ../documentation
+
+pages:
+  image: alpine:3.7
+  stage: deploy
+  only:
+    - master
+  dependencies:
+    - build
+    - docs
   artifacts:
     paths:
       - public
-  only:
-    - master
+  script:
+    - cp -r documentation/ public/
+    - cp -r build/ public/build/

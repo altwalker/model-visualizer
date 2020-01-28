@@ -1,6 +1,6 @@
 # Model-Visualizer
 
-A JavaScript library for visualizing and visualy editing JSON models for AltWalker and GraphWalker.
+A JavaScript library for visualizing and visualy editing JSON models for [AltWalker](https://altom.gitlab.io/altwalker/altwalker/) and [GraphWalker](http://graphwalker.github.io/).
 
 ## Installation
 
@@ -8,15 +8,15 @@ A JavaScript library for visualizing and visualy editing JSON models for AltWalk
 
 You can get the latest browser-ready script:
 
-* https://altom.gitlab.io/altwalker/model-visualizer/model-visualizer.js
-* https://altom.gitlab.io/altwalker/model-visualizer/model-visualizer.css
+* https://altom.gitlab.io/altwalker/model-visualizer/build/model-visualizer.js
+* https://altom.gitlab.io/altwalker/model-visualizer/build/model-visualizer.css
 
 #### CSS
 
 Copy-paste the stylesheet `<link>` into your `<head>` before all other stylesheets to load our CSS.
 
 ```html
-<link rel="stylesheet" href="https://altom.gitlab.io/altwalker/model-visualizer/model-visualizer.css">
+<link rel="stylesheet" href="https://altom.gitlab.io/altwalker/model-visualizer/build/model-visualizer.css">
 ```
 
 #### JS
@@ -24,41 +24,42 @@ Copy-paste the stylesheet `<link>` into your `<head>` before all other styleshee
 Place the following `<script>`s near the end of your pages, right before the closing `</body>` tag, to enable them.
 
 ```html
-<script src="https://altom.gitlab.io/altwalker/model-visualizer/model-visualizer.js"></script>
+<script src="https://altom.gitlab.io/altwalker/model-visualizer/build/model-visualizer.js"></script>
 ```
 
-### Dependencies Required
+### Required Dependencies
 
 * [D3](https://d3js.org/)
 * [dagre-d3](https://github.com/dagrejs/dagre-d3)
 * [Vue.js](https://vuejs.org/)
 * [lodash](https://lodash.com/)
 
-### Optional dependencies
-* [Milligram](https://milligram.io/) (__Optional__) - for the forms design.
+### Optional Dependencies
 
+* [d3-legend](https://d3-legend.susielu.com/) (__Optional__) - if you want to use the legend.
+* [Milligram](https://milligram.io/) (__Optional__) - for the forms design.
 
 ## Example
 
-The following code initializes `ModelVisualizer` in `editmode` inside the element with the id `visualizer`, using default models defined in the library.
+The following code initializes `ModelVisualizer` in `editMode` inside the element with the id `visualizer`, using default models defined in the library.
 
 ```js
 let visualizer = new ModelVisualizer({container: "visualizer", editMode: false});
 ```
 
-Yo can find a working example [here](https://altom.gitlab.io/altwalker/model-visualizer/).
+Yo can find a working example [here](https://altom.gitlab.io/altwalker/model-visualizer/_static/examples/edit-mode.html).
 
 ## Setting Up a Development Environment
 
 Install the npm dependencies:
 
-```
+```bash
 $ npm install
 ```
 
 ### Running locally
 
-```
+```bash
 $ npm run dev
 ```
 
@@ -66,7 +67,7 @@ Now you can visit http://localhost:8080/ and you should see a live demo.
 
 ### Building
 
-```
+```bash
 $ npm run build
 ```
 
@@ -74,7 +75,7 @@ Will create a build inside the `public/` directory.
 
 ### Running Tests
 
-```
+```bash
 $ npm run test
 ```
 

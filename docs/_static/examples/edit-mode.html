@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <title>ModelVisualizer - Edit Mode Example</title>
+        <meta name="description" content="An example of the ModelVisualizer in edit mode.">
+        <meta name="keywords" content="ModelVisualizer,AltWalker">
+
+        <!-- Normalize CSS  -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css">
+
+        <!-- ModelVisualizer CSS -->
+        <link rel="stylesheet" href="https://altom.gitlab.io/altwalker/model-visualizer/build/model-visualizer.css">
+
+        <!-- Optional Milligram CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.3.0/milligram.css">
+    </head>
+    <body>
+        <div style="height: 100vh; width: 100vw;">
+            <div id="visualizer">
+            </div>
+        </div>
+
+        <!-- DagreD3 and D3 -->
+        <script src="https://d3js.org/d3.v5.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dagre-d3/0.6.3/dagre-d3.min.js"></script>
+
+        <!-- VueJS -->
+        <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+        <!-- lodash -->
+        <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"></script>
+
+        <!-- Model-Visualizer -->
+        <script src="https://altom.gitlab.io/altwalker/model-visualizer/build/model-visualizer.js"></script>
+
+        <!-- Main JS -->
+        <script>
+            let visualizer = new ModelVisualizer({container: "visualizer", editMode: true});
+        </script>
+    </body>
+</html>
