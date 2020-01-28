@@ -55,6 +55,7 @@ docs:
     paths:
       - documentation
   before_script:
+    - curl -sL https://deb.nodesource.com/setup_13.x | bash -
     - apt-get install -y nodejs
     - pip install -r requirements.txt
   script:
