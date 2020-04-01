@@ -1,6 +1,6 @@
 {
   "name": "model-visualizer",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Visualize your AltWalker or GraphWalker json models",
   "scripts": {
     "build:dev": "webpack --mode development",
@@ -23,6 +23,7 @@
     "jest-puppeteer": "^4.3.0",
     "lodash": "^4.17.15",
     "mini-css-extract-plugin": "^0.8.0",
+    "optimize-css-assets-webpack-plugin": "^5.0.3",
     "puppeteer": "^1.20.0",
     "puppeteer-firefox": "^0.5.0",
     "style-loader": "^1.0.0",

@@ -1,5 +1,7 @@
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const VueLoaderPlugin = require("vue-loader/lib/plugin");
+
 var path = require("path");
 
 module.exports = {
@@ -38,6 +40,12 @@ module.exports = {
       // Options similar to the same options in webpackOptions.output
       // both options are optional
       filename: "model-visualizer.css"
+    }),
+    new OptimizeCssAssetsPlugin({
+      assetNameRegExp: /\.css$/g,
+      cssProcessorPluginOptions: {
+        preset: ['default', { discardComments: { removeAll: true } }],
+      },
     }),
     new VueLoaderPlugin()
   ],
