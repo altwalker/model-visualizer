@@ -1,58 +1,23 @@
 /* Graph SVG */
+
 svg.mv-visualizer {
   font: 400 14px "Helvetica Neue", Helvetica;
 }
 
 svg.mv-visualizer text {
   cursor: default;
+
+  user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-  user-select: none;
 }
+
 svg.mv-visualizer text::selection {
   background: none;
 }
 
-
-
-/* Tooltips */
-
-.mv-tooltip {
-  font-size: 1.2em;
-  font-weight: 400;
-
-  position: absolute;
-  text-align: left;
-
-  padding: 10px 12px;
-
-  background: #2c3e50;
-  color: #ecf0f1;
-
-  border: 0px;
-  border-radius: 3px;
-
-  pointer-events: none;
-}
-
-.code {
-  display: inline-block;
-
-  font-size: 0.9em;
-
-  padding: 3px 6px;
-  margin-top: 3px;
-
-  border: 0px;
-  border-radius: 3px;
-
-  font-family: monospace;
-  background-color: #ecf0f1;
-  color: #e74c3c;
-}
-
-/* Visualizer view and edit mode */
+/* Visualizer Base */
 
 .mv-visualizer .node > rect {
   fill: #b5d4e9;
@@ -61,6 +26,7 @@ svg.mv-visualizer text::selection {
 
 .mv-visualizer .node-label {
   fill: #000;
+
   font-size: 1.2em;
   font-weight: 400;
 }
@@ -96,15 +62,14 @@ svg.mv-visualizer text::selection {
   stroke-width: 2.5px;
 }
 
-/******/
-
+/* View Mode */
 
 .mv-viewmode {
   width: 100%;
   height: 100%;
 }
 
-/** Visualizer in editmode **/
+/* Edit Mode */
 
 .mv-editmode {
   width: 100%;
@@ -129,7 +94,6 @@ svg.mv-visualizer text::selection {
   fill: #17becf!important;
 }
 
-
 .mv-editmode .mv-visualizer .edgePath:hover path {
   cursor: pointer;
   fill: rgb(31, 43, 56);
@@ -141,11 +105,13 @@ svg.mv-visualizer text::selection {
   fill: rgb(31, 43, 56);
   font-weight: 600;
 }
+
 .mv-editmode .mv-visualizer .edgeLabels .label :hover {
   cursor: pointer;
   font-weight: 600;
   fill: rgb(31, 43, 56);
 }
+
 .mv-editmode .mv-visualizer .edgeLabels .label.edit {
   fill: rgb(31, 43, 56);
   font-weight: 600;
@@ -156,6 +122,43 @@ svg.mv-visualizer text::selection {
   stroke: rgb(31, 43, 56);
   stroke-width: 3px;
 }
+
 .mv-editmode .mv-visualizer .dynamicPath.hidden {
   stroke-width: 0;
+}
+
+/* Tooltips */
+
+.mv-tooltip {
+    position: fixed;
+    text-align: left;
+
+    font-size: 1.2em;
+    font-weight: 400;
+
+    padding: 10px 12px;
+
+    background: #2c3e50;
+    color: #ecf0f1;
+
+    border: 0px;
+    border-radius: 3px;
+
+    pointer-events: none;
+}
+
+.mv-tooltip-code {
+    display: inline-block;
+
+    font-size: 0.9em;
+    font-family: monospace;
+
+    padding: 3px 6px;
+    margin-top: 3px;
+
+    border: 0px;
+    border-radius: 3px;
+
+    background-color: #ecf0f1;
+    color: #e74c3c;
 }

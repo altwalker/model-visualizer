@@ -164,7 +164,7 @@ export function createGraph(models, graphOptions) {
   };
 }
 
-function generateNodeTooltipHTML(graph, d) {
+function generateNodeTooltipHtml(graph, d) {
   let node = graph.node(d);
   let html = "";
 
@@ -231,13 +231,13 @@ function generateEdgeTootipHtml(graph, d) {
     "</span><br/>";
 
   if (edge.guard) {
-    html += "<br/>Guard: <span class='code'>" + edge.guard + "</span><br/>";
+    html += "<br/>Guard: <span class='mv-tooltip-code'>" + edge.guard + "</span><br/>";
   }
 
   if (edge.actions) {
     html += "<br/>Actions: <br/>";
     edge.actions.forEach(action => {
-      html += "<span class='code'>" + action + "</span><br/>";
+      html += "<span class='mv-tooltip-code'>" + action + "</span><br/>";
     });
   }
 
@@ -276,7 +276,7 @@ function addTootips(svg, tooltip, cssSelector, htlmFunction, graph) {
 export function renderTooltips(svg, graph, tooltip) {
   tooltip.style("display", "none").style("opacity", 0);
 
-  addTootips(svg, tooltip, ".node", generateNodeTooltipHTML, graph);
+  addTootips(svg, tooltip, ".node", generateNodeTooltipHtml, graph);
   addTootips(
     svg,
     tooltip,
