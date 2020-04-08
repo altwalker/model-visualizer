@@ -1,47 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        <title>ModelVisualizer - Example</title>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        <!-- Mustard-UI CSS -->
-        <link rel="stylesheet" href="https://unpkg.com/mustard-ui@latest/dist/css/mustard-ui.min.css">
+  <title>ModelVisualizer - Example</title>
 
-        <!-- ModelVisualizer CSS -->
-        <link rel="stylesheet" href="model-visualizer.css">
-    </head>
-    <body style="width: 99vw; height: 99vh; margin:0">
-        <button onclick="toggleEditMode()" style="position: fixed">Toggle edit mode</button>
+  <!-- Mustard-UI CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/mustard-ui@latest/dist/css/mustard-ui.min.css">
 
-        <div id="legend" style="position: fixed; bottom:0; width:500px"></div>
+  <!-- ModelVisualizer CSS -->
+  <link rel="stylesheet" href="model-visualizer.css">
+</head>
 
-        <div id="visualizer"></div>
+<body style="width: 99vw; height: 99vh; margin:0">
+  <button onclick="toggleEditMode()" style="position: fixed">Toggle edit mode</button>
 
-        <!-- D3, DagreD3 and D3 Legend -->
-        <script src="https://d3js.org/d3.v5.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dagre-d3/0.6.3/dagre-d3.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.js"></script>
+  <div id="legend" style="position: fixed; bottom:0; width:500px"></div>
 
-        <!-- Vue JS -->
-        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <div id="visualizer"></div>
 
-        <!-- Model-Visualizer -->
-        <script src="model-visualizer.js"></script>
+  <!-- D3, DagreD3 and D3 Legend -->
+  <script src="https://d3js.org/d3.v5.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dagre-d3/0.6.3/dagre-d3.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.js"></script>
 
-        <script>
-            let visualizer = null;
-            let editMode = true;
+  <!-- Vue JS -->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
-            window.onload = function () {
-                visualizer = new ModelVisualizer({ container: "visualizer", editMode: editMode, legendContainer: "legend" });
-            };
+  <!-- Model-Visualizer -->
+  <script src="model-visualizer.js"></script>
 
-            function toggleEditMode() {
-                editMode = !editMode;
-                visualizer.setEditMode(editMode);
-            }
-        </script>
-    </body>
+  <script>
+    let visualizer = null;
+    let editMode = true;
+
+    window.onload = function () {
+      visualizer = new ModelVisualizer({ container: "visualizer", editMode: editMode, legendContainer: "legend" });
+    };
+
+    function toggleEditMode() {
+      editMode = !editMode;
+      visualizer.setEditMode(editMode);
+    }
+  </script>
+</body>
+
 </html>

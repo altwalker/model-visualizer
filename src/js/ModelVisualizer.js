@@ -1,5 +1,5 @@
 import Vue from "vue";
-import { defaultModels, validateModels } from "./models";
+import { defaultModels, validateModels, ValidationError } from "./models";
 import Editor from "./Editor.vue";
 import Visualizer from "./Visualizer.vue";
 import "../css/style.css";
@@ -86,8 +86,8 @@ class ModelVisualizer {
    * Validate the models.
    *
    * @param {Object} models - The models to be validated.
-   * @throws {ValidationError} If the models are invalid but plottabel.
-   * @throws {PlottingError} If the models are invalid and not plottabel.
+   * @throws {ValidationError} If the models are invalid but plottaable.
+   * @throws {PlottingError} If the models are invalid and not plottaable.
    */
   static validate(models) {
     validateModels(models);
@@ -106,11 +106,17 @@ class ModelVisualizer {
    * Rerenders the graph with the new models.
    *
    * @param {Object} models The models.
-   * @throws {ValidationError} If the models are invalid but plottabel.
-   * @throws {PlottingError} If the models are invalid and not plottabel.
+   * @throws {PlottingError} If the models are invalid and not plottable.
    */
   setModels(models) {
-    ModelVisualizer.validate(models);
+    try {
+      ModelVisualizer.validate(models);
+    }
+    catch (err) {
+      if (!(err instanceof ValidationError)) {
+        throw err
+      }
+    }
     this.vm.models = models;
   }
   getModels() {
