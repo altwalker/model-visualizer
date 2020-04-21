@@ -58,15 +58,15 @@
 </template>
 
 <script>
-import { createGraph, renderLegend } from "./graph";
-import Edge from "./Edge.vue";
-import Vertex from "./Vertex.vue";
-import Model from "./Model.vue";
-import { setupInteraction } from "./interaction";
-import undoredo from "./undoredo";
+import Edge from './Edge.vue'
+import Vertex from './Vertex.vue'
+import Model from './Model.vue'
+import UndoRedo from './undoredo'
+import { createGraph, renderLegend } from './graph'
+import { setupInteraction } from './interaction'
 
 export default {
-  name: "Editor",
+  name: 'Editor',
   components: { Edge, Vertex, Model },
   undoredo: null,
   data: function() {
@@ -78,7 +78,7 @@ export default {
       editableModelIndex: -1,
       createdModelsCount: 0,
       preventModelsChangedOnce: true
-    };
+    }
   },
   props: {
     models: { type: Object, required: true },
@@ -86,57 +86,65 @@ export default {
     graphLayoutOptions: { type: Object }
   },
   created: function() {
-    window.addEventListener("keyup", this.onkeyup);
+    window.addEventListener('keyup', this.onkeyup)
   },
   destroyed: function() {
-    window.removeEventListener("keyup", this.onkeyup);
+    window.removeEventListener('keyup', this.onkeyup)
   },
   mounted: function() {
-    this.editableModels = JSON.parse(JSON.stringify(this.models));
+    this.editableModels = JSON.parse(JSON.stringify(this.models))
 
-    this.undoredo = new undoredo(this.editableModels);
+    this.undoredo = new UndoRedo(this.editableModels)
     if (this.editableModels.models.length > 0) {
-      this.editableModelIndex = 0;
+      this.editableModelIndex = 0
     }
   },
 
   computed: {
     editModel() {
-      if (this.editableModelIndex >= 0)
-        return this.editableModels.models[this.editableModelIndex];
+      if (this.editableModelIndex >= 0) {
+        return this.editableModels.models[this.editableModelIndex]
+      }
+      return null
     },
     /**
      *  Returns edges of model being edited
      */
     edges() {
-      if (this.editModel) return this.editModel.edges;
+      if (this.editModel) {
+        return this.editModel.edges
+      }
+      return null
     },
     /**
      *  Returns vertices of model being edited
      */
     vertices() {
-      if (this.editModel) return this.editModel.vertices;
+      if (this.editModel) {
+        return this.editModel.vertices
+      }
+      return null
     },
     /**
      *  Returns ids of edges from all models
      */
     allEdgesIds() {
       return this.editableModels.models.reduce((acc, model) => {
-        acc.push(...model.edges.map(v => v.id));
-        return acc;
-      }, []);
+        acc.push(...model.edges.map(v => v.id))
+        return acc
+      }, [])
     },
     /**
      *  Returns ids of vertices from all models
      */
     allVerticesIds() {
       return this.editableModels.models.reduce((acc, model) => {
-        acc.push(...model.vertices.map(v => v.id));
-        return acc;
-      }, []);
+        acc.push(...model.vertices.map(v => v.id))
+        return acc
+      }, [])
     },
     editModelMeta() {
-      return this.editableVertexIndex < 0 && this.editableEdgeIndex < 0;
+      return this.editableVertexIndex < 0 && this.editableEdgeIndex < 0
     }
   },
   watch: {
@@ -146,231 +154,228 @@ export default {
         if (
           JSON.stringify(this.models) === JSON.stringify(this.editableModels)
         ) {
-          return;
+          return
         }
 
-        this.preventModelsChangedOnce = true;
-        this.editableModels = JSON.parse(JSON.stringify(this.models));
+        this.preventModelsChangedOnce = true
+        this.editableModels = JSON.parse(JSON.stringify(this.models))
         if (this.editableModelIndex > this.editableModels.models.length - 1) {
-          this.editableModelIndex = 0;
+          this.editableModelIndex = 0
         }
       },
       deep: true
     },
     editableModelIndex: function() {
-      this.editableVertexIndex = -1;
-      this.editableEdgeIndex = -1;
+      this.editableVertexIndex = -1
+      this.editableEdgeIndex = -1
 
-      this.paintGraph();
-      this.personalizeGraph();
+      this.paintGraph()
+      this.personalizeGraph()
     },
     graphLayoutOptions: function() {
-      this.editableVertexIndex = -1;
-      this.editableEdgeIndex = -1;
-      this.paintGraph();
+      this.editableVertexIndex = -1
+      this.editableEdgeIndex = -1
+      this.paintGraph()
     },
 
-    //called every time when data, computed or props change
+    // called every time when data, computed or props change
     editableModels: {
       handler: function(value) {
         if (this.preventModelsChangedOnce) {
-          this.preventModelsChangedOnce = false;
+          this.preventModelsChangedOnce = false
         } else {
-          this.$emit("change", JSON.parse(JSON.stringify(value)));
+          this.$emit('change', JSON.parse(JSON.stringify(value)))
         }
-        this.paintGraph();
-        this.personalizeGraph();
-        this.undoredo.push(this.editableModels);
+        this.paintGraph()
+        this.personalizeGraph()
+        this.undoredo.push(this.editableModels)
       },
       deep: true
     },
     editableVertexIndex: function(index) {
-      this.personalizeGraph();
+      this.personalizeGraph()
     },
     editableEdgeIndex: function(index) {
-      this.personalizeGraph();
+      this.personalizeGraph()
     }
   },
   methods: {
     onkeyup(e) {
-      if (e.target.tagName.toUpperCase() === "INPUT") return;
+      if (e.target.tagName.toUpperCase() === 'INPUT') return
 
       if (e.keyCode === 46 || e.keyCode === 8) {
-        if (this.editableEdgeIndex >= 0)
-          this.removeEdge(this.edges[this.editableEdgeIndex].id);
-        if (this.editableVertexIndex >= 0)
-          this.removeVertex(this.vertices[this.editableVertexIndex].id);
+        if (this.editableEdgeIndex >= 0) { this.removeEdge(this.edges[this.editableEdgeIndex].id) }
+        if (this.editableVertexIndex >= 0) { this.removeVertex(this.vertices[this.editableVertexIndex].id) }
       }
 
-      if ((e.ctrlKey || e.metaKey) && (e.keyCode == 90 || e.which == 90)) {
-        this.editableEdgeIndex = -1;
-        this.editableVertexIndex = -1;
-        this.editableModels = this.undoredo.undo().current();
+      if ((e.ctrlKey || e.metaKey) && (e.keyCode === 90 || e.which === 90)) {
+        this.editableEdgeIndex = -1
+        this.editableVertexIndex = -1
+        this.editableModels = this.undoredo.undo().current()
       }
-      if ((e.ctrlKey || e.metaKey) && (e.keyCode == 89 || e.which == 89)) {
-        this.editableEdgeIndex = -1;
-        this.editableVertexIndex = -1;
-        this.editableModels = this.undoredo.redo().current();
+      if ((e.ctrlKey || e.metaKey) && (e.keyCode === 89 || e.which === 89)) {
+        this.editableEdgeIndex = -1
+        this.editableVertexIndex = -1
+        this.editableModels = this.undoredo.redo().current()
       }
     },
     paintGraph() {
-      let models = [this.editableModels.models[this.editableModelIndex]];
+      const models = [this.editableModels.models[this.editableModelIndex]]
       var { graph, legendDomain, legendRange } = createGraph(
         models,
         this.graphLayoutOptions
-      );
+      )
 
-      this.svg = this.renderGraph(graph);
-      this.renderInteraction(graph);
+      this.svg = this.renderGraph(graph)
+      this.renderInteraction(graph)
 
       if (this.legendContainer) {
-        renderLegend(this.legendContainer, legendDomain, legendRange);
+        renderLegend(this.legendContainer, legendDomain, legendRange)
       }
     },
     personalizeGraph() {
-      this.svg.selectAll(".node").classed("edit", false);
+      this.svg.selectAll('.node').classed('edit', false)
       // select vertex
       if (this.editableVertexIndex >= 0) {
         this.svg
-          .select("#" + this.vertices[this.editableVertexIndex].id)
-          .classed("edit", true);
+          .select('#' + this.vertices[this.editableVertexIndex].id)
+          .classed('edit', true)
       }
 
       // select edge
-      this.svg.selectAll(".edgePath").classed("edit", false);
-      this.svg.selectAll(".edgeLabels .label").classed("edit", false);
+      this.svg.selectAll('.edgePath').classed('edit', false)
+      this.svg.selectAll('.edgeLabels .label').classed('edit', false)
       if (this.editableEdgeIndex >= 0) {
         this.svg
-          .select("#" + this.edges[this.editableEdgeIndex].id)
-          .classed("edit", true);
+          .select('#' + this.edges[this.editableEdgeIndex].id)
+          .classed('edit', true)
         this.svg
-          .select("#label_" + this.edges[this.editableEdgeIndex].id)
-          .classed("edit", true);
+          .select('#label_' + this.edges[this.editableEdgeIndex].id)
+          .classed('edit', true)
       }
     },
     selectVertex(id) {
-      const vertex = this.getVertex(id);
-      this.editableVertexIndex = this.vertices.indexOf(vertex);
-      this.editableEdgeIndex = -1;
+      const vertex = this.getVertex(id)
+      this.editableVertexIndex = this.vertices.indexOf(vertex)
+      this.editableEdgeIndex = -1
     },
     selectEdge(id) {
-      const edge = this.getEdge(id);
-      this.editableEdgeIndex = this.edges.indexOf(edge);
-      this.editableVertexIndex = -1;
+      const edge = this.getEdge(id)
+      this.editableEdgeIndex = this.edges.indexOf(edge)
+      this.editableVertexIndex = -1
     },
     removeVertex(vertexId) {
-      this.editableVertexIndex = -1;
+      this.editableVertexIndex = -1
       this.editModel.edges = this.edges.filter(
-        e => e.sourceVertexId != vertexId && e.targetVertexId != vertexId
-      );
-      this.editModel.vertices = this.vertices.filter(e => e.id != vertexId);
+        e => e.sourceVertexId !== vertexId && e.targetVertexId !== vertexId
+      )
+      this.editModel.vertices = this.vertices.filter(e => e.id !== vertexId)
     },
     removeEdge(edgeId) {
-      this.editableEdgeIndex = -1;
-      this.editModel.edges = this.edges.filter(e => e.id != edgeId);
+      this.editableEdgeIndex = -1
+      this.editModel.edges = this.edges.filter(e => e.id !== edgeId)
     },
     removeModel(modelIndex) {
-      this.editableModels.models.splice(modelIndex, 1);
+      this.editableModels.models.splice(modelIndex, 1)
 
-      if (this.editableModels.models.length == 0) this.createModel();
-      else if (this.editableModelIndex == this.editableModels.models.length)
-        this.editableModelIndex--;
+      if (this.editableModels.models.length === 0) this.createModel()
+      else if (this.editableModelIndex === this.editableModels.models.length) { this.editableModelIndex-- }
     },
     createModel() {
       this.editableModels.models.push({
         edges: [],
         vertices: [],
-        name: "NewModel" + this.createdModelsCount,
-        generator: "random(edge_coverage(100) && vertex_coverage(100))"
-      });
+        name: 'NewModel' + this.createdModelsCount,
+        generator: 'random(edge_coverage(100) && vertex_coverage(100))'
+      })
 
-      this.createdModelsCount += 1;
-      this.editableModelIndex = this.editableModels.models.length - 1;
+      this.createdModelsCount += 1
+      this.editableModelIndex = this.editableModels.models.length - 1
     },
     createVertex() {
-      let id = 0;
-      while (this.allVerticesIds.includes("v" + id)) id++;
+      let id = 0
+      while (this.allVerticesIds.includes('v' + id)) id++
       var vertex = {
-        id: "v" + id,
-        name: "v" + id
-      };
-      this.vertices.push(vertex);
-      this.selectVertex(vertex.id);
+        id: 'v' + id,
+        name: 'v' + id
+      }
+      this.vertices.push(vertex)
+      this.selectVertex(vertex.id)
     },
 
     createEdge(sourceVertexId, targetVertexId) {
-      let id = 0;
-      while (this.allEdgesIds.includes("e" + id)) id++;
+      let id = 0
+      while (this.allEdgesIds.includes('e' + id)) id++
 
       var edge = {
-        id: "e" + id,
-        name: "e" + id,
+        id: 'e' + id,
+        name: 'e' + id,
         sourceVertexId: sourceVertexId,
         targetVertexId: targetVertexId
-      };
-      this.edges.push(edge);
-      this.selectEdge(edge.id);
+      }
+      this.edges.push(edge)
+      this.selectEdge(edge.id)
     },
     getEdge(edgeId) {
-      return this.edges.find(e => e.id == edgeId);
+      return this.edges.find(e => e.id === edgeId)
     },
     getVertex(vertexId) {
-      return this.vertices.find(e => e.id == vertexId);
+      return this.vertices.find(e => e.id === vertexId)
     },
 
     renderInteraction(graph) {
-      let self = this;
+      const self = this
 
-      let interaction = setupInteraction(this.svg, graph);
+      const interaction = setupInteraction(this.svg, graph)
 
       interaction.onUpdateEdge = (edgeid, sourceVertexId, targetVertexId) => {
-        let edge = self.getEdge(edgeid);
-        edge.sourceVertexId = sourceVertexId;
-        edge.targetVertexId = targetVertexId;
-        self.selectEdge(edgeid);
-      };
+        const edge = self.getEdge(edgeid)
+        edge.sourceVertexId = sourceVertexId
+        edge.targetVertexId = targetVertexId
+        self.selectEdge(edgeid)
+      }
       interaction.onCreateEdge = (sourceVertexId, targetVertexId) => {
-        self.createEdge(sourceVertexId, targetVertexId);
-      };
+        self.createEdge(sourceVertexId, targetVertexId)
+      }
       interaction.onSelectEdge = edgeId => {
-        self.selectEdge(edgeId);
-      };
+        self.selectEdge(edgeId)
+      }
       interaction.onSelectNode = vertexId => {
-        self.selectVertex(vertexId);
-      };
+        self.selectVertex(vertexId)
+      }
       interaction.onCreateNode = () => {
-        self.createVertex();
-      };
+        self.createVertex()
+      }
       interaction.onSelectModel = () => {
-        this.editableVertexIndex = -1;
-        this.editableEdgeIndex = -1;
-      };
+        this.editableVertexIndex = -1
+        this.editableEdgeIndex = -1
+      }
     },
 
     renderGraph(graph) {
-      let container = this.$refs.container;
-      let editor = d3.select(container).select("div.mv-editor");
-      let svg = d3.select(container).select("svg");
+      const container = this.$refs.container
+      const editor = d3.select(container).select('div.mv-editor')
+      const svg = d3.select(container).select('svg')
 
       // set width and height of svg relative to container and editor
-      const width = container.offsetWidth - editor.node().offsetWidth - 1;
-      const height = container.offsetHeight;
-      svg.attr("width", width).attr("height", height);
+      const width = container.offsetWidth - editor.node().offsetWidth - 1
+      const height = container.offsetHeight
+      svg.attr('width', width).attr('height', height)
 
       // set transition duration for visibility in the graph
       graph.graph().transition = function(selection) {
-        return selection.transition().duration(200);
-      };
+        return selection.transition().duration(200)
+      }
 
       // Create the renderer
-      var render = new dagreD3.render();
-      var inner = svg.select("g#graph");
+      var render = new dagreD3.render() // eslint-disable-line new-cap
+      var inner = svg.select('g#graph')
 
       // Run the renderer. This is what draws the final graph.
-      render(inner, graph);
+      render(inner, graph)
 
-      return svg;
+      return svg
     }
   }
-};
+}
 </script>

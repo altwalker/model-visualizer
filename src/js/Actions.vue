@@ -13,41 +13,41 @@
   </div>
 </template>
 <script>
-import { cloneDeep, tap, set } from "lodash";
+import { cloneDeep, tap } from 'lodash'
 export default {
   props: {
     value: Array
   },
   data: () => ({
-    newAction: "",
-    error: ""
+    newAction: '',
+    error: ''
   }),
   computed: {
     local() {
-      return this.value || [];
+      return this.value || []
     }
   },
   methods: {
     addAction() {
       if (this.validateAction(this.newAction)) {
         this.$emit(
-          "input",
+          'input',
           tap(cloneDeep(this.local), v => v.push(this.newAction))
-        );
-        this.newAction = "";
+        )
+        this.newAction = ''
       }
     },
     removeAction(index) {
-      this.$emit("input", tap(cloneDeep(this.local), v => v.splice(index, 1)));
+      this.$emit('input', tap(cloneDeep(this.local), v => v.splice(index, 1)))
     },
     validateAction(action) {
       if (!action) {
-        this.error = "Action should not be empty.";
-        return false;
+        this.error = 'Action should not be empty.'
+        return false
       }
-      this.error = "";
-      return true;
+      this.error = ''
+      return true
     }
   }
-};
+}
 </script>
