@@ -1,27 +1,26 @@
 describe('legend', () => {
-    let legendSelector = "#legend"
+  const legendSelector = '#legend'
 
-    beforeEach(async () => {
-        await page.goto(PATH, { waitUntil: 'load' })
-    })
+  beforeEach(async () => {
+    await page.goto(PATH, { waitUntil: 'load' })
+  })
 
-    test('legend displayed in edit mode', async () => {
-        const legendText = await page.$eval(legendSelector, l => l.innerText)
-        expect(legendText).toContain("Graph Legend")
-        expect(legendText).toContain("Start Vertex")
-        expect(legendText).toContain("Blocked Vertex")
-        expect(legendText).toContain("Fake Vertex")
-    })
+  test('legend displayed in edit mode', async () => {
+    const legendText = await page.$eval(legendSelector, l => l.innerText)
+    expect(legendText).toContain('Graph Legend')
+    expect(legendText).toContain('Start Vertex')
+    expect(legendText).toContain('Blocked Vertex')
+    expect(legendText).toContain('Fake Vertex')
+  })
 
-    test('legend displayed in view mode', async () => {
-        await page.waitForFunction(() => visualizer !== null)
-        await page.evaluate(() => visualizer.setEditMode(false))
+  test('legend displayed in view mode', async () => {
+    await page.waitForFunction(() => visualizer !== null)
+    await page.evaluate(() => visualizer.setEditMode(false))
 
-        const legendText = await page.$eval(legendSelector, l => l.innerText)
-        expect(legendText).toContain("Graph Legend")
-        expect(legendText).toContain("Start Vertex")
-        expect(legendText).toContain("Blocked Vertex")
-        expect(legendText).toContain("Fake Vertex")
-    })
-
+    const legendText = await page.$eval(legendSelector, l => l.innerText)
+    expect(legendText).toContain('Graph Legend')
+    expect(legendText).toContain('Start Vertex')
+    expect(legendText).toContain('Blocked Vertex')
+    expect(legendText).toContain('Fake Vertex')
+  })
 })

@@ -1,8 +1,8 @@
-import Vue from "vue";
-import { defaultModels, validateModels, ValidationError } from "./models";
-import Editor from "./Editor.vue";
-import Visualizer from "./Visualizer.vue";
-import "../css/style.css";
+import Vue from 'vue'
+import { defaultModels, validateModels, ValidationError } from './models'
+import Editor from './Editor.vue'
+import Visualizer from './Visualizer.vue'
+import '../css/style.css'
 
 /**
  * Visualizer and Visual Editor for AltWalker and GraphWalker JSON models.
@@ -34,29 +34,30 @@ class ModelVisualizer {
    */
   constructor(options) {
     if (!options) {
-      throw Error("options paramter is required");
+      throw Error('options paramter is required')
     }
-    let container = options.container;
+    let container = options.container
 
-    if (!container)
+    if (!container) {
       throw Error(
-        "options.container is not set. The container for rendering the model is required"
-      );
-
-    if (typeof container === "string" || container instanceof string) {
-      container = document.getElementById(container);
+        'options.container is not set. The container for rendering the model is required'
+      )
     }
 
-    this.onModelsChange = options.onModelsChange;
-    let visualizer = this;
+    if (typeof container === 'string' || container instanceof String) {
+      container = document.getElementById(container)
+    }
 
-    let data = {
+    this.onModelsChange = options.onModelsChange
+    const visualizer = this
+
+    const data = {
       models: options.models || defaultModels,
       editMode: options.editMode,
       legendContainer: options.legendContainer,
       graphLayoutOptions: options.graphLayoutOptions
-    };
-    ModelVisualizer.validate(data.models);
+    }
+    ModelVisualizer.validate(data.models)
     this.vm = new Vue({
       components: { Editor, Visualizer },
       data: data,
@@ -72,14 +73,14 @@ class ModelVisualizer {
         `,
       methods: {
         modelsChanged: function (models) {
-          data.models = models;
+          data.models = models
           if (visualizer.onModelsChange) {
-            visualizer.onModelsChange(models);
+            visualizer.onModelsChange(models)
           }
         }
       }
-    });
-    this.vm.$mount(container);
+    })
+    this.vm.$mount(container)
   }
 
   /**
@@ -90,7 +91,7 @@ class ModelVisualizer {
    * @throws {PlottingError} If the models are invalid and not plottaable.
    */
   static validate(models) {
-    validateModels(models);
+    validateModels(models)
   }
 
   /**
@@ -99,7 +100,7 @@ class ModelVisualizer {
   repaint() {
     this.vm.editMode
       ? this.vm.$refs.editor.paintGraph()
-      : this.vm.$refs.visualizer.paintGraph();
+      : this.vm.$refs.visualizer.paintGraph()
   }
 
   /**
@@ -110,17 +111,17 @@ class ModelVisualizer {
    */
   setModels(models) {
     try {
-      ModelVisualizer.validate(models);
-    }
-    catch (err) {
+      ModelVisualizer.validate(models)
+    } catch (err) {
       if (!(err instanceof ValidationError)) {
         throw err
       }
     }
-    this.vm.models = models;
+    this.vm.models = models
   }
+
   getModels() {
-    return JSON.parse(JSON.stringify(this.vm.models));
+    return JSON.parse(JSON.stringify(this.vm.models))
   }
 
   /**
@@ -129,7 +130,7 @@ class ModelVisualizer {
    * @param {Boolean} editMode - If set to true will switch to edit mode.
    */
   setEditMode(editMode) {
-    this.vm.editMode = editMode;
+    this.vm.editMode = editMode
   }
 
   /**
@@ -138,7 +139,7 @@ class ModelVisualizer {
    * @param {Function} onModelsChange - Called when the model changes. Called only if editMode is enabled. It's called with one paramter the new value of the models.
    */
   setOnModelsChange(callback) {
-    this.onModelsChange = callback;
+    this.onModelsChange = callback
   }
 
   /**
@@ -156,8 +157,8 @@ class ModelVisualizer {
    * @param {Object} graphLayoutOptions.ranker Type of algorithm to assigns a rank to each node in the input graph. Possible values: network-simplex, tight-tree or longest-path
    */
   setGraphLayoutOptions(graphLayoutOptions) {
-    this.vm.graphLayoutOptions = graphLayoutOptions;
+    this.vm.graphLayoutOptions = graphLayoutOptions
   }
 }
 
-export { ModelVisualizer as default };
+export { ModelVisualizer as default }

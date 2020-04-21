@@ -99,9 +99,9 @@
 </template>
 
 <script>
-import Actions from "./Actions.vue";
-import { cloneDeep, tap, set, unset } from "lodash";
-import { isNameValid, isWeightValid } from "./models";
+import Actions from './Actions.vue'
+import { cloneDeep, tap, set, unset } from 'lodash'
+import { isNameValid, isWeightValid } from './models'
 export default {
   components: { Actions },
   props: {
@@ -112,68 +112,68 @@ export default {
     }
   },
   data: () => ({
-    nameError: "",
-    dependencyError: "",
-    weightError: ""
+    nameError: '',
+    dependencyError: '',
+    weightError: ''
   }),
   computed: {
     local() {
-      return cloneDeep(this.value);
+      return cloneDeep(this.value)
     }
   },
   methods: {
     update(key, value) {
       if (!value && value !== 0) {
         this.$emit(
-          "input",
+          'input',
           tap(cloneDeep(this.local), v => unset(v, key, value))
-        );
+        )
       } else {
         this.$emit(
-          "input",
+          'input',
           tap(cloneDeep(this.local), v => set(v, key, value))
-        );
+        )
       }
     },
     updateActions(actions) {
       this.$emit(
-        "input",
+        'input',
         tap(cloneDeep(this.local), v => (v.actions = actions))
-      );
+      )
     },
     validateName(name) {
       if (!name) {
-        this.nameError = "* name is required";
-        return false;
+        this.nameError = '* name is required'
+        return false
       }
       if (!isNameValid(name)) {
-        this.nameError = "* name should be a valid identifier";
-        return false;
+        this.nameError = '* name should be a valid identifier'
+        return false
       }
 
-      this.nameError = "";
-      return true;
+      this.nameError = ''
+      return true
     },
     validateWeight(weight) {
       if (!isWeightValid(weight)) {
-        this.weightError = "* weight should be between 0 and 1";
-        return false;
+        this.weightError = '* weight should be between 0 and 1'
+        return false
       }
-      this.weightError = "";
-      return true;
+      this.weightError = ''
+      return true
     },
     validateDependency(dependency) {
       if (isNaN(dependency)) {
-        this.dependencyError = "* dependency must be a number";
-        return false;
+        this.dependencyError = '* dependency must be a number'
+        return false
       }
-      if (0 > dependency) {
-        this.dependencyError = "* dependency cannot be negative";
-        return false;
+      if (dependency < 0) {
+        this.dependencyError = '* dependency cannot be negative'
+        return false
       }
-      this.dependencyError = "";
-      return true;
+      this.dependencyError = ''
+      return true
     }
   }
-};
+}
 </script>

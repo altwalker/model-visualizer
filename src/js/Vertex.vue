@@ -60,35 +60,35 @@
 </template>
 
 <script>
-import { cloneDeep, tap, set } from "lodash";
-import { isNameValid } from "./models";
+import { cloneDeep, tap, set } from 'lodash'
+import { isNameValid } from './models'
 export default {
-  props: ["value"],
+  props: ['value'],
   data: () => ({
-    nameError: ""
+    nameError: ''
   }),
   computed: {
     local() {
-      return cloneDeep(this.value);
+      return cloneDeep(this.value)
     }
   },
   methods: {
     update(key, value) {
-      this.$emit("input", tap(cloneDeep(this.local), v => set(v, key, value)));
+      this.$emit('input', tap(cloneDeep(this.local), v => set(v, key, value)))
     },
     validateName(name) {
       if (!name) {
-        this.nameError = "* name is required";
-        return false;
+        this.nameError = '* name is required'
+        return false
       }
       if (!isNameValid(name)) {
-        this.nameError = "* name should be a valid identifier";
-        return false;
+        this.nameError = '* name should be a valid identifier'
+        return false
       }
 
-      this.nameError = "";
-      return true;
+      this.nameError = ''
+      return true
     }
   }
-};
+}
 </script>

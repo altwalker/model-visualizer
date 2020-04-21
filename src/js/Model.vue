@@ -46,9 +46,9 @@
 </template>
 
 <script>
-import { cloneDeep, tap } from "lodash";
-import Actions from "./Actions.vue";
-import { isNameValid } from "./models";
+import { cloneDeep, tap } from 'lodash'
+import Actions from './Actions.vue'
+import { isNameValid } from './models'
 export default {
   components: { Actions },
   props: {
@@ -57,49 +57,49 @@ export default {
     edges: { type: Array, required: true }
   },
   data: () => ({
-    nameError: "",
-    generatorError: ""
+    nameError: '',
+    generatorError: ''
   }),
   computed: {
     local() {
-      return cloneDeep(this.value);
+      return cloneDeep(this.value)
     },
     elementsIds: function() {
-      return [...this.vertices.map(v => v.id), ...this.edges.map(e => e.id)];
+      return [...this.vertices.map(v => v.id), ...this.edges.map(e => e.id)]
     }
   },
   methods: {
     update(key, value) {
-      this.$emit("input", { ...this.local, [key]: value });
+      this.$emit('input', { ...this.local, [key]: value })
     },
     updateActions(actions) {
       this.$emit(
-        "input",
+        'input',
         tap(cloneDeep(this.local), v => (v.actions = actions))
-      );
+      )
     },
     validateName(name) {
       if (!name) {
-        this.nameError = "* name is required";
-        return false;
+        this.nameError = '* name is required'
+        return false
       }
       if (!isNameValid(name)) {
-        this.nameError = "* name should be a valid identifier";
-        return false;
+        this.nameError = '* name should be a valid identifier'
+        return false
       }
 
-      this.nameError = "";
-      return true;
+      this.nameError = ''
+      return true
     },
     validateGenerator(generator) {
       if (!generator) {
-        this.generatorError = "* generator is required";
-        return false;
+        this.generatorError = '* generator is required'
+        return false
       }
 
-      this.generatorError = "";
-      return true;
+      this.generatorError = ''
+      return true
     }
   }
-};
+}
 </script>
