@@ -1,7 +1,9 @@
 import Vue from 'vue'
-import { defaultModels, validateModels, ValidationError } from './models'
+
 import Editor from './Editor.vue'
 import Visualizer from './Visualizer.vue'
+import { ValidationError } from './exceptions'
+import { defaultModels, validateModels } from './models'
 import '../css/style.css'
 
 /**

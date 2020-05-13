@@ -14,6 +14,7 @@
 </template>
 <script>
 import { cloneDeep, tap } from 'lodash'
+
 export default {
   props: {
     value: Array
@@ -37,14 +38,17 @@ export default {
         this.newAction = ''
       }
     },
+
     removeAction(index) {
       this.$emit('input', tap(cloneDeep(this.local), v => v.splice(index, 1)))
     },
+
     validateAction(action) {
       if (!action) {
         this.error = 'Action should not be empty.'
         return false
       }
+
       this.error = ''
       return true
     }
