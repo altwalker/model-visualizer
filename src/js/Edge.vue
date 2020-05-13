@@ -99,9 +99,11 @@
 </template>
 
 <script>
-import Actions from './Actions.vue'
 import { cloneDeep, tap, set, unset } from 'lodash'
-import { isNameValid, isWeightValid } from './models'
+
+import { isKeyword, isIdentifier, isWeightValid, isDependencyValid } from './models'
+import Actions from './Actions.vue'
+
 export default {
   components: { Actions },
   props: {
@@ -143,10 +145,16 @@ export default {
     },
     validateName(name) {
       if (!name) {
-        this.nameError = '* name is required'
+        this.nameError = ''
+        return true
+      }
+
+      if (isKeyword(name)) {
+        this.nameError = '* name should not be a reserved keyword'
         return false
       }
-      if (!isNameValid(name)) {
+
+      if (!isIdentifier(name)) {
         this.nameError = '* name should be a valid identifier'
         return false
       }
@@ -159,6 +167,7 @@ export default {
         this.weightError = '* weight should be between 0 and 1'
         return false
       }
+
       this.weightError = ''
       return true
     },
@@ -167,10 +176,12 @@ export default {
         this.dependencyError = '* dependency must be a number'
         return false
       }
-      if (dependency < 0) {
+
+      if (!isDependencyValid(dependency)) {
         this.dependencyError = '* dependency cannot be negative'
         return false
       }
+
       this.dependencyError = ''
       return true
     }

@@ -4,7 +4,8 @@ svg.mv-visualizer {
   font: 400 14px "Helvetica Neue", Helvetica;
 }
 
-svg.mv-visualizer text {
+svg.mv-visualizer text,
+svg.mv-visualizer .node {
   cursor: default;
 
   user-select: none;

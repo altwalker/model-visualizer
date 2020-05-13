@@ -47,8 +47,10 @@
 
 <script>
 import { cloneDeep, tap } from 'lodash'
+
+import { isKeyword, isIdentifier } from './models'
 import Actions from './Actions.vue'
-import { isNameValid } from './models'
+
 export default {
   components: { Actions },
   props: {
@@ -83,7 +85,13 @@ export default {
         this.nameError = '* name is required'
         return false
       }
-      if (!isNameValid(name)) {
+
+      if (isKeyword(name)) {
+        this.nameError = '* name should not be a reserved keyword'
+        return false
+      }
+
+      if (!isIdentifier(name)) {
         this.nameError = '* name should be a valid identifier'
         return false
       }
