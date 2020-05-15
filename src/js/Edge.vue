@@ -1,6 +1,7 @@
 <template>
   <div class="mv-edit-edge">
-    <h2>Edge</h2>
+    <h2>Edit Edge</h2>
+
     <div class="mv-edge-id">
       <label for="edgeId">Id</label>
       <input
@@ -12,6 +13,7 @@
         disabled
       />
     </div>
+
     <div class="mv-edge-name">
       <label for="name">Name</label>
       <input
@@ -24,6 +26,7 @@
       />
       <span v-if="nameError" class="error">{{nameError}}</span>
     </div>
+
     <div class="mv-edge-source-vertex">
       <label for="source">Source vertex</label>
       <select
@@ -41,8 +44,10 @@
         >{{vertex.id}} - {{vertex.name}}</option>
       </select>
     </div>
+
     <div class="mv-edge-target-vertex">
       <label for="target">Target vertex</label>
+
       <select
         :value="local.targetVertexId"
         @input="update('targetVertexId', $event.target.value)"
@@ -57,8 +62,10 @@
         >{{vertex.id}} - {{vertex.name}}</option>
       </select>
     </div>
+
     <div class="mv-edge-guard">
       <label for="guard">Guard</label>
+
       <input
         :value="local.guard"
         @input="update('guard', $event.target.value)"
@@ -66,6 +73,7 @@
         type="text"
       />
     </div>
+
     <div class="mv-edge-weight">
       <label for="weight">Weight</label>
       <input
@@ -77,8 +85,10 @@
         max="1"
         step="0.1"
       />
+
       <span v-if="weightError" class="error">{{weightError}}</span>
     </div>
+
     <div class="mv-edge-dependency">
       <label for="dependency">Dependency</label>
       <input
@@ -91,9 +101,12 @@
       <span v-if="dependencyError" class="error">{{dependencyError}}</span>
     </div>
 
-    <Actions :value="local.actions" @input="updateActions($event)" />
+    <div class="mv-edge-actions">
+      <Actions :value="local.actions" @input="updateActions($event)" />
+    </div>
+
     <div>
-      <button id="mv-btn-delete-edge" @click="$emit('delete')">Delete edge</button>
+      <button class="mv-button mv-button-delete-edge" @click="$emit('delete')">Delete Edge</button>
     </div>
   </div>
 </template>

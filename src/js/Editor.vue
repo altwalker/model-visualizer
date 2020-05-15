@@ -1,35 +1,51 @@
 <template>
   <div ref="container" class="mv mv-editmode">
     <div class="mv-editor">
-      <button id="mv-btn-new-model" @click="createModel">New model</button>
-      <label for="currentModel">Select model</label>
-      <select v-if="editableModels" v-model="editableModelIndex" id="currentModel">
-        <option
-          v-for="(model, i) in editableModels.models"
-          v-bind:key="i"
-          v-bind:value="i"
-        >{{model.name}}</option>
-      </select>
+      <div class="mv-edit-project">
+        <h2>Editor</h2>
+        <label for="currentModel">Select model</label>
+        <select v-if="editableModels" v-model="editableModelIndex" id="currentModel">
+          <option
+            v-for="(model, i) in editableModels.models"
+            v-bind:key="i"
+            v-bind:value="i"
+          >{{model.name}}</option>
+        </select>
+
+        <button class="mv-button mv-button-new-model" @click="createModel">New model</button>
+      </div>
 
       <Model
         v-if="editModelMeta && editableModelIndex >=0"
         v-model="editableModels.models[editableModelIndex]"
         :vertices="vertices"
         :edges="edges"
-        v-on:delete="removeModel(editableModelIndex)"
+        v-on:delete="showDeleteModelPopUp"
       />
+
       <Edge
         v-if="editableEdgeIndex >= 0"
         v-model="edges[editableEdgeIndex]"
         :vertices="vertices"
         v-on:delete="removeEdge(edges[editableEdgeIndex].id)"
       />
+
       <Vertex
         v-if="editableVertexIndex >=0 "
         v-model="vertices[editableVertexIndex]"
         v-on:delete="removeVertex(vertices[editableVertexIndex].id)"
       />
     </div>
+
+    <div class="mv-overlay" v-if="displayDeleteModelPopUp">
+      <div class="mv-pop-up">
+        <p>Are you sure you want to delete the model?</p>
+
+        <button class="mv-button mv-button-delete-model" @click="removeModel(editableModelIndex)">Delete Model</button>
+        <button class="mv-button mv-button-cancel" @click="hideDeleteModelPopUp">Cancel</button>
+      </div>
+    </div>
+
     <svg class="mv-visualizer">
       <g id="graph" />
       <g id="interaction">
@@ -72,6 +88,7 @@ export default {
   data: function() {
     return {
       svg: null,
+      displayDeleteModelPopUp: false,
       editableModels: null,
       editableEdgeIndex: -1,
       editableVertexIndex: -1,
@@ -219,6 +236,7 @@ export default {
         this.editableModels = this.undoredo.redo().current()
       }
     },
+
     paintGraph() {
       const models = [this.editableModels.models[this.editableModelIndex]]
       var { graph, legendDomain, legendRange } = createGraph(
@@ -233,6 +251,7 @@ export default {
         renderLegend(this.legendContainer, legendDomain, legendRange)
       }
     },
+
     personalizeGraph() {
       this.svg.selectAll('.node').classed('edit', false)
       // select vertex
@@ -254,16 +273,19 @@ export default {
           .classed('edit', true)
       }
     },
+
     selectVertex(id) {
       const vertex = this.getVertex(id)
       this.editableVertexIndex = this.vertices.indexOf(vertex)
       this.editableEdgeIndex = -1
     },
+
     selectEdge(id) {
       const edge = this.getEdge(id)
       this.editableEdgeIndex = this.edges.indexOf(edge)
       this.editableVertexIndex = -1
     },
+
     removeVertex(vertexId) {
       this.editableVertexIndex = -1
       this.editModel.edges = this.edges.filter(
@@ -271,16 +293,21 @@ export default {
       )
       this.editModel.vertices = this.vertices.filter(e => e.id !== vertexId)
     },
+
     removeEdge(edgeId) {
       this.editableEdgeIndex = -1
       this.editModel.edges = this.edges.filter(e => e.id !== edgeId)
     },
+
     removeModel(modelIndex) {
       this.editableModels.models.splice(modelIndex, 1)
 
       if (this.editableModels.models.length === 0) this.createModel()
       else if (this.editableModelIndex === this.editableModels.models.length) { this.editableModelIndex-- }
+
+      this.hideDeleteModelPopUp()
     },
+
     createModel() {
       this.editableModels.models.push({
         edges: [],
@@ -292,6 +319,7 @@ export default {
       this.createdModelsCount += 1
       this.editableModelIndex = this.editableModels.models.length - 1
     },
+
     createVertex() {
       let id = 0
       while (this.allVerticesIds.includes('v' + id)) id++
@@ -316,9 +344,11 @@ export default {
       this.edges.push(edge)
       this.selectEdge(edge.id)
     },
+
     getEdge(edgeId) {
       return this.edges.find(e => e.id === edgeId)
     },
+
     getVertex(vertexId) {
       return this.vertices.find(e => e.id === vertexId)
     },
@@ -375,6 +405,14 @@ export default {
       render(inner, graph)
 
       return svg
+    },
+
+    showDeleteModelPopUp() {
+      this.displayDeleteModelPopUp = true
+    },
+
+    hideDeleteModelPopUp() {
+      this.displayDeleteModelPopUp = false
     }
   }
 }

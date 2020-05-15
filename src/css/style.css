@@ -192,3 +192,26 @@ svg.mv-visualizer text::selection {
     background-color: #ecf0f1;
     color: #e74c3c;
 }
+
+/* PopUp */
+
+.mv-overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: rgba(1, 1, 1, 0.75);
+  position: absolute;
+
+  width: 100%;
+  height: 100%;
+
+  top: 0;
+  left: 0;
+}
+
+.mv-pop-up {
+  background-color: white;
+
+  padding: 1rem 2rem;
+}

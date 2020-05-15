@@ -3,6 +3,7 @@
     <svg class="mv-visualizer">
       <g id="graph" />
     </svg>
+
     <div class="mv-tooltip"></div>
   </div>
 </template>

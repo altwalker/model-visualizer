@@ -1,3 +1,5 @@
+/* global expect, test */
+
 import UndoRedo from '../src/js/undoredo'
 
 test('Initial state is set', () => {

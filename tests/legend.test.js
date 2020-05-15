@@ -1,3 +1,5 @@
+/* global PATH, visualizer, page, expect, describe, beforeEach, test */
+
 describe('legend', () => {
   const legendSelector = '#legend'
 
