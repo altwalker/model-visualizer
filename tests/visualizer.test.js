@@ -1,3 +1,5 @@
+/* global PATH, visualizer, page, expect, describe, beforeEach, test */
+
 describe('visualizer in viewmode', () => {
   const svgSelector = '.mv-viewmode svg.mv-visualizer'
   beforeEach(async () => {
@@ -39,7 +41,7 @@ describe('visualizer in viewmode', () => {
     const graphTransformAfter = await visualizerSvg.$eval('g#graph', g => g.getAttribute('transform'))
     expect(graphTransformBefore).toBeTruthy()
     expect(graphTransformAfter).toBeTruthy()
-    expect(graphTransformBefore == graphTransformAfter).toBeFalsy()
+    expect(graphTransformBefore === graphTransformAfter).toBeFalsy()
   })
 
   test('set graphLayoutOptions', async () => {

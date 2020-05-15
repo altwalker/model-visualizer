@@ -1,6 +1,7 @@
 <template>
   <div class="mv-edit-vertex">
-    <h2>Vertex</h2>
+    <h2>Edit Vertex</h2>
+
     <div class="mv-vertex-id">
       <label for="vertexId">Id</label>
       <input
@@ -12,6 +13,7 @@
         disabled
       />
     </div>
+
     <div class="mv-vertex-name">
       <label for="name">Name</label>
       <span v-if="nameError" class="error">{{nameError}}</span>
@@ -24,6 +26,7 @@
         :class="nameError&&'error'"
       />
     </div>
+
     <div class="mv-vertex-shared-state">
       <label for="sharedState">Shared state</label>
       <input
@@ -34,6 +37,7 @@
         type="text"
       />
     </div>
+
     <div class="mv-vertex-blocked">
       <label for="blocked">Blocked</label>
       <input
@@ -44,6 +48,7 @@
         type="checkbox"
       />
     </div>
+
     <div class="mv-vertex-color">
       <label for="color">Color</label>
       <input
@@ -53,8 +58,9 @@
         @input="update('properties.color', $event.target.value)"
       />
     </div>
+
     <div>
-      <button id="mv-btn-delete-vertex" @click="$emit('delete')">Delete</button>
+      <button class="mv-button mv-button-delete-vertex" @click="$emit('delete')">Delete Vertex</button>
     </div>
   </div>
 </template>

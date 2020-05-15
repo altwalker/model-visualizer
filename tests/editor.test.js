@@ -133,7 +133,7 @@ describe('visualizer in edit mode', () => {
 
     test('should add a new model', async () => {
       const editorContainer = await page.$(editorSelector)
-      const newModel = await editorContainer.$('button#mv-btn-new-model')
+      const newModel = await editorContainer.$('button.mv-button-new-model')
       await newModel.click()
 
       const modelSelect = await editorContainer.$('#currentModel')
@@ -143,8 +143,14 @@ describe('visualizer in edit mode', () => {
 
     test('should delete a model', async () => {
       const editorContainer = await page.$(editorSelector)
-      const deleteModel = await editorContainer.$('button#mv-btn-delete-model')
+      const deleteModel = await editorContainer.$('button.mv-button-delete-model')
       await deleteModel.click()
+
+      const popUpContainer = await page.$('.mv-editmode .mv-overlay .mv-pop-up')
+      expect(popUpContainer).toBeTruthy()
+
+      const popUpDeleteModel = await popUpContainer.$('button.mv-button-delete-model')
+      await popUpDeleteModel.click()
 
       const modelSelect = await editorContainer.$('#currentModel')
       const options = await modelSelect.$$eval('option', options => options.map(option => option.textContent))
@@ -164,7 +170,7 @@ describe('visualizer in edit mode', () => {
 
     test('should not add empty model action', async () => {
       const editor = await page.$(editorSelector)
-      const addAction = await editor.$('.mv-add-action')
+      const addAction = await editor.$('button.mv-button-add-action')
       await addAction.click()
 
       const models = await page.evaluate('visualizer.getModels()')
@@ -179,7 +185,7 @@ describe('visualizer in edit mode', () => {
       const actionInput = await editor.$('.mv-new-action input')
       await actionInput.type(action)
 
-      const addAction = await editor.$('.mv-add-action')
+      const addAction = await editor.$('button.mv-button-add-action')
       await addAction.click()
 
       const models = await page.evaluate('visualizer.getModels()')
@@ -395,7 +401,7 @@ describe('visualizer in edit mode', () => {
     test('should not add empty edge action', async () => {
       const edgeEditor = await selectEdge()
 
-      const addAction = await edgeEditor.$('.mv-add-action')
+      const addAction = await edgeEditor.$('button.mv-button-add-action')
       await addAction.click()
 
       const models = await page.evaluate('visualizer.getModels()')
@@ -409,7 +415,7 @@ describe('visualizer in edit mode', () => {
       const actionInput = await edgeEditor.$('.mv-new-action input')
       await actionInput.type('a=b')
 
-      const addAction = await edgeEditor.$('.mv-add-action')
+      const addAction = await edgeEditor.$('button.mv-button-add-action')
       await addAction.click()
 
       const models = await page.evaluate('visualizer.getModels()')

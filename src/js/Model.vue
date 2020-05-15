@@ -1,6 +1,7 @@
 <template>
   <div class="mv-edit-model">
-    <h2>Model</h2>
+    <h2>Edit Model</h2>
+
     <div class="mv-model-name">
       <label for="name">Name</label>
       <span v-if="nameError" class="error">{{nameError}}</span>
@@ -13,6 +14,7 @@
         :class="nameError&&'error'"
       />
     </div>
+
     <div class="mv-model-generator">
       <label for="generator">Generator</label>
       <span v-if="generatorError" class="error">{{generatorError}}</span>
@@ -25,6 +27,7 @@
         :class="generatorError&&'error'"
       />
     </div>
+
     <div class="mv-model-start-element">
       <label for="startElementId">Start element id</label>
       <select
@@ -38,9 +41,13 @@
         <option v-for="id in elementsIds" v-bind:key="id" :value="id">{{id}}</option>
       </select>
     </div>
-    <Actions :value="local.actions" @input="updateActions($event)" />
+
+    <div class="mv-model-actions">
+      <Actions :value="local.actions" @input="updateActions($event)" />
+    </div>
+
     <div>
-      <button id="mv-btn-delete-model" @click="$emit('delete')">Delete</button>
+      <button class="mv-button mv-button-delete-model" @click="$emit('delete')">Delete Model</button>
     </div>
   </div>
 </template>
