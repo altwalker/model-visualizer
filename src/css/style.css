@@ -1,7 +1,29 @@
+/* Colors */
+
+:root {
+    --vertex-color: #3182CE;
+    --selected-vertex-color: #434190;
+    --start-vertex-color: #38A169;
+    --blocked-vertex-color: #718096;
+    --fake-vertex-color: #4A5568;
+
+    --vertex-label-color: #F7FAFC;
+    --selected-vertex-label-color: #F7FAFC;
+
+    --edge-color: #A0AEC0;
+    --selected-edge-color: #2D3748;
+
+    --edge-label-color: #2D3748;
+    --selected-edge-label-color: #2D3748;
+
+    --tooltip-color: #2A4365;
+    --tootlip-text-color: #F7FAFC;
+}
+
 /* Graph SVG */
 
 svg.mv-visualizer {
-  font: 400 14px "Helvetica Neue", Helvetica;
+    font: 400 14px "Helvetica Neue", Helvetica;
 }
 
 svg.mv-visualizer text,
@@ -15,33 +37,28 @@ svg.mv-visualizer .node {
 }
 
 svg.mv-visualizer text::selection {
-  background: none;
+    background: none;
 }
 
 /* Visualizer Base */
 
 .mv-visualizer .node > rect {
-  fill: #b5d4e9;
-  stroke: #000;
+  fill: var(--vertex-color);
 }
 
 .mv-visualizer .node-label {
-  fill: #000;
+  fill: var(--vertex-label-color);
 
   font-size: 1.2em;
   font-weight: 400;
 }
 
 .mv-visualizer .node-start > rect {
-  fill: #1b9e77;
-}
-
-.mv-visualizer .node-fake {
-  fill: #ecf0f1;
+  fill: var(--start-vertex-color);
 }
 
 .mv-visualizer .node-fake > rect {
-  fill: #3498db;
+  fill: var(--fake-vertex-color);
 }
 
 .mv-visualizer .node-blocked {
@@ -49,17 +66,20 @@ svg.mv-visualizer text::selection {
 }
 
 .mv-visualizer .node-blocked > rect {
-  fill: #7f8c8d;
+  fill: var(--blocked-vertex-color) !important;
 }
 
 .mv-visualizer .edgeLabels {
-  font-size: 1.2em;
-  font-weight: 400;
+    fill: var(--edge-label-color);
+
+    font-size: 1.2em;
+    font-weight: 400;
 }
 
 .mv-visualizer .edgePath path {
-  stroke: #999;
-  fill: #999;
+  fill: var(--edge-color);
+  stroke: var(--edge-color);
+
   stroke-width: 2.5px;
 }
 
@@ -86,46 +106,55 @@ svg.mv-visualizer text::selection {
 
 .mv-editmode .mv-visualizer .node > rect:hover {
   stroke-width: 1.75;
-  fill: #17becf!important;
+  fill: var(--selected-vertex-color) !important;
+
   cursor: pointer;
 }
 
 .mv-editmode .mv-visualizer .node.edit rect {
-  stroke-width: 1.75;
-  fill: #17becf!important;
+    fill: var(--selected-vertex-color);
+
+    stroke-width: 1.75;
+}
+
+.mv-editmode .mv-visualizer .node-label.edit {
+    fill: var(--selected-vertex-label-color);
 }
 
 .mv-editmode .mv-visualizer .edgePath:hover path {
-  cursor: pointer;
-  fill: rgb(31, 43, 56);
-  stroke: rgb(31, 43, 56);
+    fill: var(--selected-edge-color);
+    stroke: var(--selected-edge-color);
+
+    cursor: pointer;
 }
 
 .mv-editmode .mv-visualizer .edgePath.edit path {
-  stroke: rgb(31, 43, 56);
-  fill: rgb(31, 43, 56);
-  font-weight: 600;
+    stroke: var(--selected-edge-color);
+    fill: var(--selected-edge-color);
+
+    font-weight: 600;
 }
 
 .mv-editmode .mv-visualizer .edgeLabels .label :hover {
-  cursor: pointer;
-  font-weight: 600;
-  fill: rgb(31, 43, 56);
+    fill: var(--selected-edge-label-color);
+
+    cursor: pointer;
+    font-weight: 600;
 }
 
 .mv-editmode .mv-visualizer .edgeLabels .label.edit {
-  fill: rgb(31, 43, 56);
-  font-weight: 600;
+    font-weight: 600;
 }
 
 .mv-editmode .mv-visualizer .dynamicPath {
-  fill: rgb(31, 43, 56);
-  stroke: rgb(31, 43, 56);
-  stroke-width: 3px;
+    stroke: var(--selected-edge-color);
+    fill: var(--selected-edge-color);
+
+    stroke-width: 3px;
 }
 
 .mv-editmode .mv-visualizer .dynamicPath.hidden {
-  stroke-width: 0;
+    stroke-width: 0;
 }
 
 /* Tooltips */
@@ -134,16 +163,16 @@ svg.mv-visualizer text::selection {
     position: fixed;
     text-align: left;
 
-    font-size: 1.2em;
+    font-size: 1rem;
     font-weight: 400;
 
     padding: 10px 12px;
 
-    background: #2c3e50;
-    color: #ecf0f1;
+    background: var(--tooltip-color);
+    color: var(--tootlip-text-color);
 
-    border: 0px;
-    border-radius: 3px;
+    border: 0;
+    border-radius: 1px;
 
     pointer-events: none;
 }

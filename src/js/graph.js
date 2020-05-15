@@ -1,8 +1,9 @@
 import dagreD3 from 'dagre-d3'
 
 let fakeNodesCount = 0
+
 const commonLegendDommain = ['Start Vertex', 'Blocked Vertex', 'Fake Vertex']
-const commonLegendRange = ['#1b9e77', '#7f8c8d', '#3498db']
+const commonLegendRange = ['var(--start-vertex-color)', 'var(--blocked-vertex-color)', 'var(--fake-vertex-color)']
 
 function createVertexLabel(vertex, startElementsIds) {
   const nodeLabelClass = 'node-label'
@@ -112,6 +113,7 @@ export function createGraph(models, graphOptions) {
 
   var sharedStatesNames = Object.keys(sharedStates)
   var colors = {}
+
   // Automatically label each of the nodes
   vertices.forEach(function (vertex) {
     graph.setNode(vertex.id, createVertexLabel(vertex, startElementsIds))
@@ -145,7 +147,7 @@ export function createGraph(models, graphOptions) {
     )
   graph.nodes().forEach(function (v) {
     var node = graph.node(v)
-    node.rx = node.ry = 5
+    node.rx = node.ry = 1
 
     sharedStatesNames.forEach(key => {
       if (sharedStates[key].includes(v)) {
@@ -154,9 +156,10 @@ export function createGraph(models, graphOptions) {
     })
     if (colors[v]) { node.style = 'fill: ' + colors[v] + '!important' }
   })
+
   return {
     graph: graph,
-    legendDomain: [...commonLegendDommain, ...sharedStatesNames],
+    legendDomain: [...commonLegendDommain, ...sharedStatesNames.map(name => `Shared State: ${name}`)],
     legendRange: [
       ...commonLegendRange,
       ...sharedStatesNames.map(name => color(name))
@@ -289,7 +292,10 @@ export function renderTooltips(svg, graph, tooltip) {
 export function renderLegend(legendContainer, legendDomain, legendRange) {
   const container = d3.select('#' + legendContainer)
   container.selectAll('svg').remove()
+
+  // set the height of the svg to 25px for each line + the title
   const svg = container.append('svg')
+    .style('height', `${25 * (legendDomain.length + 1)}px`)
 
   svg.append('g')
     .attr('class', 'legendQuant')
