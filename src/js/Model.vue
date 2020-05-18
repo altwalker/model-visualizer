@@ -31,7 +31,7 @@
     <div class="mv-model-start-element">
       <label for="startElementId">Start element id</label>
       <select
-        :value="local.startElementId"
+        v-model="local.startElementId"
         @input="update('startElementId', $event.target.value)"
         placeholder
         id="startElementId"
