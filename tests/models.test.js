@@ -122,16 +122,6 @@ describe('validateName', () => {
 })
 
 describe('validateVertex', () => {
-  test('should trow an error if the vertex has no id', () => {
-    const vertex = {
-      name: 'vertexName'
-    }
-    const f = () => validateVertex(vertex)
-
-    expect(f).toThrowError(new Error('Each vertex must have a unique id.'))
-    expect(f).toThrowError(PlottingError)
-  })
-
   test('should trow an error if the vertex has no name', () => {
     const vertex = {
       id: 'v1'
@@ -178,16 +168,6 @@ describe('validateEdge', () => {
     const f = () => validateEdge(edge)
 
     expect(f).not.toThrowError(ModelVisualizerError)
-  })
-
-  test('should trow an error if the edge has no id', () => {
-    const edge = {
-      name: 'edgeName'
-    }
-    const f = () => validateEdge(edge)
-
-    expect(f).toThrowError(new Error('Each edge must have a unique id.'))
-    expect(f).toThrowError(PlottingError)
   })
 
   test('should not throw an error if the edge has no name', () => {
@@ -479,7 +459,7 @@ describe('validateModels', () => {
     })
 
     expect(f).toThrowError(new Error('Edge \'e1\' has as sourceVertexId \'v1\' which does not exist in model \'ModelB\'.'))
-    expect(f).toThrowError(ValidationError)
+    expect(f).toThrowError(PlottingError)
   })
 
   test('should trow an error if a vertex from another model is referenced as targetVertexId', () => {
@@ -524,7 +504,7 @@ describe('validateModels', () => {
     })
 
     expect(f).toThrowError(new Error('Edge \'e1\' has as targetVertexId \'v1\' which does not exist in model \'ModelB\'.'))
-    expect(f).toThrowError(ValidationError)
+    expect(f).toThrowError(PlottingError)
   })
 
   test('should trow an error if the sourceVertexId is not valid', () => {
@@ -558,7 +538,7 @@ describe('validateModels', () => {
     })
 
     expect(f).toThrowError(new Error('Edge \'e1\' has as sourceVertexId \'v2\' which does not exist in model \'ModelA\'.'))
-    expect(f).toThrowError(ValidationError)
+    expect(f).toThrowError(PlottingError)
   })
 
   test('should trow an error if the targetVertexId is not valid', () => {
@@ -592,7 +572,37 @@ describe('validateModels', () => {
     })
 
     expect(f).toThrowError(new Error('Edge \'e1\' has as targetVertexId \'v2\' which does not exist in model \'ModelA\'.'))
-    expect(f).toThrowError(ValidationError)
+    expect(f).toThrowError(PlottingError)
+  })
+
+  test('should trow an error if a vertex has no id', () => {
+    const f = () => validateModels({
+      name: 'Test Models',
+      models: [
+        {
+          name: 'ModelA',
+          generator: 'random(never)',
+          startElementId: 'v1',
+          vertices: [
+            {
+              id: 'v1',
+              name: 'vertexA'
+            },
+            {
+              name: 'vertexB'
+            },
+            {
+              id: 'v2',
+              name: 'vertexC'
+            }
+          ],
+          edges: []
+        }
+      ]
+    })
+
+    expect(f).toThrowError(new Error('Each vertex must have a unique id.'))
+    expect(f).toThrowError(PlottingError)
   })
 
   test('should trow an error for duplicate vertex ids', () => {
@@ -623,6 +633,55 @@ describe('validateModels', () => {
     })
 
     expect(f).toThrowError(new Error('Duplicate id \'v1\'. Edges and vertices should have unique ids.'))
+    expect(f).toThrowError(PlottingError)
+  })
+
+  test('should trow an error if a edge has no id', () => {
+    const f = () => validateModels({
+      name: 'Test Models',
+      models: [
+        {
+          name: 'ModelA',
+          generator: 'random(never)',
+          startElementId: 'v1',
+          vertices: [
+            {
+              id: 'v1',
+              name: 'vertexA'
+            },
+            {
+              id: 'v2',
+              name: 'vertexB'
+            },
+            {
+              id: 'v3',
+              name: 'vertexC'
+            }
+          ],
+          edges: [
+            {
+              id: 'e1',
+              name: 'edgeA',
+              sourceVertexId: 'v1',
+              targetVertexId: 'v2'
+            },
+            {
+              name: 'edgeB',
+              sourceVertexId: 'v2',
+              targetVertexId: 'v3'
+            },
+            {
+              id: 'e2',
+              name: 'edgeB',
+              sourceVertexId: 'v3',
+              targetVertexId: 'v2'
+            }
+          ]
+        }
+      ]
+    })
+
+    expect(f).toThrowError(new Error('Each edge must have a unique id.'))
     expect(f).toThrowError(PlottingError)
   })
 

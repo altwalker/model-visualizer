@@ -150,10 +150,6 @@ export function validateName(name, elementType) {
 }
 
 export function validateVertex(vertex) {
-  if (!vertex.id) {
-    throw new PlottingError('Each vertex must have a unique id.')
-  }
-
   if (!vertex.name) {
     throw new ValidationError(`Vertex '${vertex.id}' does't have a name. Each vertex must have a name.`)
   }
@@ -166,10 +162,6 @@ export function validateVertex(vertex) {
 }
 
 export function validateEdge(edge) {
-  if (!edge.id) {
-    throw new PlottingError('Each edge must have a unique id.')
-  }
-
   if (edge.name) {
     validateName(edge.name, 'Edge')
   }
@@ -219,7 +211,7 @@ export function validateModels(json) {
   const models = json.models
 
   if (!models) {
-    throw new ValidationError('Models should not be empty.')
+    throw new PlottingError('Models should not be empty.')
   }
 
   var verticesIds = {}
@@ -228,45 +220,62 @@ export function validateModels(json) {
   var hasStartElement = false
   var modelNames = []
 
-  models.forEach(model => {
-    validateModel(model)
-    modelNames.push(model.name)
-
+  models.forEach((model) => {
     var modelVerticesIds = {}
-    var modelHasStartElement = false
-    var modelHasSharedState = false
 
-    model.vertices.forEach(vertex => {
-      validateVertex(vertex)
+    const vertices = model.vertices || []
+    vertices.forEach(vertex => {
+      if (!vertex.id) {
+        throw new PlottingError('Each vertex must have a unique id.')
+      }
 
       if (verticesIds[vertex.id] || edgesIds[vertex.id]) {
         throw new PlottingError(`Duplicate id '${vertex.id}'. Edges and vertices should have unique ids.`)
-      }
-
-      if (vertex.sharedState) {
-        modelHasSharedState = true
       }
 
       verticesIds[vertex.id] = true
       modelVerticesIds[vertex.id] = true
     })
 
-    model.edges.forEach(edge => {
-      validateEdge(edge)
+    const edges = model.edges || []
+    edges.forEach(edge => {
+      if (!edge.id) {
+        throw new PlottingError('Each edge must have a unique id.')
+      }
 
       if (edgesIds[edge.id] || verticesIds[edge.id]) {
         throw new PlottingError(`Duplicate id '${edge.id}'. Edges and vertices should have unique ids.`)
       }
 
       if (edge.sourceVertexId && !modelVerticesIds[edge.sourceVertexId]) {
-        throw new ValidationError(`Edge '${edge.id}' has as sourceVertexId '${edge.sourceVertexId}' which does not exist in model '${model.name}'.`)
+        throw new PlottingError(`Edge '${edge.id}' has as sourceVertexId '${edge.sourceVertexId}' which does not exist in model '${model.name}'.`)
       }
 
       if (!modelVerticesIds[edge.targetVertexId]) {
-        throw new ValidationError(`Edge '${edge.id}' has as targetVertexId '${edge.targetVertexId}' which does not exist in model '${model.name}'.`)
+        throw new PlottingError(`Edge '${edge.id}' has as targetVertexId '${edge.targetVertexId}' which does not exist in model '${model.name}'.`)
       }
 
       edgesIds[edge.id] = true
+    })
+  })
+
+  models.forEach(model => {
+    validateModel(model)
+    modelNames.push(model.name)
+
+    var modelHasStartElement = false
+    var modelHasSharedState = false
+
+    model.vertices.forEach(vertex => {
+      validateVertex(vertex)
+
+      if (vertex.sharedState) {
+        modelHasSharedState = true
+      }
+    })
+
+    model.edges.forEach(edge => {
+      validateEdge(edge)
     })
 
     if (model.startElementId && !(verticesIds[model.startElementId] || edgesIds[model.startElementId])) {
