@@ -1,4 +1,5 @@
-sphinx
+sphinx==2.4.4
 sphinx-js
 sphinx-rtd-theme
 recommonmark
+
