@@ -1,16 +1,22 @@
+import { cloneDeep } from 'lodash'
+
 export default class UndoRedo {
   constructor(initialState) {
-    this.states = [JSON.parse(JSON.stringify(initialState))]
+    this.states = [cloneDeep(initialState)]
     this.currentStateIndex = 0
   }
 
   push(state) {
-    state = JSON.parse(JSON.stringify(state))
+    state = cloneDeep(state)
 
-    if (JSON.stringify(this.current()) === JSON.stringify(state)) return this
+    if (JSON.stringify(this.current()) === JSON.stringify(state)) {
+      return this
+    }
+
     this.states = this.states.slice(0, this.currentStateIndex + 1)
     this.states.push(state)
     this.currentStateIndex++
+
     return this
   }
 
@@ -29,6 +35,6 @@ export default class UndoRedo {
   }
 
   current() {
-    return JSON.parse(JSON.stringify(this.states[this.currentStateIndex]))
+    return cloneDeep(this.states[this.currentStateIndex])
   }
 }

@@ -11,6 +11,7 @@ function createDynamicPath(gInteraction, graph, svg) {
     startNodeId: null,
     endNodeId: null,
     edgeId: null,
+
     getSvgLocation(x, y) {
       var pt = svg.node().createSVGPoint()
 
