@@ -85,6 +85,7 @@ export default {
   name: 'Editor',
   components: { Edge, Vertex, Model },
   undoredo: null,
+
   data: function() {
     return {
       svg: null,
@@ -97,17 +98,21 @@ export default {
       preventModelsChangedOnce: true
     }
   },
+
   props: {
     models: { type: Object, required: true },
     legendContainer: { type: String },
     graphLayoutOptions: { type: Object }
   },
+
   created: function() {
-    window.addEventListener('keyup', this.onkeyup)
+    window.addEventListener('keydown', this.keyPressHandler, false)
   },
+
   destroyed: function() {
     window.removeEventListener('keyup', this.onkeyup)
   },
+
   mounted: function() {
     this.editableModels = JSON.parse(JSON.stringify(this.models))
 
@@ -164,6 +169,7 @@ export default {
       return this.editableVertexIndex < 0 && this.editableEdgeIndex < 0
     }
   },
+
   watch: {
     models: {
       handler: function() {
@@ -216,25 +222,55 @@ export default {
       this.personalizeGraph()
     }
   },
-  methods: {
-    onkeyup(e) {
-      if (e.target.tagName.toUpperCase() === 'INPUT') return
 
-      if (e.keyCode === 46 || e.keyCode === 8) {
+  methods: {
+    keyPressHandler(event) {
+      const tagName = event.target.tagName.toUpperCase()
+
+      if (tagName === 'INPUT' || tagName === 'SELECT' || tagName === 'TEXTAREA') {
+        return
+      }
+
+      const deleteKey = 46
+      const backspaceKey = 8
+
+      const zKey = 90
+      const yKey = 89
+
+      const shiftKey = event.shiftKey
+      const metaKey = event.metaKey || event.ctrlKey
+      const keyCode = event.keyCode || event.which
+
+      if (keyCode === deleteKey || keyCode === backspaceKey) {
+        event.preventDefault()
+
         if (this.editableEdgeIndex >= 0) { this.removeEdge(this.edges[this.editableEdgeIndex].id) }
         if (this.editableVertexIndex >= 0) { this.removeVertex(this.vertices[this.editableVertexIndex].id) }
+
+        return
       }
 
-      if ((e.ctrlKey || e.metaKey) && (e.keyCode === 90 || e.which === 90)) {
-        this.editableEdgeIndex = -1
-        this.editableVertexIndex = -1
-        this.editableModels = this.undoredo.undo().current()
+      if (shiftKey && metaKey && keyCode === yKey) {
+        this.undo()
+      } else if (shiftKey && metaKey && keyCode === zKey) {
+        this.redo()
+      } else if (metaKey && keyCode === zKey) {
+        this.undo()
+      } else if (metaKey && keyCode === yKey) {
+        this.redo()
       }
-      if ((e.ctrlKey || e.metaKey) && (e.keyCode === 89 || e.which === 89)) {
-        this.editableEdgeIndex = -1
-        this.editableVertexIndex = -1
-        this.editableModels = this.undoredo.redo().current()
-      }
+    },
+
+    undo() {
+      this.editableEdgeIndex = -1
+      this.editableVertexIndex = -1
+      this.editableModels = this.undoredo.undo().current()
+    },
+
+    redo() {
+      this.editableEdgeIndex = -1
+      this.editableVertexIndex = -1
+      this.editableModels = this.undoredo.redo().current()
     },
 
     paintGraph() {

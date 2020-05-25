@@ -1,52 +1,126 @@
-/* global expect, test */
+/* global expect, describe, test */
 
 import UndoRedo from '../src/js/undoredo'
 
-test('Initial state is set', () => {
-  var state = new UndoRedo('initial_state')
-  expect(state.current()).toBe('initial_state')
-})
+describe('UndoRedo', () => {
+  test('it should set the initial state', () => {
+    var state = new UndoRedo('Initial State')
 
-test('UndoRedo', () => {
-  var state = new UndoRedo('state0')
-  state.push('state1')
-  state.push('state2')
-  state.push('state3')
-  expect(state.current()).toBe('state3')
-  state.undo()
-  expect(state.current()).toBe('state2')
-  state.undo()
-  expect(state.current()).toBe('state1')
-  state.undo()
-  expect(state.current()).toBe('state0')
-  state.undo()
-  expect(state.current()).toBe('state0')
-  state.redo()
-  expect(state.current()).toBe('state1')
-  state.redo()
-  expect(state.current()).toBe('state2')
-  state.redo()
-  expect(state.current()).toBe('state3')
-  state.redo()
-  expect(state.current()).toBe('state3')
-})
+    expect(state.current()).toBe('Initial State')
+  })
 
-test('redo after push does nothing', () => {
-  var state = new UndoRedo('state0')
-  state.push('state1')
-  state.push('state2')
-  state.push('state3')
-  state.undo()
-  state.undo()
-  expect(state.current()).toBe('state1')
-  state.redo()
-  expect(state.current()).toBe('state2')
+  test('it should return the currnt state', () => {
+    var state = new UndoRedo('Initial State')
+    expect(state.current()).toBe('Initial State')
 
-  state.push('new state')
-  expect(state.current()).toBe('new state')
-  state.redo()
-  expect(state.current()).toBe('new state')
+    state.push('State 1')
+    expect(state.current()).toBe('State 1')
 
-  state.undo()
-  expect(state.current()).toBe('state2')
+    state.push('State 2')
+    expect(state.current()).toBe('State 2')
+
+    state.push('State 3')
+    expect(state.current()).toBe('State 3')
+  })
+
+  test('it should undo the last change', () => {
+    var state = new UndoRedo('Initial State')
+    state.push('State 1')
+    state.push('State 2')
+    state.push('State 3')
+
+    expect(state.current()).toBe('State 3')
+
+    state.undo()
+    expect(state.current()).toBe('State 2')
+
+    state.undo()
+    expect(state.current()).toBe('State 1')
+
+    state.undo()
+    expect(state.current()).toBe('Initial State')
+  })
+
+  test('it should not undo if there are no more change', () => {
+    var state = new UndoRedo('Initial State')
+    state.push('State 1')
+    state.push('State 2')
+
+    expect(state.current()).toBe('State 2')
+
+    state.undo()
+    expect(state.current()).toBe('State 1')
+
+    state.undo()
+    expect(state.current()).toBe('Initial State')
+
+    state.undo()
+    expect(state.current()).toBe('Initial State')
+  })
+
+  test('it should redo the changes', () => {
+    var state = new UndoRedo('Initial State')
+    state.push('State 1')
+    state.push('State 2')
+    state.push('State 3')
+
+    expect(state.current()).toBe('State 3')
+
+    state.undo()
+    expect(state.current()).toBe('State 2')
+
+    state.undo()
+    expect(state.current()).toBe('State 1')
+
+    state.undo()
+    expect(state.current()).toBe('Initial State')
+
+    state.redo()
+    expect(state.current()).toBe('State 1')
+
+    state.redo()
+    expect(state.current()).toBe('State 2')
+
+    state.redo()
+    expect(state.current()).toBe('State 3')
+  })
+
+  test('it should not redo if there are no more change', () => {
+    var state = new UndoRedo('Initial State')
+    state.push('State 1')
+    state.push('State 2')
+
+    expect(state.current()).toBe('State 2')
+
+    state.undo()
+    expect(state.current()).toBe('State 1')
+
+    state.undo()
+    expect(state.current()).toBe('Initial State')
+
+    state.redo()
+    expect(state.current()).toBe('State 1')
+
+    state.redo()
+    expect(state.current()).toBe('State 2')
+
+    state.redo()
+    expect(state.current()).toBe('State 2')
+  })
+
+  test('it should not redo after push', () => {
+    var state = new UndoRedo('Initial State')
+    state.push('State 1a')
+
+    expect(state.current()).toBe('State 1a')
+
+    state.undo()
+    expect(state.current()).toBe('Initial State')
+
+    state.push('State 1b')
+    expect(state.current()).toBe('State 1b')
+
+    state.redo()
+    expect(state.current()).toBe('State 1b')
+  })
 })
