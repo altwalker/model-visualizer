@@ -18,6 +18,7 @@
       <Model
         v-if="editModelMeta && editableModelIndex >=0"
         v-model="editableModels.models[editableModelIndex]"
+        :modelNames="allModelNames"
         :vertices="vertices"
         :edges="edges"
         v-on:delete="showDeleteModelPopUp"
