@@ -260,6 +260,28 @@ describe('visualizer in edit mode', () => {
       expect(hasErrorClass).toBeTruthy()
     })
 
+    test('model names should be unique', async () => {
+      const editor = await page.$(editorSelector)
+
+      const modelnameInput = await editor.$('input#name')
+      await modelnameInput.click({ clickCount: 3 })
+      await page.keyboard.press('Backspace')
+      await modelnameInput.type('SecondModel')
+
+      const errorValue = await page.$eval(`${editorSelector} span.error`, element => element.textContent)
+      expect(errorValue).toBe('* model names should be unique')
+
+      let hasErrorClass = await page.evaluate(modelName => modelName.classList.contains('error'), modelnameInput)
+      expect(hasErrorClass).toBeTruthy()
+
+      await modelnameInput.click({ clickCount: 3 })
+      await page.keyboard.press('Backspace')
+      await modelnameInput.type('FirstModel')
+
+      hasErrorClass = await page.evaluate(modelName => modelName.classList.contains('error'), modelnameInput)
+      expect(hasErrorClass).toBeFalsy()
+    })
+
     test('generator should be required', async () => {
       const editor = await page.$(editorSelector)
 

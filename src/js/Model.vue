@@ -62,6 +62,7 @@ export default {
   components: { Actions },
   props: {
     value: Object,
+    modelNames: { type: Array, required: true },
     vertices: { type: Array, required: true },
     edges: { type: Array, required: true }
   },
@@ -81,12 +82,14 @@ export default {
     update(key, value) {
       this.$emit('input', { ...this.local, [key]: value })
     },
+
     updateActions(actions) {
       this.$emit(
         'input',
         tap(cloneDeep(this.local), v => (v.actions = actions))
       )
     },
+
     validateName(name) {
       if (!name) {
         this.nameError = '* name is required'
@@ -103,9 +106,15 @@ export default {
         return false
       }
 
+      if (this.value.name !== name && this.modelNames.includes(name)) {
+        this.nameError = '* model names should be unique'
+        return false
+      }
+
       this.nameError = ''
       return true
     },
+
     validateGenerator(generator) {
       if (!generator) {
         this.generatorError = '* generator is required'
