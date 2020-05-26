@@ -94,7 +94,6 @@ export default {
       editableEdgeIndex: -1,
       editableVertexIndex: -1,
       editableModelIndex: -1,
-      createdModelsCount: 0,
       preventModelsChangedOnce: true
     }
   },
@@ -123,14 +122,35 @@ export default {
   },
 
   computed: {
-    editModel() {
-      if (this.editableModelIndex >= 0) {
-        return this.editableModels.models[this.editableModelIndex]
-      }
-      return null
-    },
     /**
-     *  Returns edges of model being edited
+     * Returns the names of all models.
+     */
+    allModelNames() {
+      return this.editableModels.models.map((model) => model.name)
+    },
+
+    /**
+     *  Returns the ids of edges from all models.
+     */
+    allEdgesIds() {
+      return this.editableModels.models.reduce((acc, model) => {
+        acc.push(...model.edges.map(v => v.id))
+        return acc
+      }, [])
+    },
+
+    /**
+     *  Returns the ids of vertices from all models.
+     */
+    allVerticesIds() {
+      return this.editableModels.models.reduce((acc, model) => {
+        acc.push(...model.vertices.map(v => v.id))
+        return acc
+      }, [])
+    },
+
+    /**
+     *  Returns edges of model being edited.
      */
     edges() {
       if (this.editModel) {
@@ -138,6 +158,7 @@ export default {
       }
       return null
     },
+
     /**
      *  Returns vertices of model being edited
      */
@@ -147,24 +168,14 @@ export default {
       }
       return null
     },
-    /**
-     *  Returns ids of edges from all models
-     */
-    allEdgesIds() {
-      return this.editableModels.models.reduce((acc, model) => {
-        acc.push(...model.edges.map(v => v.id))
-        return acc
-      }, [])
+
+    editModel() {
+      if (this.editableModelIndex >= 0) {
+        return this.editableModels.models[this.editableModelIndex]
+      }
+      return null
     },
-    /**
-     *  Returns ids of vertices from all models
-     */
-    allVerticesIds() {
-      return this.editableModels.models.reduce((acc, model) => {
-        acc.push(...model.vertices.map(v => v.id))
-        return acc
-      }, [])
-    },
+
     editModelMeta() {
       return this.editableVertexIndex < 0 && this.editableEdgeIndex < 0
     }
@@ -345,23 +356,40 @@ export default {
     },
 
     createModel() {
-      this.editableModels.models.push({
-        edges: [],
-        vertices: [],
-        name: 'NewModel' + this.createdModelsCount,
-        generator: 'random(edge_coverage(100) && vertex_coverage(100))'
-      })
+      let index = 0
+      while (this.allModelNames.includes(`NewModel${index}`)) {
+        index += 1
+      }
 
-      this.createdModelsCount += 1
+      let vertexId = 0
+      while (this.allVerticesIds.includes(`v${vertexId}`)) {
+        vertexId += 1
+      }
+
+      this.editableModels.models.push({
+        name: `NewModel${index}`,
+        generator: 'random(edge_coverage(100) && vertex_coverage(100))',
+        startElementId: `v${vertexId}`,
+        vertices: [
+          {
+            id: `v${vertexId}`,
+            name: `v${vertexId}`
+          }
+        ],
+        edges: []
+      })
       this.editableModelIndex = this.editableModels.models.length - 1
     },
 
     createVertex() {
       let id = 0
-      while (this.allVerticesIds.includes('v' + id)) id++
-      var vertex = {
-        id: 'v' + id,
-        name: 'v' + id
+      while (this.allVerticesIds.includes(`v${id}`)) {
+        id += 1
+      }
+
+      const vertex = {
+        id: `v${id}`,
+        name: `v${id}`
       }
       this.vertices.push(vertex)
       this.selectVertex(vertex.id)
@@ -369,11 +397,13 @@ export default {
 
     createEdge(sourceVertexId, targetVertexId) {
       let id = 0
-      while (this.allEdgesIds.includes('e' + id)) id++
+      while (this.allEdgesIds.includes(`e${id}`)) {
+        id += 1
+      }
 
-      var edge = {
-        id: 'e' + id,
-        name: 'e' + id,
+      const edge = {
+        id: `e${id}`,
+        name: `e${id}`,
         sourceVertexId: sourceVertexId,
         targetVertexId: targetVertexId
       }
@@ -382,11 +412,11 @@ export default {
     },
 
     getEdge(edgeId) {
-      return this.edges.find(e => e.id === edgeId)
+      return this.edges.find(edge => edge.id === edgeId)
     },
 
     getVertex(vertexId) {
-      return this.vertices.find(e => e.id === vertexId)
+      return this.vertices.find(vertex => vertex.id === vertexId)
     },
 
     renderInteraction(graph) {
