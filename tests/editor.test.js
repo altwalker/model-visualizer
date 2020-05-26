@@ -141,6 +141,31 @@ describe('visualizer in edit mode', () => {
       expect(options).toEqual(['FirstModel', 'SecondModel', 'NewModel0'])
     })
 
+    test('should always create models with valid names', async () => {
+      const editorContainer = await page.$(editorSelector)
+      const newModel = await editorContainer.$('button.mv-button-new-model')
+      await newModel.click()
+
+      const modelSelect = await editorContainer.$('#currentModel')
+      let options = await modelSelect.$$eval('option', options => options.map(option => option.textContent))
+      expect(options).toEqual(['FirstModel', 'SecondModel', 'NewModel0'])
+
+      await newModel.click()
+
+      options = await modelSelect.$$eval('option', options => options.map(option => option.textContent))
+      expect(options).toEqual(['FirstModel', 'SecondModel', 'NewModel0', 'NewModel1'])
+    })
+
+    test('should add model with an start element', async () => {
+      const editorContainer = await page.$(editorSelector)
+      const newModel = await editorContainer.$('button.mv-button-new-model')
+      await newModel.click()
+
+      const models = await page.evaluate('visualizer.getModels()')
+      const model = models.models[models.models.length - 1]
+      expect(model.startElementId).toEqual(model.vertices[0].id)
+    })
+
     test('should delete a model', async () => {
       const editorContainer = await page.$(editorSelector)
       const deleteModel = await editorContainer.$('button.mv-button-delete-model')
