@@ -29,7 +29,7 @@
     </div>
 
     <div class="mv-model-start-element">
-      <label for="startElementId">Start element id</label>
+      <label for="startElementId">Start element</label>
       <select
         v-model="local.startElementId"
         @input="update('startElementId', $event.target.value)"
@@ -38,7 +38,7 @@
         type="text"
       >
         <option></option>
-        <option v-for="id in elementsIds" v-bind:key="id" :value="id">{{id}}</option>
+        <option v-for="element in elements" v-bind:key="element.id" :value="element.id">{{element.id}} - {{element.name}}</option>
       </select>
     </div>
 
@@ -74,8 +74,8 @@ export default {
     local() {
       return cloneDeep(this.value)
     },
-    elementsIds: function() {
-      return [...this.vertices.map(v => v.id), ...this.edges.map(e => e.id)]
+    elements: function() {
+      return [...this.vertices, ...this.edges]
     }
   },
   methods: {
