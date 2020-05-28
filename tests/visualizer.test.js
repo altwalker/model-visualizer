@@ -15,9 +15,9 @@ describe('visualizer in viewmode', () => {
 
   test('tooltip displayed on hover', async () => {
     const visualizerSvg = await page.$(svgSelector)
-    const v0 = await visualizerSvg.$('#v0')
+    const v2 = await visualizerSvg.$('#v2')
     expect(await page.$eval('.mv-viewmode .mv-tooltip', t => t.style.display)).toBe('none')
-    await v0.hover()
+    await v2.hover()
     await page.waitForSelector('.mv-viewmode .mv-tooltip', { visible: true })
     expect(await page.$eval('.mv-viewmode .mv-tooltip', t => t.style.display)).toBe('block')
   })

@@ -66,6 +66,7 @@ export default {
     vertices: { type: Array, required: true },
     edges: { type: Array, required: true }
   },
+
   data: () => ({
     nameError: '',
     generatorError: ''

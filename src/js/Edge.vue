@@ -21,6 +21,7 @@
         @input="validateName($event.target.value) && update('name', $event.target.value)"
         placeholder="Name"
         id="name"
+        ref="name"
         type="text"
         :class="nameError&&'error'"
       />
@@ -124,7 +125,8 @@ export default {
     vertices: {
       type: Array,
       required: true
-    }
+    },
+    newEdge: Boolean
   },
   data: () => ({
     nameError: '',
@@ -136,7 +138,17 @@ export default {
       return cloneDeep(this.value)
     }
   },
+  mounted() {
+    if (this.newEdge) this.focusNameInput()
+  },
+  updated() {
+    if (this.newEdge) this.focusNameInput()
+  },
   methods: {
+    focusNameInput() {
+      const inputName = this.$refs.name
+      setTimeout(function() { inputName.focus() }, 20)
+    },
     update(key, value) {
       if (!value && value !== 0) {
         this.$emit(

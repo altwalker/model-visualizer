@@ -22,6 +22,7 @@
         @input="validateName($event.target.value) && update('name', $event.target.value)"
         placeholder="Name"
         id="name"
+        ref="name"
         type="text"
         :class="nameError&&'error'"
       />
@@ -70,10 +71,16 @@ import { cloneDeep, tap, set } from 'lodash'
 import { isKeyword, isIdentifier } from './models'
 
 export default {
-  props: ['value'],
+  props: ['value', 'newVertex'],
   data: () => ({
     nameError: ''
   }),
+  mounted() {
+    if (this.newVertex) {
+      const inputName = this.$refs.name
+      setTimeout(function() { inputName.focus() }, 20)
+    }
+  },
   computed: {
     local() {
       return cloneDeep(this.value)
