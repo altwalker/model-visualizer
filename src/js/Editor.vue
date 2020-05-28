@@ -28,12 +28,14 @@
         v-if="editableEdgeIndex >= 0"
         v-model="edges[editableEdgeIndex]"
         :vertices="vertices"
+        :newEdge="newEdge"
         v-on:delete="removeEdge(edges[editableEdgeIndex].id)"
       />
 
       <Vertex
         v-if="editableVertexIndex >=0 "
         v-model="vertices[editableVertexIndex]"
+        :newVertex="newVertex"
         v-on:delete="removeVertex(vertices[editableVertexIndex].id)"
       />
     </div>
@@ -95,6 +97,8 @@ export default {
       editableEdgeIndex: -1,
       editableVertexIndex: -1,
       editableModelIndex: -1,
+      newEdge: false,
+      newVertex: false,
       preventModelsChangedOnce: true
     }
   },
@@ -110,7 +114,7 @@ export default {
   },
 
   destroyed: function() {
-    window.removeEventListener('keyup', this.onkeyup)
+    window.removeEventListener('keydown', this.keyPressHandler)
   },
 
   mounted: function() {
@@ -263,26 +267,34 @@ export default {
       }
 
       if (shiftKey && metaKey && keyCode === yKey) {
+        event.preventDefault()
         this.undo()
       } else if (shiftKey && metaKey && keyCode === zKey) {
+        event.preventDefault()
         this.redo()
       } else if (metaKey && keyCode === zKey) {
+        event.preventDefault()
         this.undo()
       } else if (metaKey && keyCode === yKey) {
+        event.preventDefault()
         this.redo()
       }
     },
 
     undo() {
-      this.editableEdgeIndex = -1
-      this.editableVertexIndex = -1
+      const edgesLength = this.edges.length
+      const verticesLength = this.vertices.length
       this.editableModels = this.undoredo.undo().current()
+      if (this.edges.length !== edgesLength) { this.editableEdgeIndex = -1 }
+      if (this.vertices.length !== verticesLength) { this.editableVertexIndex = -1 }
     },
 
     redo() {
-      this.editableEdgeIndex = -1
-      this.editableVertexIndex = -1
+      const edgesLength = this.edges.length
+      const verticesLength = this.vertices.length
       this.editableModels = this.undoredo.redo().current()
+      if (this.edges.length !== edgesLength) { this.editableEdgeIndex = -1 }
+      if (this.vertices.length !== verticesLength) { this.editableVertexIndex = -1 }
     },
 
     paintGraph() {
@@ -326,12 +338,14 @@ export default {
       const vertex = this.getVertex(id)
       this.editableVertexIndex = this.vertices.indexOf(vertex)
       this.editableEdgeIndex = -1
+      this.newVertex = false
     },
 
     selectEdge(id) {
       const edge = this.getEdge(id)
       this.editableEdgeIndex = this.edges.indexOf(edge)
       this.editableVertexIndex = -1
+      this.newEdge = false
     },
 
     removeVertex(vertexId) {
@@ -394,6 +408,7 @@ export default {
       }
       this.vertices.push(vertex)
       this.selectVertex(vertex.id)
+      this.newVertex = true
     },
 
     createEdge(sourceVertexId, targetVertexId) {
@@ -410,6 +425,7 @@ export default {
       }
       this.edges.push(edge)
       this.selectEdge(edge.id)
+      this.newEdge = true
     },
 
     getEdge(edgeId) {
