@@ -34,12 +34,6 @@
       padding: 0;
     }
 
-    #toggle-button {
-      position: fixed;
-      top: 10px;
-      left: 10px;
-    }
-
     #legend {
       position: fixed;
       left: 10px;
@@ -54,8 +48,6 @@
   </style>
 </head>
 <body>
-  <button id="toggle-button" onclick="toggleEditMode()">Toggle Edit Mode</button>
-
   <div id="legend"></div>
   <div id="visualizer"></div>
 
@@ -71,17 +63,9 @@
   <script src="model-visualizer.js"></script>
 
   <script>
-    let visualizer = null;
-    let editMode = true;
-
     window.onload = function () {
-      visualizer = new ModelVisualizer({ container: "visualizer", editMode: editMode, legendContainer: "legend" });
+      visualizer = new ModelVisualizer({ container: "visualizer", editMode: true, legendContainer: "legend" });
     };
-
-    function toggleEditMode() {
-      editMode = !editMode;
-      visualizer.setEditMode(editMode);
-    }
   </script>
 </body>
 </html>

@@ -1,8 +1,11 @@
-/* global PATH, visualizer, page, expect, describe, beforeEach, test */
+/* global PATH, jest, visualizer, page, expect, describe, beforeEach, test */
 
 describe('visualizer in viewmode', () => {
-  const svgSelector = '.mv-viewmode svg.mv-visualizer'
+  const svgSelector = '.mv-viewmode .mv-visualizer'
+
   beforeEach(async () => {
+    jest.setTimeout(30000)
+
     await page.goto(PATH, { waitUntil: 'load' })
     await page.waitForFunction(() => visualizer !== null)
     await page.evaluate(() => visualizer.setEditMode(false))

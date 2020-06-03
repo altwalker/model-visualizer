@@ -1,9 +1,11 @@
-/* global PATH, visualizer, page, expect, describe, beforeEach, test */
+/* global PATH, jest, visualizer, page, expect, describe, beforeEach, test */
 
 describe('legend', () => {
   const legendSelector = '#legend'
 
   beforeEach(async () => {
+    jest.setTimeout(30000)
+
     await page.goto(PATH, { waitUntil: 'load' })
   })
 
