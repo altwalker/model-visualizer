@@ -296,6 +296,7 @@ export function renderLegend(legendContainer, legendDomain, legendRange) {
   // set the height of the svg to 25px for each line + the title
   const svg = container.append('svg')
     .style('height', `${25 * (legendDomain.length + 1)}px`)
+    .style('width', '100%')
 
   svg.append('g')
     .attr('class', 'legendQuant')

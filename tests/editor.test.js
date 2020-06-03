@@ -78,7 +78,7 @@ async function vueNextTick() {
 }
 
 describe('visualizer in edit mode', () => {
-  const visualizerSelector = '.mv-editmode svg.mv-visualizer'
+  const visualizerSelector = '.mv-editmode .mv-visualizer'
   const editorSelector = '.mv-editmode .mv-editor'
 
   beforeEach(async () => {
@@ -87,6 +87,7 @@ describe('visualizer in edit mode', () => {
     await page.goto(PATH, { waitUntil: 'load' })
     await page.waitForFunction(() => visualizer !== null)
     await page.waitForSelector(visualizerSelector, { visible: true })
+    await page.waitForSelector(editorSelector, { visible: true })
 
     await page.evaluate((models) => visualizer.setModels(models), models)
     await vueNextTick()
@@ -194,9 +195,27 @@ describe('visualizer in edit mode', () => {
     })
 
     test('should not add empty model action', async () => {
-      const editor = await page.$(editorSelector)
-      const addAction = await editor.$('button.mv-button-add-action')
-      await addAction.click()
+      const editorContainer = await page.$(editorSelector)
+      const actionsInput = await editorContainer.$('#mv-actions')
+      await actionsInput.click({ clickCount: 3 })
+      await page.keyboard.press('Enter')
+
+      const errorValue = await page.$eval(`${editorSelector} span.error`, element => element.textContent)
+      expect(errorValue).toBe('* action should not be empty.')
+
+      const models = await page.evaluate('visualizer.getModels()')
+      // adding an action should not append an empty action to the model
+      expect(models.models[0].actions).toBeFalsy()
+    })
+
+    test('should not add invalid model action', async () => {
+      const action = 'a = b'
+      const editorContainer = await page.$(editorSelector)
+      const actionsInput = await editorContainer.$('#mv-actions')
+      await actionsInput.type(action)
+
+      const errorValue = await page.$eval(`${editorSelector} span.error`, element => element.textContent)
+      expect(errorValue).toBe('* each actions should end with \';\'')
 
       const models = await page.evaluate('visualizer.getModels()')
       // adding an action should not append an empty action to the model
@@ -204,14 +223,10 @@ describe('visualizer in edit mode', () => {
     })
 
     test('should add model action', async () => {
-      const action = 'a = b'
-      const editor = await page.$(editorSelector)
-
-      const actionInput = await editor.$('.mv-new-action input')
-      await actionInput.type(action)
-
-      const addAction = await editor.$('button.mv-button-add-action')
-      await addAction.click()
+      const action = 'a = b;'
+      const editorContainer = await page.$(editorSelector)
+      const actionsInput = await editorContainer.$('#mv-actions')
+      await actionsInput.type(action)
 
       const models = await page.evaluate('visualizer.getModels()')
       expect(models.models[0].actions).toBeTruthy()
@@ -298,6 +313,18 @@ describe('visualizer in edit mode', () => {
   })
 
   describe('vertex editor', () => {
+    const selectVertex = async function () {
+      const visualizerSvg = await page.$(visualizerSelector)
+      const v0 = await visualizerSvg.$('#v0')
+      await v0.click()
+
+      // editor is displayed
+      const editor = await page.$(editorSelector)
+      const vertexEditor = await editor.$('.mv-edit-vertex')
+      expect(vertexEditor).toBeTruthy()
+      return vertexEditor
+    }
+
     test('selecting a vertex should display the vertex editor', async () => {
       const visualizerSvg = await page.$(visualizerSelector)
       const v0 = await visualizerSvg.$('#v0')
@@ -315,12 +342,8 @@ describe('visualizer in edit mode', () => {
     })
 
     test('should edit the vertex name', async () => {
-      const visualizerSvg = await page.$(visualizerSelector)
-      const editor = await page.$(editorSelector)
-      const v0 = await visualizerSvg.$('#v0')
-      await v0.click()
-      const vertexEdit = await editor.$('.mv-edit-vertex')
-      const nameInput = await vertexEdit.$('#name')
+      const vertexEditor = await selectVertex()
+      const nameInput = await vertexEditor.$('#name')
 
       await nameInput.type('_name_changed')
       const models = await page.evaluate('visualizer.getModels()')
@@ -328,12 +351,8 @@ describe('visualizer in edit mode', () => {
     })
 
     test('vertex name should be required', async () => {
-      const visualizerSvg = await page.$(visualizerSelector)
-      const editor = await page.$(editorSelector)
-      const v0 = await visualizerSvg.$('#v0')
-      await v0.click()
-      const vertexEdit = await editor.$('.mv-edit-vertex')
-      const nameInput = await vertexEdit.$('#name')
+      const vertexEditor = await selectVertex()
+      const nameInput = await vertexEditor.$('#name')
       await nameInput.click({ clickCount: 3 })
       await page.keyboard.press('Backspace')
 
@@ -345,12 +364,8 @@ describe('visualizer in edit mode', () => {
     })
 
     test('vertex name should be a valid identifier', async () => {
-      const visualizerSvg = await page.$(visualizerSelector)
-      const editor = await page.$(editorSelector)
-      const v0 = await visualizerSvg.$('#v0')
-      await v0.click()
-      const vertexEdit = await editor.$('.mv-edit-vertex')
-      const nameInput = await vertexEdit.$('#name')
+      const vertexEditor = await selectVertex()
+      const nameInput = await vertexEditor.$('#name')
       await nameInput.click({ clickCount: 3 })
       await page.keyboard.press('Backspace')
       await nameInput.type('#invalidIdentifier')
@@ -363,12 +378,8 @@ describe('visualizer in edit mode', () => {
     })
 
     test('vertex name should not be a reserved keyword', async () => {
-      const visualizerSvg = await page.$(visualizerSelector)
-      const editor = await page.$(editorSelector)
-      const v0 = await visualizerSvg.$('#v0')
-      await v0.click()
-      const vertexEdit = await editor.$('.mv-edit-vertex')
-      const nameInput = await vertexEdit.$('#name')
+      const vertexEditor = await selectVertex()
+      const nameInput = await vertexEditor.$('#name')
       await nameInput.click({ clickCount: 3 })
       await page.keyboard.press('Backspace')
       await nameInput.type('return')
@@ -381,12 +392,8 @@ describe('visualizer in edit mode', () => {
     })
 
     test('should add a sharedState', async () => {
-      const visualizerSvg = await page.$(visualizerSelector)
-      const editor = await page.$(editorSelector)
-      const v0 = await visualizerSvg.$('#v0')
-      await v0.click()
-      const vertexEdit = await editor.$('.mv-edit-vertex')
-      const sharedStateInput = await vertexEdit.$('#sharedState')
+      const vertexEditor = await selectVertex()
+      const sharedStateInput = await vertexEditor.$('#sharedState')
 
       await sharedStateInput.type('mysharedstate')
       const models = await page.evaluate('visualizer.getModels()')
@@ -394,12 +401,8 @@ describe('visualizer in edit mode', () => {
     })
 
     test('should mark a vertex as blocked', async () => {
-      const visualizerSvg = await page.$(visualizerSelector)
-      const editor = await page.$(editorSelector)
-      const v0 = await visualizerSvg.$('#v0')
-      await v0.click()
-      const vertexEdit = await editor.$('.mv-edit-vertex')
-      const blockedCheckbox = await vertexEdit.$('#blocked')
+      const vertexEditor = await selectVertex()
+      const blockedCheckbox = await vertexEditor.$('#blocked')
 
       await blockedCheckbox.click()
       const models = await page.evaluate('visualizer.getModels()')
@@ -447,9 +450,26 @@ describe('visualizer in edit mode', () => {
 
     test('should not add empty edge action', async () => {
       const edgeEditor = await selectEdge()
+      const actionsInput = await edgeEditor.$('#mv-actions')
+      await actionsInput.click({ clickCount: 3 })
+      await page.keyboard.press('Enter')
 
-      const addAction = await edgeEditor.$('button.mv-button-add-action')
-      await addAction.click()
+      const errorValue = await page.$eval(`${editorSelector} span.error`, element => element.textContent)
+      expect(errorValue).toBe('* action should not be empty.')
+
+      const models = await page.evaluate('visualizer.getModels()')
+      // adding an action should not append an empty action to the edge
+      expect(models.models[0].edges[0].actions).toBeFalsy()
+    })
+
+    test('should not add invalid edge action', async () => {
+      const action = 'a = b'
+      const edgeEditor = await selectEdge()
+      const actionsInput = await edgeEditor.$('#mv-actions')
+      await actionsInput.type(action)
+
+      const errorValue = await page.$eval(`${editorSelector} span.error`, element => element.textContent)
+      expect(errorValue).toBe('* each actions should end with \';\'')
 
       const models = await page.evaluate('visualizer.getModels()')
       // adding an action should not append an empty action to the edge
@@ -457,17 +477,14 @@ describe('visualizer in edit mode', () => {
     })
 
     test('should add edge action', async () => {
+      const action = 'a = b;'
       const edgeEditor = await selectEdge()
-
-      const actionInput = await edgeEditor.$('.mv-new-action input')
-      await actionInput.type('a=b')
-
-      const addAction = await edgeEditor.$('button.mv-button-add-action')
-      await addAction.click()
+      const actionsInput = await edgeEditor.$('#mv-actions')
+      await actionsInput.type(action)
 
       const models = await page.evaluate('visualizer.getModels()')
       expect(models.models[0].edges[0].actions).toBeTruthy()
-      expect(models.models[0].edges[0].actions[0]).toBe('a=b')
+      expect(models.models[0].edges[0].actions[0]).toBe(action)
     })
 
     test('should add a guard', async () => {

@@ -13,8 +13,8 @@
   "author": "Altom Consulting",
   "license": "GPL-3.0-only",
   "devDependencies": {
-    "@babel/core": "^7.9.6",
-    "@babel/preset-env": "^7.9.6",
+    "@babel/core": "^7.10.2",
+    "@babel/preset-env": "^7.10.2",
     "@vue/cli-plugin-babel": "^3.12.1",
     "babel-jest": "^24.9.0",
     "babel-loader": "^8.0.6",
@@ -41,7 +41,7 @@
     "vue-template-compiler": "^2.6.11",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.10.3"
+    "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {}
 }

@@ -8,9 +8,9 @@ stages:
 default:
   image: altwalker/tests:model-visualizer
   cache:
-    key: global-
+    key: "$CI_PIPELINE_ID"
     paths:
-      - node_modules/
+      - node_modules
 
 lint:
   stage: test
@@ -21,6 +21,10 @@ lint:
 
 chromium tests:
   stage: test
+  artifacts:
+    paths:
+      - screenshots/
+    when: always
   before_script:
     - npm install
   script:
@@ -64,7 +68,7 @@ build-dev:
       - build-dev
   before_script:
     - git pull || true
-    - git checkout develop 
+    - git checkout develop
     - npm install
   script:
     - npm run build

@@ -122,6 +122,9 @@ class ModelVisualizer {
     this.vm.models = models
   }
 
+  /**
+   * Returns the current models.
+   */
   getModels() {
     return JSON.parse(JSON.stringify(this.vm.models))
   }
