@@ -101,6 +101,7 @@ export function setupInteraction(svg, graph) {
     var coords = d3.mouse(this)
     dLine.paint(coords)
   }
+
   function mouseup() {
     if (dLine.active) {
       if (dLine.startNodeId && dLine.endNodeId) {
@@ -114,6 +115,7 @@ export function setupInteraction(svg, graph) {
           interaction.createEdge(dLine.startNodeId, dLine.endNodeId)
         }
       }
+
       if (!dLine.painted) {
         if (dLine.edgeId) {
           interaction.selectEdge(dLine.edgeId)
@@ -121,34 +123,38 @@ export function setupInteraction(svg, graph) {
           interaction.selectNode(dLine.startNodeId)
         }
       }
+
       dLine.hide()
     }
   }
+
   function mouseout() {
     if (dLine.active) {
       dLine.endNodeId = null
     }
   }
+
   function mouseover(d) {
     if (dLine.active) {
       dLine.endNodeId = d
     }
   }
 
-  svg.on('mousemove', mousemove)
-    .on('mouseup', mouseup)
-    .on('mousedown', () => { interaction.selectModel() })
+  svg.on('mousemove.interaction', mousemove)
+    .on('mouseup.interaction', mouseup)
+    .on('mousedown.interaction', () => { interaction.selectModel() })
+
   svg.selectAll('g.node .label').attr('pointer-events', 'none')
   svg.selectAll('g.node')
-    .on('mousedown', nodeId => {
+    .on('mousedown.interaction', nodeId => {
       d3.event.stopPropagation()
       dLine.activate(nodeId)
     })
-    .on('mouseout', mouseout)
-    .on('mouseover', mouseover)
+    .on('mouseout.interaction', mouseout)
+    .on('mouseover.interaction', mouseover)
 
   svg.selectAll('.edgePath, .edgeLabel')
-    .on('mousedown', edge => {
+    .on('mousedown.interaction', edge => {
       d3.event.stopPropagation()
       dLine.activate(edge.v, edge.name)
     })

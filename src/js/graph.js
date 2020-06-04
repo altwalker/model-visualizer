@@ -255,7 +255,7 @@ function addTootips(svg, tooltip, cssSelector, htlmFunction, graph) {
 
   svg
     .selectAll(cssSelector)
-    .on('mouseover', d => {
+    .on('mouseover.tooltip', d => {
       tooltip
         .transition()
         .style('display', 'block')
@@ -267,7 +267,7 @@ function addTootips(svg, tooltip, cssSelector, htlmFunction, graph) {
         .style('top', d3.event.pageY + tooltipOffset.y + 'px')
         .style('cursor', 'pointer')
     })
-    .on('mouseout', d => {
+    .on('mouseout.tooltip', d => {
       tooltip
         .transition()
         .style('display', 'none')
