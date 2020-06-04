@@ -73,6 +73,8 @@
         />
       </g>
     </svg>
+
+    <div class="mv-tooltip"></div>
   </div>
 </template>
 
@@ -81,7 +83,7 @@ import Edge from './Edge.vue'
 import Vertex from './Vertex.vue'
 import Model from './Model.vue'
 import UndoRedo from './undoredo'
-import { createGraph, renderLegend } from './graph'
+import { createGraph, renderTooltips, renderLegend } from './graph'
 import { setupInteraction } from './interaction'
 
 export default {
@@ -467,6 +469,7 @@ export default {
 
     renderGraph(graph) {
       const container = this.$refs.container
+      const tooltip = d3.select(container).select('div.mv-tooltip')
       const editor = d3.select(container).select('div.mv-editor')
       const svg = d3.select(container).select('svg')
 
@@ -486,6 +489,9 @@ export default {
 
       // Run the renderer. This is what draws the final graph.
       render(inner, graph)
+      // setupZoom(svg, graph)
+
+      renderTooltips(svg, graph, tooltip)
 
       return svg
     },
