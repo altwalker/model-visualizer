@@ -8,6 +8,7 @@
       v-on:input="updateActions($event.target.value)"
       name="mv-actions"
       id="mv-actions"
+      spellcheck="false"
     >
     </textarea>
 
@@ -56,7 +57,7 @@ export default {
           return false
         }
 
-        if (!action.endsWith(';')) {
+        if (!action.trim().endsWith(';')) {
           this.error = '* each actions should end with \';\''
           return false
         }
