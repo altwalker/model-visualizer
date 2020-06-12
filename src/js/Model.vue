@@ -3,38 +3,43 @@
     <h2>Edit Model</h2>
 
     <div class="mv-model-name">
-      <label for="name">Name</label>
-      <span v-if="nameError" class="error">{{nameError}}</span>
+      <label for="mv-model-name-input">Name</label>
+
       <input
         v-model="local.name"
         @input="validateName($event.target.value) && update('name', $event.target.value)"
+        v-bind:class="{ 'mv-input-error': nameError }"
         placeholder="Name"
-        id="name"
+        id="mv-model-name-input"
         type="text"
-        :class="nameError&&'error'"
       />
+
+      <span v-if="nameError" class="mv-error">{{nameError}}</span>
     </div>
 
     <div class="mv-model-generator">
-      <label for="generator">Generator</label>
-      <span v-if="generatorError" class="error">{{generatorError}}</span>
+      <label for="mv-model-generator-input">Generator</label>
+
       <input
         v-model="local.generator"
         @input="validateGenerator($event.target.value) && update('generator', $event.target.value)"
+        v-bind:class="{ 'mv-input-error': generatorError }"
         placeholder="generator(stop_condition)"
-        id="generator"
+        id="mv-model-generator-input"
         type="text"
-        :class="generatorError&&'error'"
       />
+
+      <span v-if="generatorError" class="mv-error">{{generatorError}}</span>
     </div>
 
     <div class="mv-model-start-element">
-      <label for="startElementId">Start element</label>
+      <label for="mv-model-start-element-input">Start element</label>
+
       <select
         v-model="local.startElementId"
         @input="update('startElementId', $event.target.value)"
         placeholder
-        id="startElementId"
+        id="mv-model-start-element-input"
         type="text"
       >
         <option></option>
@@ -60,6 +65,7 @@ import Actions from './Actions.vue'
 
 export default {
   components: { Actions },
+
   props: {
     value: Object,
     modelNames: { type: Array, required: true },
@@ -71,6 +77,7 @@ export default {
     nameError: '',
     generatorError: ''
   }),
+
   computed: {
     local() {
       return cloneDeep(this.value)
@@ -79,6 +86,7 @@ export default {
       return [...this.vertices, ...this.edges]
     }
   },
+
   methods: {
     update(key, value) {
       this.$emit('input', { ...this.local, [key]: value })

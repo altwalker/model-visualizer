@@ -1,18 +1,18 @@
 <template>
-  <div class="mv-edit-action">
-    <label for="mv-actions">Actions</label>
+  <div class="mv-actions">
+    <label for="mv-actions-input">Actions</label>
 
     <textarea
       v-bind:value="actions"
       v-bind:rows="Math.max(3, numberOfActions)"
       v-on:input="updateActions($event.target.value)"
-      name="mv-actions"
-      id="mv-actions"
+      v-bind:class="{ 'mv-input-error': error }"
+      id="mv-actions-input"
       spellcheck="false"
     >
     </textarea>
 
-    <span v-if="error" class="error">{{error}}</span>
+    <span v-if="error" class="mv-error">{{error}}</span>
   </div>
 </template>
 
@@ -21,6 +21,7 @@ export default {
   props: {
     value: Array
   },
+
   data() {
     return {
       actions: this.value ? this.value.reduce((acc, cur, index) => acc + cur + '\n', '') : '',
@@ -28,12 +29,14 @@ export default {
       error: ''
     }
   },
+
   computed: {
   },
+
   methods: {
     updateActions(actions) {
       this.actions = actions
-      const actionsList = actions.split('\n')
+      const actionsList = actions ? actions.split('\n') : []
 
       if (this.validateActions(actionsList)) {
         this.$emit(
@@ -53,7 +56,7 @@ export default {
         const action = actions[index]
 
         if (!action) {
-          this.error = '* action should not be empty.'
+          this.error = '* action should not be empty'
           return false
         }
 

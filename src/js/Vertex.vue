@@ -3,60 +3,65 @@
     <h2>Edit Vertex</h2>
 
     <div class="mv-vertex-id">
-      <label for="vertexId">Id</label>
+      <label for="mv-vertex-id-input">Id</label>
+
       <input
         :value="local.id"
-        @input="update('id', $event.target.value)"
         placeholder="Id"
-        id="vertexId"
+        id="mv-vertex-id-input"
         type="text"
         disabled
       />
     </div>
 
     <div class="mv-vertex-name">
-      <label for="name">Name</label>
-      <span v-if="nameError" class="error">{{nameError}}</span>
+      <label for="mv-vertex-name-input">Name</label>
+
       <input
         v-model="local.name"
         @input="validateName($event.target.value) && update('name', $event.target.value)"
+        v-bind:class="{ 'mv-input-error': nameError }"
         placeholder="Name"
-        id="name"
+        id="mv-vertex-name-input"
         ref="name"
         type="text"
-        :class="nameError&&'error'"
       />
+
+      <span v-if="nameError" class="mv-error">{{nameError}}</span>
     </div>
 
     <div class="mv-vertex-shared-state">
-      <label for="sharedState">Shared state</label>
+      <label for="mv-vertex-shared-state-input">Shared state</label>
+
       <input
         :value="local.sharedState"
         @input="update('sharedState', $event.target.value)"
         placeholder="Shared state"
-        id="sharedState"
+        id="mv-vertex-shared-state-input"
         type="text"
       />
     </div>
 
     <div class="mv-vertex-blocked">
-      <label for="blocked">Blocked</label>
+      <label for="mv-vertex-blocked-input">Blocked</label>
+
       <input
-        :checked="local.properties&&local.properties.blocked"
+        :checked="local.properties && local.properties.blocked"
         @input="update('properties.blocked', $event.target.checked)"
         placeholder="Blocked"
-        id="blocked"
+        id="mv-vertex-blocked-input"
         type="checkbox"
       />
     </div>
 
     <div class="mv-vertex-color">
-      <label for="color">Color</label>
+      <label for="mv-vertex-color-input">Color</label>
+
       <input
-        id="color"
-        type="color"
         :value="local.properties&&local.properties.color"
         @input="update('properties.color', $event.target.value)"
+        id="mv-vertex-color-input"
+        type="color"
       />
     </div>
 
@@ -71,25 +76,37 @@ import { cloneDeep, tap, set } from 'lodash'
 import { isKeyword, isIdentifier } from './models'
 
 export default {
-  props: ['value', 'newVertex'],
+  props: {
+    value: Object,
+    newVertex: Boolean
+  },
+
   data: () => ({
     nameError: ''
   }),
+
   mounted() {
     if (this.newVertex) {
-      const inputName = this.$refs.name
-      setTimeout(function() { inputName.focus() }, 20)
+      this.focusNameInput()
     }
   },
+
   computed: {
     local() {
       return cloneDeep(this.value)
     }
   },
+
   methods: {
+    focusNameInput() {
+      const inputName = this.$refs.name
+      setTimeout(function() { inputName.focus() }, 20)
+    },
+
     update(key, value) {
       this.$emit('input', tap(cloneDeep(this.local), v => set(v, key, value)))
     },
+
     validateName(name) {
       if (!name) {
         this.nameError = '* name is required'

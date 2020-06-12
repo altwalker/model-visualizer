@@ -80,6 +80,9 @@ async function vueNextTick() {
 describe('visualizer in edit mode', () => {
   const visualizerSelector = '.mv-editmode .mv-visualizer'
   const editorSelector = '.mv-editmode .mv-editor'
+  const errorSelector = '.mv-error'
+
+  const actionsInputSelector = '#mv-actions-input'
 
   beforeEach(async () => {
     jest.setTimeout(30000)
@@ -124,6 +127,9 @@ describe('visualizer in edit mode', () => {
   })
 
   describe('model editor', () => {
+    const nameInputSelector = '#mv-model-name-input'
+    const generatorInputSelector = '#mv-model-generator-input'
+
     test('should select a model', async () => {
       const visualizerContainer = await page.$(visualizerSelector)
       await page.select('select#currentModel', '1')
@@ -185,7 +191,7 @@ describe('visualizer in edit mode', () => {
 
     test('should rename a model', async () => {
       const editorContainer = await page.$(editorSelector)
-      const modelnameInput = await editorContainer.$('input#name')
+      const modelnameInput = await editorContainer.$(nameInputSelector)
       await modelnameInput.type('Modified')
 
       const models = await page.evaluate(() => { return visualizer.getModels() })
@@ -196,12 +202,12 @@ describe('visualizer in edit mode', () => {
 
     test('should not add empty model action', async () => {
       const editorContainer = await page.$(editorSelector)
-      const actionsInput = await editorContainer.$('#mv-actions')
+      const actionsInput = await editorContainer.$(actionsInputSelector)
       await actionsInput.click({ clickCount: 3 })
       await page.keyboard.press('Enter')
 
-      const errorValue = await page.$eval(`${editorSelector} span.error`, element => element.textContent)
-      expect(errorValue).toBe('* action should not be empty.')
+      const errorValue = await page.$eval(`${editorSelector} ${errorSelector}`, element => element.textContent)
+      expect(errorValue).toBe('* action should not be empty')
 
       const models = await page.evaluate('visualizer.getModels()')
       // adding an action should not append an empty action to the model
@@ -211,10 +217,10 @@ describe('visualizer in edit mode', () => {
     test('should not add invalid model action', async () => {
       const action = 'a = b'
       const editorContainer = await page.$(editorSelector)
-      const actionsInput = await editorContainer.$('#mv-actions')
+      const actionsInput = await editorContainer.$(actionsInputSelector)
       await actionsInput.type(action)
 
-      const errorValue = await page.$eval(`${editorSelector} span.error`, element => element.textContent)
+      const errorValue = await page.$eval(`${editorSelector} ${errorSelector}`, element => element.textContent)
       expect(errorValue).toBe('* each actions should end with \';\'')
 
       const models = await page.evaluate('visualizer.getModels()')
@@ -225,7 +231,7 @@ describe('visualizer in edit mode', () => {
     test('should add model action', async () => {
       const action = 'a = b;'
       const editorContainer = await page.$(editorSelector)
-      const actionsInput = await editorContainer.$('#mv-actions')
+      const actionsInput = await editorContainer.$(actionsInputSelector)
       await actionsInput.type(action)
 
       const models = await page.evaluate('visualizer.getModels()')
@@ -236,83 +242,87 @@ describe('visualizer in edit mode', () => {
     test('model name should be required', async () => {
       const editor = await page.$(editorSelector)
 
-      const modelnameInput = await editor.$('input#name')
+      const modelnameInput = await editor.$(nameInputSelector)
       await modelnameInput.click({ clickCount: 3 })
       await page.keyboard.press('Backspace')
 
-      const errorValue = await page.$eval(`${editorSelector} span.error`, element => element.textContent)
+      const errorValue = await page.$eval(`${editorSelector} ${errorSelector}`, element => element.textContent)
       expect(errorValue).toBe('* name is required')
 
-      const hasErrorClass = await page.evaluate(modelName => modelName.classList.contains('error'), modelnameInput)
+      const hasErrorClass = await page.evaluate(modelName => modelName.classList.contains('mv-input-error'), modelnameInput)
       expect(hasErrorClass).toBeTruthy()
     })
 
     test('model name should be a valid identifier', async () => {
       const editor = await page.$(editorSelector)
-      const modelnameInput = await editor.$('input#name')
+      const modelnameInput = await editor.$(nameInputSelector)
       await modelnameInput.click({ clickCount: 3 })
       await page.keyboard.press('Backspace')
       await modelnameInput.type('#invalidIdentifier')
 
-      const errorValue = await page.$eval(editorSelector + ' span.error', el => el.textContent)
+      const errorValue = await page.$eval(`${editorSelector} ${errorSelector}`, el => el.textContent)
       expect(errorValue).toBe('* name should be a valid identifier')
 
-      const hasErrorClass = await page.evaluate(modelName => modelName.classList.contains('error'), modelnameInput)
+      const hasErrorClass = await page.evaluate(modelName => modelName.classList.contains('mv-input-error'), modelnameInput)
       expect(hasErrorClass).toBeTruthy()
     })
 
     test('model name should not be a reserved keyword', async () => {
       const editor = await page.$(editorSelector)
-      const modelnameInput = await editor.$('input#name')
+      const modelnameInput = await editor.$(nameInputSelector)
       await modelnameInput.click({ clickCount: 3 })
       await page.keyboard.press('Backspace')
       await modelnameInput.type('return')
 
-      const errorValue = await page.$eval(editorSelector + ' span.error', el => el.textContent)
+      const errorValue = await page.$eval(`${editorSelector} ${errorSelector}`, el => el.textContent)
       expect(errorValue).toBe('* name should not be a reserved keyword')
 
-      const hasErrorClass = await page.evaluate(modelName => modelName.classList.contains('error'), modelnameInput)
+      const hasErrorClass = await page.evaluate(modelName => modelName.classList.contains('mv-input-error'), modelnameInput)
       expect(hasErrorClass).toBeTruthy()
     })
 
     test('model names should be unique', async () => {
       const editor = await page.$(editorSelector)
 
-      const modelnameInput = await editor.$('input#name')
+      const modelnameInput = await editor.$(nameInputSelector)
       await modelnameInput.click({ clickCount: 3 })
       await page.keyboard.press('Backspace')
       await modelnameInput.type('SecondModel')
 
-      const errorValue = await page.$eval(`${editorSelector} span.error`, element => element.textContent)
+      const errorValue = await page.$eval(`${editorSelector} ${errorSelector}`, element => element.textContent)
       expect(errorValue).toBe('* model names should be unique')
 
-      let hasErrorClass = await page.evaluate(modelName => modelName.classList.contains('error'), modelnameInput)
+      let hasErrorClass = await page.evaluate(modelName => modelName.classList.contains('mv-input-error'), modelnameInput)
       expect(hasErrorClass).toBeTruthy()
 
       await modelnameInput.click({ clickCount: 3 })
       await page.keyboard.press('Backspace')
       await modelnameInput.type('FirstModel')
 
-      hasErrorClass = await page.evaluate(modelName => modelName.classList.contains('error'), modelnameInput)
+      hasErrorClass = await page.evaluate(modelName => modelName.classList.contains('mv-input-error'), modelnameInput)
       expect(hasErrorClass).toBeFalsy()
     })
 
     test('generator should be required', async () => {
       const editor = await page.$(editorSelector)
 
-      const generatorInput = await editor.$('input#generator')
+      const generatorInput = await editor.$(generatorInputSelector)
       await generatorInput.click({ clickCount: 3 })
       await page.keyboard.press('Backspace')
 
-      const errorValue = await page.$eval(editorSelector + ' span.error', el => el.textContent)
+      const errorValue = await page.$eval(`${editorSelector} ${errorSelector}`, el => el.textContent)
       expect(errorValue).toBe('* generator is required')
 
-      const hasErrorClass = await page.evaluate(generator => generator.classList.contains('error'), generatorInput)
+      const hasErrorClass = await page.evaluate(generator => generator.classList.contains('mv-input-error'), generatorInput)
       expect(hasErrorClass).toBeTruthy()
     })
   })
 
   describe('vertex editor', () => {
+    const nameInputSelector = '#mv-vertex-name-input'
+    const sharedStateInputSelector = '#mv-vertex-shared-state-input'
+    const blockedInputSelector = '#mv-vertex-blocked-input'
+
     const selectVertex = async function () {
       const visualizerSvg = await page.$(visualizerSelector)
       const v0 = await visualizerSvg.$('#v0')
@@ -343,7 +353,7 @@ describe('visualizer in edit mode', () => {
 
     test('should edit the vertex name', async () => {
       const vertexEditor = await selectVertex()
-      const nameInput = await vertexEditor.$('#name')
+      const nameInput = await vertexEditor.$(nameInputSelector)
 
       await nameInput.type('_name_changed')
       const models = await page.evaluate('visualizer.getModels()')
@@ -352,48 +362,48 @@ describe('visualizer in edit mode', () => {
 
     test('vertex name should be required', async () => {
       const vertexEditor = await selectVertex()
-      const nameInput = await vertexEditor.$('#name')
+      const nameInput = await vertexEditor.$(nameInputSelector)
       await nameInput.click({ clickCount: 3 })
       await page.keyboard.press('Backspace')
 
-      const errorValue = await page.$eval(editorSelector + ' span.error', el => el.textContent)
+      const errorValue = await page.$eval(`${editorSelector} ${errorSelector}`, el => el.textContent)
       expect(errorValue).toBe('* name is required')
 
-      const hasErrorClass = await page.evaluate(modelName => modelName.classList.contains('error'), nameInput)
+      const hasErrorClass = await page.evaluate(modelName => modelName.classList.contains('mv-input-error'), nameInput)
       expect(hasErrorClass).toBeTruthy()
     })
 
     test('vertex name should be a valid identifier', async () => {
       const vertexEditor = await selectVertex()
-      const nameInput = await vertexEditor.$('#name')
+      const nameInput = await vertexEditor.$(nameInputSelector)
       await nameInput.click({ clickCount: 3 })
       await page.keyboard.press('Backspace')
       await nameInput.type('#invalidIdentifier')
 
-      const errorValue = await page.$eval(editorSelector + ' span.error', el => el.textContent)
+      const errorValue = await page.$eval(`${editorSelector} ${errorSelector}`, el => el.textContent)
       expect(errorValue).toBe('* name should be a valid identifier')
 
-      const hasErrorClass = await page.evaluate(modelName => modelName.classList.contains('error'), nameInput)
+      const hasErrorClass = await page.evaluate(modelName => modelName.classList.contains('mv-input-error'), nameInput)
       expect(hasErrorClass).toBeTruthy()
     })
 
     test('vertex name should not be a reserved keyword', async () => {
       const vertexEditor = await selectVertex()
-      const nameInput = await vertexEditor.$('#name')
+      const nameInput = await vertexEditor.$(nameInputSelector)
       await nameInput.click({ clickCount: 3 })
       await page.keyboard.press('Backspace')
       await nameInput.type('return')
 
-      const errorValue = await page.$eval(editorSelector + ' span.error', el => el.textContent)
+      const errorValue = await page.$eval(`${editorSelector} ${errorSelector}`, el => el.textContent)
       expect(errorValue).toBe('* name should not be a reserved keyword')
 
-      const hasErrorClass = await page.evaluate(modelName => modelName.classList.contains('error'), nameInput)
+      const hasErrorClass = await page.evaluate(modelName => modelName.classList.contains('mv-input-error'), nameInput)
       expect(hasErrorClass).toBeTruthy()
     })
 
     test('should add a sharedState', async () => {
       const vertexEditor = await selectVertex()
-      const sharedStateInput = await vertexEditor.$('#sharedState')
+      const sharedStateInput = await vertexEditor.$(sharedStateInputSelector)
 
       await sharedStateInput.type('mysharedstate')
       const models = await page.evaluate('visualizer.getModels()')
@@ -402,7 +412,7 @@ describe('visualizer in edit mode', () => {
 
     test('should mark a vertex as blocked', async () => {
       const vertexEditor = await selectVertex()
-      const blockedCheckbox = await vertexEditor.$('#blocked')
+      const blockedCheckbox = await vertexEditor.$(blockedInputSelector)
 
       await blockedCheckbox.click()
       const models = await page.evaluate('visualizer.getModels()')
@@ -420,6 +430,11 @@ describe('visualizer in edit mode', () => {
   })
 
   describe('edge editor', () => {
+    const nameInputSelector = '#mv-edge-name-input'
+    const guardInputSeletor = '#mv-edge-guard-input'
+    const weightInputSelector = '#mv-edge-weight-input'
+    const dependencyInputSelector = '#mv-edge-dependency-input'
+
     const selectEdge = async function () {
       const visualizerSvg = await page.$(visualizerSelector)
       const e0Label = await visualizerSvg.$('#label_e0')
@@ -450,12 +465,12 @@ describe('visualizer in edit mode', () => {
 
     test('should not add empty edge action', async () => {
       const edgeEditor = await selectEdge()
-      const actionsInput = await edgeEditor.$('#mv-actions')
+      const actionsInput = await edgeEditor.$(actionsInputSelector)
       await actionsInput.click({ clickCount: 3 })
       await page.keyboard.press('Enter')
 
-      const errorValue = await page.$eval(`${editorSelector} span.error`, element => element.textContent)
-      expect(errorValue).toBe('* action should not be empty.')
+      const errorValue = await page.$eval(`${editorSelector} ${errorSelector}`, element => element.textContent)
+      expect(errorValue).toBe('* action should not be empty')
 
       const models = await page.evaluate('visualizer.getModels()')
       // adding an action should not append an empty action to the edge
@@ -465,10 +480,10 @@ describe('visualizer in edit mode', () => {
     test('should not add invalid edge action', async () => {
       const action = 'a = b'
       const edgeEditor = await selectEdge()
-      const actionsInput = await edgeEditor.$('#mv-actions')
+      const actionsInput = await edgeEditor.$(actionsInputSelector)
       await actionsInput.type(action)
 
-      const errorValue = await page.$eval(`${editorSelector} span.error`, element => element.textContent)
+      const errorValue = await page.$eval(`${editorSelector} ${errorSelector}`, element => element.textContent)
       expect(errorValue).toBe('* each actions should end with \';\'')
 
       const models = await page.evaluate('visualizer.getModels()')
@@ -479,7 +494,7 @@ describe('visualizer in edit mode', () => {
     test('should add edge action', async () => {
       const action = 'a = b;'
       const edgeEditor = await selectEdge()
-      const actionsInput = await edgeEditor.$('#mv-actions')
+      const actionsInput = await edgeEditor.$(actionsInputSelector)
       await actionsInput.type(action)
 
       const models = await page.evaluate('visualizer.getModels()')
@@ -491,7 +506,7 @@ describe('visualizer in edit mode', () => {
       const guard = 'e == 0'
       const edgeEditor = await selectEdge()
 
-      const guardInput = await edgeEditor.$('#guard')
+      const guardInput = await edgeEditor.$(guardInputSeletor)
       await guardInput.type(guard)
 
       const models = await page.evaluate('visualizer.getModels()')
@@ -501,49 +516,49 @@ describe('visualizer in edit mode', () => {
     test('edge name should not be required', async () => {
       const edgeEditor = await selectEdge()
 
-      const nameInput = await edgeEditor.$('#name')
+      const nameInput = await edgeEditor.$(nameInputSelector)
       await nameInput.click({ clickCount: 3 })
       await page.keyboard.press('Backspace')
 
-      await expect(page).not.toMatchElement(`${editorSelector} span.error`)
+      await expect(page).not.toMatchElement(`${editorSelector} ${errorSelector}`)
 
-      const hasErrorClass = await page.evaluate(modelName => modelName.classList.contains('error'), nameInput)
+      const hasErrorClass = await page.evaluate(modelName => modelName.classList.contains('mv-input-error'), nameInput)
       expect(hasErrorClass).toBeFalsy()
     })
 
     test('edge name should be a valid indentifier', async () => {
       const edgeEditor = await selectEdge()
 
-      const nameInput = await edgeEditor.$('#name')
+      const nameInput = await edgeEditor.$(nameInputSelector)
       await nameInput.click({ clickCount: 3 })
       await page.keyboard.press('Backspace')
       await nameInput.type('#invalidIdentifier')
 
-      const errorValue = await page.$eval(`${editorSelector} span.error`, element => element.textContent)
+      const errorValue = await page.$eval(`${editorSelector} ${errorSelector}`, element => element.textContent)
       expect(errorValue).toBe('* name should be a valid identifier')
 
-      const hasErrorClass = await page.evaluate(modelName => modelName.classList.contains('error'), nameInput)
+      const hasErrorClass = await page.evaluate(modelName => modelName.classList.contains('mv-input-error'), nameInput)
       expect(hasErrorClass).toBeTruthy()
     })
 
     test('edge name should not be a reserved keyword', async () => {
       const edgeEditor = await selectEdge()
 
-      const nameInput = await edgeEditor.$('#name')
+      const nameInput = await edgeEditor.$(nameInputSelector)
       await nameInput.click({ clickCount: 3 })
       await page.keyboard.press('Backspace')
       await nameInput.type('return')
 
-      const errorValue = await page.$eval(`${editorSelector} span.error`, element => element.textContent)
+      const errorValue = await page.$eval(`${editorSelector} ${errorSelector}`, element => element.textContent)
       expect(errorValue).toBe('* name should not be a reserved keyword')
 
-      const hasErrorClass = await page.evaluate(modelName => modelName.classList.contains('error'), nameInput)
+      const hasErrorClass = await page.evaluate(modelName => modelName.classList.contains('mv-input-error'), nameInput)
       expect(hasErrorClass).toBeTruthy()
     })
 
     test('should add weight', async () => {
       const edgeEditor = await selectEdge()
-      const weightInput = await edgeEditor.$('#weight')
+      const weightInput = await edgeEditor.$(weightInputSelector)
       await weightInput.type('0.5')
 
       const models = await page.evaluate('visualizer.getModels()')
@@ -552,10 +567,10 @@ describe('visualizer in edit mode', () => {
 
     test('weight should be between 0 and 1', async () => {
       const edgeEditor = await selectEdge()
-      const weightInput = await edgeEditor.$('#weight')
+      const weightInput = await edgeEditor.$(weightInputSelector)
       await weightInput.type('-1')
 
-      const errorValue = await page.$eval(editorSelector + ' span.error', el => el.textContent)
+      const errorValue = await page.$eval(`${editorSelector} ${errorSelector}`, el => el.textContent)
       expect(errorValue).toBe('* weight should be between 0 and 1')
       const models = await page.evaluate('visualizer.getModels()')
       expect(models.models[0].edges[0].weight).toBe(undefined)
@@ -563,7 +578,7 @@ describe('visualizer in edit mode', () => {
 
     test('should add dependency', async () => {
       const edgeEditor = await selectEdge()
-      const weightInput = await edgeEditor.$('#dependency')
+      const weightInput = await edgeEditor.$(dependencyInputSelector)
       await weightInput.type('75')
 
       const models = await page.evaluate('visualizer.getModels()')
@@ -572,10 +587,10 @@ describe('visualizer in edit mode', () => {
 
     test('dependency should be a positive number', async () => {
       const edgeEditor = await selectEdge()
-      const weightInput = await edgeEditor.$('#dependency')
+      const weightInput = await edgeEditor.$(dependencyInputSelector)
       await weightInput.type('-1')
 
-      const errorValue = await page.$eval(editorSelector + ' span.error', el => el.textContent)
+      const errorValue = await page.$eval(`${editorSelector} ${errorSelector}`, el => el.textContent)
       expect(errorValue).toBe('* dependency cannot be negative')
       const models = await page.evaluate('visualizer.getModels()')
       expect(models.models[0].edges[0].dependency).toBe(undefined)

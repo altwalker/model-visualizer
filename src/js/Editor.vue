@@ -3,7 +3,9 @@
     <div class="mv-editor">
       <div class="mv-edit-project">
         <h2>Editor</h2>
+
         <label for="currentModel">Select model</label>
+
         <select v-if="editableModels" v-model="editableModelIndex" id="currentModel">
           <option
             v-for="(model, i) in editableModels.models"
