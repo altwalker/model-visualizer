@@ -3,38 +3,41 @@
     <h2>Edit Edge</h2>
 
     <div class="mv-edge-id">
-      <label for="edgeId">Id</label>
+      <label for="mv-edge-id-input">Id</label>
+
       <input
-        :value="local.id"
-        @input="update('id', $event.target.value)"
+        v-bind:value="local.id"
         placeholder="Edge id"
-        id="edgeId"
+        id="mv-edge-id-input"
         type="text"
         disabled
       />
     </div>
 
     <div class="mv-edge-name">
-      <label for="name">Name</label>
+      <label for="mv-edge-name-input">Name</label>
+
       <input
         v-model="local.name"
         @input="validateName($event.target.value) && update('name', $event.target.value)"
+        v-bind:class="{ 'mv-input-error': nameError }"
         placeholder="Name"
-        id="name"
+        id="mv-edge-name-input"
         ref="name"
         type="text"
-        :class="nameError&&'error'"
       />
-      <span v-if="nameError" class="error">{{nameError}}</span>
+
+      <span v-if="nameError" class="mv-error">{{nameError}}</span>
     </div>
 
     <div class="mv-edge-source-vertex">
-      <label for="source">Source vertex</label>
+      <label for="mv-edge-source-vertex-input">Source vertex</label>
+
       <select
         :value="local.sourceVertexId"
         @input="update('sourceVertexId', $event.target.value)"
         placeholder="Source vertex id"
-        id="source"
+        id="mv-edge-source-vertex-input"
         type="text"
       >
         <option></option>
@@ -47,13 +50,13 @@
     </div>
 
     <div class="mv-edge-target-vertex">
-      <label for="target">Target vertex</label>
+      <label for="mv-edge-target-vertex-input">Target vertex</label>
 
       <select
         :value="local.targetVertexId"
         @input="update('targetVertexId', $event.target.value)"
         placeholder="Target vertex id"
-        id="target"
+        id="mv-edge-target-vertex-input"
         type="text"
       >
         <option
@@ -65,41 +68,42 @@
     </div>
 
     <div class="mv-edge-guard">
-      <label for="guard">Guard</label>
+      <label for="mv-edge-guard-input">Guard</label>
 
       <input
         :value="local.guard"
         @input="update('guard', $event.target.value)"
-        id="guard"
+        id="mv-edge-guard-input"
         type="text"
       />
     </div>
 
     <div class="mv-edge-weight">
-      <label for="weight">Weight</label>
+      <label for="mv-edge-weight-input">Weight</label>
+
       <input
-        v-model="local.weight"
-        @input="validateWeight(parseFloat($event.target.value)) && update('weight', parseFloat($event.target.value))"
-        id="weight"
-        type="number"
-        min="0"
-        max="1"
-        step="0.1"
+        v-bind:value="weight"
+        v-on:input="updateWeight($event.target.value)"
+        v-bind:class="{ 'mv-input-error': weightError }"
+        id="mv-edge-weight-input"
+        type="text"
       />
 
-      <span v-if="weightError" class="error">{{weightError}}</span>
+      <span v-if="weightError" class="mv-error">{{weightError}}</span>
     </div>
 
     <div class="mv-edge-dependency">
-      <label for="dependency">Dependency</label>
+      <label for="mv-edge-dependency-input">Dependency</label>
+
       <input
-        v-model="local.dependency"
-        @input="validateDependency(parseInt($event.target.value)) && update('dependency', parseInt($event.target.value))"
-        id="dependency"
-        type="number"
-        min="0"
+        v-bind:value="dependency"
+        v-on:input="updateDependency($event.target.value)"
+        v-bind:class="{ 'mv-input-error': dependencyError }"
+        id="mv-edge-dependency-input"
+        type="text"
       />
-      <span v-if="dependencyError" class="error">{{dependencyError}}</span>
+
+      <span v-if="dependencyError" class="mv-error">{{dependencyError}}</span>
     </div>
 
     <div class="mv-edge-actions">
@@ -120,6 +124,7 @@ import Actions from './Actions.vue'
 
 export default {
   components: { Actions },
+
   props: {
     value: Object,
     vertices: {
@@ -128,46 +133,41 @@ export default {
     },
     newEdge: Boolean
   },
-  data: () => ({
-    nameError: '',
-    dependencyError: '',
-    weightError: ''
-  }),
+
+  data() {
+    return {
+      nameError: '',
+      weight: this.value.weight || '',
+      weightError: '',
+      dependency: this.value.dependency || '',
+      dependencyError: ''
+    }
+  },
+
   computed: {
     local() {
       return cloneDeep(this.value)
     }
   },
+
   mounted() {
-    if (this.newEdge) this.focusNameInput()
+    if (this.newEdge) {
+      this.focusNameInput()
+    }
   },
+
   updated() {
-    if (this.newEdge) this.focusNameInput()
+    if (this.newEdge) {
+      this.focusNameInput()
+    }
   },
+
   methods: {
     focusNameInput() {
       const inputName = this.$refs.name
       setTimeout(function() { inputName.focus() }, 20)
     },
-    update(key, value) {
-      if (!value && value !== 0) {
-        this.$emit(
-          'input',
-          tap(cloneDeep(this.local), v => unset(v, key, value))
-        )
-      } else {
-        this.$emit(
-          'input',
-          tap(cloneDeep(this.local), v => set(v, key, value))
-        )
-      }
-    },
-    updateActions(actions) {
-      this.$emit(
-        'input',
-        tap(cloneDeep(this.local), v => (v.actions = actions))
-      )
-    },
+
     validateName(name) {
       if (!name) {
         this.nameError = ''
@@ -187,7 +187,20 @@ export default {
       this.nameError = ''
       return true
     },
+
     validateWeight(weight) {
+      if (!weight) {
+        this.weightError = ''
+        return true
+      }
+
+      weight = Number(weight)
+
+      if (isNaN(weight)) {
+        this.weightError = '* weight must be a number'
+        return false
+      }
+
       if (!isWeightValid(weight)) {
         this.weightError = '* weight should be between 0 and 1'
         return false
@@ -196,7 +209,15 @@ export default {
       this.weightError = ''
       return true
     },
+
     validateDependency(dependency) {
+      if (!dependency) {
+        this.dependencyError = ''
+        return true
+      }
+
+      dependency = Number(dependency)
+
       if (isNaN(dependency)) {
         this.dependencyError = '* dependency must be a number'
         return false
@@ -209,6 +230,43 @@ export default {
 
       this.dependencyError = ''
       return true
+    },
+
+    update(key, value) {
+      if (!value && value !== 0) {
+        this.$emit(
+          'input',
+          tap(cloneDeep(this.local), v => unset(v, key, value))
+        )
+      } else {
+        this.$emit(
+          'input',
+          tap(cloneDeep(this.local), v => set(v, key, value))
+        )
+      }
+    },
+
+    updateActions(actions) {
+      this.$emit(
+        'input',
+        tap(cloneDeep(this.local), v => (v.actions = actions))
+      )
+    },
+
+    updateWeight(weight) {
+      this.weight = weight
+
+      if (this.validateWeight(weight)) {
+        this.update('weight', Number(weight))
+      }
+    },
+
+    updateDependency(dependency) {
+      this.dependency = dependency
+
+      if (this.validateDependency(dependency)) {
+        this.update('dependency', Number(dependency))
+      }
     }
   }
 }
