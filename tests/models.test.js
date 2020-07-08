@@ -23,6 +23,12 @@ describe('isIdentifier', () => {
     expect(isIdentifier('validIdentifier123')).toBe(true)
     expect(isIdentifier('validIdentifier123___')).toBe(true)
     expect(isIdentifier('_validIdentifier123_')).toBe(true)
+
+    expect(isIdentifier('ᾩ')).toBe(true)
+    expect(isIdentifier('ĦĔĽĻŎ')).toBe(true)
+    expect(isIdentifier('〱〱〱〱')).toBe(true)
+    expect(isIdentifier('जावास्क्रिप्ट')).toBe(true)
+    expect(isIdentifier('KingGeorgeⅦ')).toBe(true)
   })
 
   test('should return false for invalid identifier', () => {
