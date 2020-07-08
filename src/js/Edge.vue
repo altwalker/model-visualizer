@@ -79,31 +79,11 @@
     </div>
 
     <div class="mv-edge-weight">
-      <label for="mv-edge-weight-input">Weight</label>
-
-      <input
-        v-bind:value="weight"
-        v-on:input="updateWeight($event.target.value)"
-        v-bind:class="{ 'mv-input-error': weightError }"
-        id="mv-edge-weight-input"
-        type="text"
-      />
-
-      <span v-if="weightError" class="mv-error">{{weightError}}</span>
+      <Weight :value="local.weight" @input="update('weight', $event)" />
     </div>
 
     <div class="mv-edge-dependency">
-      <label for="mv-edge-dependency-input">Dependency</label>
-
-      <input
-        v-bind:value="dependency"
-        v-on:input="updateDependency($event.target.value)"
-        v-bind:class="{ 'mv-input-error': dependencyError }"
-        id="mv-edge-dependency-input"
-        type="text"
-      />
-
-      <span v-if="dependencyError" class="mv-error">{{dependencyError}}</span>
+      <Dependency :value="local.dependency" @input="update('dependency', $event)" />
     </div>
 
     <div class="mv-edge-actions">
@@ -119,11 +99,13 @@
 <script>
 import { cloneDeep, tap, set, unset } from 'lodash'
 
-import { isKeyword, isIdentifier, isWeightValid, isDependencyValid } from './models'
+import { isKeyword, isIdentifier } from './models'
 import Actions from './Actions.vue'
+import Weight from './Weight.vue'
+import Dependency from './Dependency.vue'
 
 export default {
-  components: { Actions },
+  components: { Actions, Weight, Dependency },
 
   props: {
     value: Object,
@@ -144,21 +126,23 @@ export default {
     }
   },
 
-  computed: {
-    local() {
-      return cloneDeep(this.value)
-    }
-  },
-
   mounted() {
     if (this.newEdge) {
       this.focusNameInput()
     }
   },
 
-  updated() {
-    if (this.newEdge) {
-      this.focusNameInput()
+  computed: {
+    local() {
+      return cloneDeep(this.value)
+    }
+  },
+
+  watch: {
+    newEdge: function(newEdge) {
+      if (newEdge) {
+        this.focusNameInput()
+      }
     }
   },
 
@@ -188,60 +172,16 @@ export default {
       return true
     },
 
-    validateWeight(weight) {
-      if (!weight) {
-        this.weightError = ''
-        return true
-      }
-
-      weight = Number(weight)
-
-      if (isNaN(weight)) {
-        this.weightError = '* weight must be a number'
-        return false
-      }
-
-      if (!isWeightValid(weight)) {
-        this.weightError = '* weight should be between 0 and 1'
-        return false
-      }
-
-      this.weightError = ''
-      return true
-    },
-
-    validateDependency(dependency) {
-      if (!dependency) {
-        this.dependencyError = ''
-        return true
-      }
-
-      dependency = Number(dependency)
-
-      if (isNaN(dependency)) {
-        this.dependencyError = '* dependency must be a number'
-        return false
-      }
-
-      if (!isDependencyValid(dependency)) {
-        this.dependencyError = '* dependency cannot be negative'
-        return false
-      }
-
-      this.dependencyError = ''
-      return true
-    },
-
     update(key, value) {
-      if (!value && value !== 0) {
+      if (value || value === 0) {
         this.$emit(
           'input',
-          tap(cloneDeep(this.local), v => unset(v, key, value))
+          tap(cloneDeep(this.local), v => set(v, key, value))
         )
       } else {
         this.$emit(
           'input',
-          tap(cloneDeep(this.local), v => set(v, key, value))
+          tap(cloneDeep(this.local), v => unset(v, key, value))
         )
       }
     },
@@ -251,22 +191,6 @@ export default {
         'input',
         tap(cloneDeep(this.local), v => (v.actions = actions))
       )
-    },
-
-    updateWeight(weight) {
-      this.weight = weight
-
-      if (this.validateWeight(weight)) {
-        this.update('weight', Number(weight))
-      }
-    },
-
-    updateDependency(dependency) {
-      this.dependency = dependency
-
-      if (this.validateDependency(dependency)) {
-        this.update('dependency', Number(dependency))
-      }
     }
   }
 }

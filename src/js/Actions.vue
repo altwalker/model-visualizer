@@ -24,21 +24,39 @@ export default {
 
   data() {
     return {
-      actions: this.value ? this.value.reduce((acc, cur, index) => acc + cur + '\n', '') : '',
+      actions: this.stringifyActions(this.value),
       numberOfActions: this.value ? this.value.length : 0,
       error: ''
     }
   },
 
-  computed: {
+  watch: {
+    value: function(newValue, oldValue) {
+      if (oldValue !== newValue) {
+        this.reset()
+      }
+    }
   },
 
   methods: {
+    reset() {
+      this.actions = this.stringifyActions(this.value)
+      this.error = ''
+    },
+
+    parseActions(actions) {
+      return actions ? actions.split('\n') : []
+    },
+
+    stringifyActions(actions) {
+      return actions ? actions.reduce((acc, cur, index) => acc + cur + (index < actions.length - 1 ? '\n' : ''), '') : ''
+    },
+
     updateActions(actions) {
       this.actions = actions
-      const actionsList = actions ? actions.split('\n') : []
+      const actionsList = this.parseActions(actions)
 
-      if (this.validateActions(actionsList)) {
+      if (this.validateActions(actionsList) && actionsList !== this.value) {
         this.$emit(
           'input',
           actionsList

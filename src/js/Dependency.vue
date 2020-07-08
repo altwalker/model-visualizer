@@ -1,0 +1,79 @@
+<template>
+  <div>
+    <label for="mv-edge-dependency-input">Dependency</label>
+
+    <input
+      v-bind:value="dependency"
+      v-on:input="updateDependency($event.target.value)"
+      v-bind:class="{ 'mv-input-error': error }"
+      id="mv-edge-dependency-input"
+      type="text"
+    />
+
+    <span v-if="error" class="mv-error">{{error}}</span>
+  </div>
+</template>
+<script>
+import { isDependencyValid } from './models'
+
+export default {
+  props: {
+    value: Number
+  },
+
+  data() {
+    return {
+      dependency: this.value || '',
+      error: ''
+    }
+  },
+
+  watch: {
+    value: function(newValue) {
+      if (newValue !== Number(this.dependency)) {
+        this.reset()
+      }
+    }
+  },
+
+  methods: {
+    reset() {
+      this.dependency = this.value || ''
+      this.error = ''
+    },
+
+    validateDependency(dependency) {
+      if (!dependency) {
+        this.error = ''
+        return true
+      }
+
+      dependency = Number(dependency)
+
+      if (isNaN(dependency)) {
+        this.error = '* dependency must be a number'
+        return false
+      }
+
+      if (!isDependencyValid(dependency)) {
+        this.error = '* dependency cannot be negative'
+        return false
+      }
+
+      this.error = ''
+      return true
+    },
+
+    updateDependency(dependency) {
+      this.dependency = dependency
+
+      if (this.validateDependency(dependency)) {
+        this.$emit(
+          'input',
+          Number(dependency)
+        )
+      }
+    }
+  }
+}
+</script>
