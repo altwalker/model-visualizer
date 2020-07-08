@@ -98,7 +98,16 @@ export function isKeyword(name) {
 }
 
 export function isIdentifier(name) {
-  const identifierRegex = /^[_a-zA-Z]\w*$/
+  // The regular expression is based on the python identifiers specification from: https://docs.python.org/3/reference/lexical_analysis.html#identifiers
+
+  /* eslint-disable-next-line no-misleading-character-class */
+  let identifierRegex
+
+  try {
+    identifierRegex = new RegExp('^[\\p{L}\\p{Nl}\u1885\u1886\u2118\u212E\u309B\u309CA-Za-z_][\\p{L}\\p{Nl}\\p{Mn}\\p{Mc}\\p{Nd}\\p{Pc}\u1885\u1886\u2118\u212E\u309B\u309C\u00B7\u0387\u1369\u1369\u136A\u136B\u136C\u136D\u136E\u136F\u1370\u1371\u19DA0-9A-Za-z_]*$', 'u')
+  } catch (error) {
+    identifierRegex = new RegExp('^[_a-zA-Z]\\w*$')
+  }
 
   if (!identifierRegex.test(name)) {
     return false
