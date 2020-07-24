@@ -108,7 +108,7 @@ describe('validateName', () => {
   test('should throw error for invalid identifier', () => {
     const f = () => validateName('1invalididentifier', 'Model')
 
-    expect(f).toThrowError(new Error('Model name \'1invalididentifier\' is not a valid identifier. Name should start with a letter and characters \'%$#!\' are not allowed.'))
+    expect(f).toThrowError(new Error('Model name \'1invalididentifier\' is not a valid identifier. Valid characters for identifiers are uppercase/lowercase letters, underscore _, and digits except for the first charater.'))
     expect(f).toThrowError(ValidationError)
   })
 
@@ -156,7 +156,7 @@ describe('validateVertex', () => {
     }
     const f = () => validateVertex(vertex)
 
-    expect(f).toThrowError(new Error('Vertex name \'1invalididentifier\' is not a valid identifier. Name should start with a letter and characters \'%$#!\' are not allowed.'))
+    expect(f).toThrowError(new Error('Vertex name \'1invalididentifier\' is not a valid identifier. Valid characters for identifiers are uppercase/lowercase letters, underscore _, and digits except for the first charater.'))
     expect(f).toThrowError(ValidationError)
   })
 })

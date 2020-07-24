@@ -148,7 +148,7 @@ export function validateName(name, elementType) {
   elementType = elementType || 'Element'
 
   if (!isIdentifier(name)) {
-    throw new ValidationError(`${elementType} name '${name}' is not a valid identifier. Name should start with a letter and characters '%$#!' are not allowed.`)
+    throw new ValidationError(`${elementType} name '${name}' is not a valid identifier. Valid characters for identifiers are uppercase/lowercase letters, underscore _, and digits except for the first charater.`)
   }
 
   if (isKeyword(name)) {
