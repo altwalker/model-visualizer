@@ -1,4 +1,5 @@
 import dagreD3 from 'dagre-d3'
+import { isEmpty, omit } from 'lodash'
 
 let fakeNodesCount = 0
 
@@ -25,12 +26,12 @@ function createVertexLabel(vertex, startElementsIds) {
     label.blocked = true
   }
 
-  if (vertex.description) {
-    label.description = vertex.description
+  if (vertex.properties && vertex.properties.description) {
+    label.description = vertex.properties.description
   }
 
   if (vertex.properties) {
-    label.properties = vertex.properties
+    label.properties = omit(vertex.properties, ['blocked', 'description'])
   }
 
   if (startElementsIds.includes(vertex.id)) {
@@ -52,6 +53,10 @@ function createEdgeLable(edge) {
     label: edge.name
   }
 
+  if (edge.properties && edge.properties.description) {
+    label.description = edge.properties.description
+  }
+
   if (edge.sourceVertexId) {
     label.sourceVertexId = edge.sourceVertexId
   }
@@ -62,6 +67,10 @@ function createEdgeLable(edge) {
 
   if (edge.actions) {
     label.actions = edge.actions
+  }
+
+  if (edge.properties) {
+    label.properties = omit(edge.properties, ['description'])
   }
 
   return label
@@ -167,82 +176,81 @@ export function createGraph(models, graphOptions) {
   }
 }
 
-function generateNodeTooltipHtml(graph, d) {
-  const node = graph.node(d)
+function generateDescriptionHtml(description) {
   let html = ''
 
-  if (node.blocked) {
-    html += "<span class='font-weight-bolder'>BLOCKED</span>" + '<br/>'
+  if (description) {
+    html += `<div>Description: <span>${description}</span></div>`
   }
 
-  html +=
-    'Id: ' +
-    "<span class='font-weight-bolder'>" +
-    node.id +
-    '</span>' +
-    '<br/>'
+  return html
+}
 
-  if (node.description) {
-    html +=
-      'Description: ' +
-      "<span class='font-weight-bolder'>" +
-      node.description +
-      '</span>' +
-      '<br/>'
+function generateActionsHtml(actions) {
+  let html = ''
+
+  if (actions && !isEmpty(actions)) {
+    html += '<div>Actions:'
+
+    actions.forEach(action => {
+      html += `<div><span class='mv-tooltip-code'>${action}</span></div>`
+    })
+
+    html += '</div>'
   }
+
+  return html
+}
+
+function generatePropertiesHtml(properties) {
+  let html = ''
+
+  if (properties && !isEmpty(properties)) {
+    html += '<div>Properties:'
+
+    Object.keys(properties).forEach(key => {
+      html += `<div>${key}: <span>${properties[key]}</span></div>`
+    })
+
+    html += '</div>'
+  }
+
+  return html
+}
+
+function generateNodeTooltipHtml(graph, d) {
+  const node = graph.node(d)
+  let html = `<div>Id: <span>${node.id}</span> ${node.blocked ? '<span>[BLOCKED]</span>' : ''}</div>`
+
+  html += generateDescriptionHtml(node.description)
 
   if (node.sharedState) {
-    html +=
-      'Shared State: ' +
-      "<span class='font-weight-bolder'>" +
-      node.sharedState +
-      '</span>' +
-      '<br/>'
+    html += `<div> Shared State: <span>${node.sharedState}</span></div>`
   }
 
-  if (node.properties) {
-    html += '<br/>Properties: <br/>'
-    Object.keys(node.properties).forEach(key => {
-      html +=
-        key +
-        ": <span class='font-weight-bolder'>" +
-        node.properties[key] +
-        '</span>' +
-        '<br/>'
-    })
-  }
+  html += generatePropertiesHtml(node.properties)
 
   return html
 }
 
 function generateEdgeTootipHtml(graph, d) {
   const edge = graph.edge(d.v, d.w, d.name)
-  let html = ''
+  let html = `<div>Id: <span>${edge.id}</span></div>`
 
-  html += "Id: <span class='font-weight-bolder'>" + edge.id + '</span><br/>'
+  html += generateDescriptionHtml(edge.description)
 
   if (edge.sourceVertexId) {
-    html +=
-      "Source Vertex Id: <span class='font-weight-bolder'>" +
-      edge.sourceVertexId +
-      '</span><br/>'
+    html += `<div>Source Vertex Id: <span>${edge.sourceVertexId}</span></div>`
   }
 
-  html +=
-    "Target Vertex Id: <span class='font-weight-bolder'>" +
-    edge.targetVertexId +
-    '</span><br/>'
+  html += `<div>Target Vertex Id: <span>${edge.targetVertexId}</span></div>`
 
   if (edge.guard) {
-    html += "<br/>Guard: <span class='mv-tooltip-code'>" + edge.guard + '</span><br/>'
+    html += `<div>Guard: <span class='mv-tooltip-code'>${edge.guard}</span></div>`
   }
 
-  if (edge.actions) {
-    html += '<br/>Actions: <br/>'
-    edge.actions.forEach(action => {
-      html += "<span class='mv-tooltip-code'>" + action + '</span><br/>'
-    })
-  }
+  html += generateActionsHtml(edge.actions)
+  html += generatePropertiesHtml(edge.properties)
 
   return html
 }

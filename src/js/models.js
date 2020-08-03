@@ -12,7 +12,11 @@ export var defaultModels = {
       vertices: [
         {
           id: 'v0',
-          name: 'vertex_zero'
+          name: 'vertex_zero',
+          properties: {
+            x: 100,
+            y: 200
+          }
         },
         {
           id: 'v1',
@@ -29,7 +33,11 @@ export var defaultModels = {
           id: 'e0',
           name: 'edge_A',
           sourceVertexId: 'v0',
-          targetVertexId: 'v1'
+          targetVertexId: 'v1',
+          properties: {
+            x: 100,
+            y: 200
+          }
         }
       ]
     },

@@ -30,6 +30,17 @@
       <span v-if="nameError" class="mv-error">{{nameError}}</span>
     </div>
 
+    <div class="mv-edge-description">
+      <label for="mv-edge-description-input">Description</label>
+
+      <textarea
+        :value="local.properties && local.properties.description"
+        @input="update('properties.description', $event.target.value)"
+        placeholder="Description"
+        id="mv-edge-description-input"
+      ></textarea>
+    </div>
+
     <div class="mv-edge-source-vertex">
       <label for="mv-edge-source-vertex-input">Source vertex</label>
 
