@@ -2,12 +2,21 @@
   <div>
     <label for="mv-edge-weight-input">Weight</label>
 
+    <div class="mv-help-tooltip">
+      <Info />
+
+      <span class="mv-help-tooltip-text">
+        A number between 0 and 1 used by the weighted_random generator. It represents the probability of an edge getting chosen.
+      </span>
+    </div>
+
     <input
       v-bind:value="weight"
       v-on:input="updateWeight($event.target.value)"
       v-bind:class="{ 'mv-input-error': error }"
       id="mv-edge-weight-input"
       type="text"
+      placeholder="Weight"
     />
 
     <span v-if="error" class="mv-error">{{error}}</span>
@@ -16,8 +25,11 @@
 
 <script>
 import { isWeightValid } from './models'
+import Info from './icons/Info.vue'
 
 export default {
+  components: { Info },
+
   props: {
     value: Number
   },

@@ -473,7 +473,7 @@ export default {
       const container = this.$refs.container
       const tooltip = d3.select(container).select('div.mv-tooltip')
       const editor = d3.select(container).select('div.mv-editor')
-      const svg = d3.select(container).select('svg')
+      const svg = d3.select(container).select('svg.mv-visualizer')
 
       // set width and height of svg relative to container and editor
       const width = container.offsetWidth - editor.node().offsetWidth - 1

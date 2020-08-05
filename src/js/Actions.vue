@@ -2,6 +2,12 @@
   <div class="mv-actions">
     <label for="mv-actions-input">Actions</label>
 
+    <div class="mv-help-tooltip">
+      <Info />
+
+      <span class="mv-help-tooltip-text">{{tooltipMessage}}</span>
+    </div>
+
     <textarea
       v-bind:value="actions"
       v-bind:rows="Math.max(3, numberOfActions)"
@@ -9,6 +15,7 @@
       v-bind:class="{ 'mv-input-error': error }"
       id="mv-actions-input"
       spellcheck="false"
+      placeholder="Actions"
     >
     </textarea>
 
@@ -17,9 +24,14 @@
 </template>
 
 <script>
+import Info from './icons/Info.vue'
+
 export default {
+  components: { Info },
+
   props: {
-    value: Array
+    value: Array,
+    tooltipMessage: String
   },
 
   data() {
