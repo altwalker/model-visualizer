@@ -15,7 +15,7 @@
       v-bind:class="{ 'mv-input-error': error }"
       id="mv-actions-input"
       spellcheck="false"
-      placeholder="Actions"
+      placeholder="Actions (optional)"
     >
     </textarea>
 

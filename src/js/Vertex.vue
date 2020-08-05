@@ -36,8 +36,8 @@
       <textarea
         :value="local.properties && local.properties.description"
         @input="update('properties.description', $event.target.value)"
-        placeholder="Description"
         id="mv-vertex-description-input"
+        placeholder="Description (optional)"
       ></textarea>
     </div>
 
@@ -55,7 +55,7 @@
       <input
         :value="local.sharedState"
         @input="update('sharedState', $event.target.value)"
-        placeholder="Shared state"
+        placeholder="Shared state (optional)"
         id="mv-vertex-shared-state-input"
         type="text"
       />
