@@ -17,21 +17,6 @@
       <span v-if="nameError" class="mv-error">{{nameError}}</span>
     </div>
 
-    <div class="mv-model-generator">
-      <label for="mv-model-generator-input">Generator</label>
-
-      <input
-        v-model="local.generator"
-        @input="validateGenerator($event.target.value) && update('generator', $event.target.value)"
-        v-bind:class="{ 'mv-input-error': generatorError }"
-        placeholder="generator(stop_condition)"
-        id="mv-model-generator-input"
-        type="text"
-      />
-
-      <span v-if="generatorError" class="mv-error">{{generatorError}}</span>
-    </div>
-
     <div class="mv-model-start-element">
       <label for="mv-model-start-element-input">Start element</label>
 
@@ -47,8 +32,31 @@
       </select>
     </div>
 
+    <div class="mv-model-generator">
+      <label for="mv-model-generator-input">Generator</label>
+
+      <div class="mv-help-tooltip">
+        <Info />
+
+        <span class="mv-help-tooltip-text">
+          Decides how to walk through the graph and when to stop.
+        </span>
+      </div>
+
+      <input
+        v-model="local.generator"
+        @input="validateGenerator($event.target.value) && update('generator', $event.target.value)"
+        v-bind:class="{ 'mv-input-error': generatorError }"
+        placeholder="generator(stop_condition)"
+        id="mv-model-generator-input"
+        type="text"
+      />
+
+      <span v-if="generatorError" class="mv-error">{{generatorError}}</span>
+    </div>
+
     <div class="mv-model-actions">
-      <Actions :value="local.actions" @input="updateActions($event)" />
+      <Actions :value="local.actions" :tooltipMessage="this.actionsTooltipMessage" @input="updateActions($event)" />
     </div>
 
     <div>
@@ -62,9 +70,10 @@ import { cloneDeep, tap } from 'lodash'
 
 import { isKeyword, isIdentifier } from './models'
 import Actions from './Actions.vue'
+import Info from './icons/Info.vue'
 
 export default {
-  components: { Actions },
+  components: { Actions, Info },
 
   props: {
     value: Object,
@@ -75,13 +84,15 @@ export default {
 
   data: () => ({
     nameError: '',
-    generatorError: ''
+    generatorError: '',
+    actionsTooltipMessage: 'Javascript code executed once before any edge or vertex is executed.'
   }),
 
   computed: {
     local() {
       return cloneDeep(this.value)
     },
+
     elements: function() {
       return [...this.vertices, ...this.edges]
     }

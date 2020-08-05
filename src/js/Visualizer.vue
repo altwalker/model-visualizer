@@ -48,7 +48,7 @@ export default {
     },
 
     renderGraph(container, graph) {
-      const svg = d3.select(container).select('svg')
+      const svg = d3.select(container).select('svg.mv-visualizer')
       const tooltip = d3.select(container).select('div.mv-tooltip')
       var inner = svg.select('g#graph')
 

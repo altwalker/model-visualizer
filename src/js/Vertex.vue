@@ -44,6 +44,14 @@
     <div class="mv-vertex-shared-state">
       <label for="mv-vertex-shared-state-input">Shared state</label>
 
+      <div class="mv-help-tooltip">
+        <Info />
+
+        <span class="mv-help-tooltip-text">
+          A common shared state value added to vertexes to link them together, allowing the path to jump from one to another.
+        </span>
+      </div>
+
       <input
         :value="local.sharedState"
         @input="update('sharedState', $event.target.value)"
@@ -55,6 +63,14 @@
 
     <div class="mv-vertex-blocked">
       <label for="mv-vertex-blocked-input">Blocked</label>
+
+      <div class="mv-help-tooltip">
+        <Info />
+
+        <span class="mv-help-tooltip-text">
+          A property which filters out the vertex from the path.
+        </span>
+      </div>
 
       <input
         :checked="local.properties && local.properties.blocked"
@@ -85,8 +101,11 @@
 <script>
 import { cloneDeep, tap, set } from 'lodash'
 import { isKeyword, isIdentifier } from './models'
+import Info from './icons/Info.vue'
 
 export default {
+  components: { Info },
+
   props: {
     value: Object,
     newVertex: Boolean

@@ -81,11 +81,20 @@
     <div class="mv-edge-guard">
       <label for="mv-edge-guard-input">Guard</label>
 
+      <div class="mv-help-tooltip">
+        <Info />
+
+        <span class="mv-help-tooltip-text">
+          A JavaScript conditional expression that blocks the edge until the condition is met.
+        </span>
+      </div>
+
       <input
         :value="local.guard"
         @input="update('guard', $event.target.value)"
         id="mv-edge-guard-input"
         type="text"
+        placeholder="Guard"
       />
     </div>
 
@@ -98,7 +107,7 @@
     </div>
 
     <div class="mv-edge-actions">
-      <Actions :value="local.actions" @input="updateActions($event)" />
+      <Actions :value="local.actions" :tooltipMessage="this.actionsTooltipMessage" @input="updateActions($event)" />
     </div>
 
     <div>
@@ -114,9 +123,10 @@ import { isKeyword, isIdentifier } from './models'
 import Actions from './Actions.vue'
 import Weight from './Weight.vue'
 import Dependency from './Dependency.vue'
+import Info from './icons/Info.vue'
 
 export default {
-  components: { Actions, Weight, Dependency },
+  components: { Actions, Weight, Dependency, Info },
 
   props: {
     value: Object,
@@ -133,7 +143,8 @@ export default {
       weight: this.value.weight || '',
       weightError: '',
       dependency: this.value.dependency || '',
-      dependencyError: ''
+      dependencyError: '',
+      actionsTooltipMessage: 'JavaScript code that is executed every time an edge is reached.'
     }
   },
 

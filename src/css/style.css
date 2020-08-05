@@ -1,23 +1,23 @@
 /* Colors */
 
 :root {
-    --vertex-color: #3182CE;
-    --selected-vertex-color: #434190;
-    --start-vertex-color: #38A169;
-    --blocked-vertex-color: #718096;
-    --fake-vertex-color: #4A5568;
+  --vertex-color: #3182CE;
+  --selected-vertex-color: #434190;
+  --start-vertex-color: #38A169;
+  --blocked-vertex-color: #718096;
+  --fake-vertex-color: #4A5568;
 
-    --vertex-label-color: #F7FAFC;
-    --selected-vertex-label-color: #F7FAFC;
+  --vertex-label-color: #F7FAFC;
+  --selected-vertex-label-color: #F7FAFC;
 
-    --edge-color: #A0AEC0;
-    --selected-edge-color: #2D3748;
+  --edge-color: #A0AEC0;
+  --selected-edge-color: #2D3748;
 
-    --edge-label-color: #2D3748;
-    --selected-edge-label-color: #2D3748;
+  --edge-label-color: #2D3748;
+  --selected-edge-label-color: #2D3748;
 
-    --tooltip-color: #2A4365;
-    --tootlip-text-color: #F7FAFC;
+  --tooltip-color: #2D3748;
+  --tootlip-text-color: #F7FAFC;
 }
 
 /* Graph SVG */
@@ -37,7 +37,7 @@ svg.mv-visualizer .node {
 }
 
 svg.mv-visualizer text::selection {
-    background: none;
+  background: none;
 }
 
 /* Visualizer Base */
@@ -70,10 +70,10 @@ svg.mv-visualizer text::selection {
 }
 
 .mv-visualizer .edgeLabels {
-    fill: var(--edge-label-color);
+  fill: var(--edge-label-color);
 
-    font-size: 1.2em;
-    font-weight: 400;
+  font-size: 1.2em;
+  font-weight: 400;
 }
 
 .mv-visualizer .edgePath path {
@@ -112,87 +112,146 @@ svg.mv-visualizer text::selection {
 }
 
 .mv-editmode .mv-visualizer .node.edit rect {
-    fill: var(--selected-vertex-color);
+  fill: var(--selected-vertex-color);
 
-    stroke-width: 1.75;
+  stroke-width: 1.75;
 }
 
 .mv-editmode .mv-visualizer .node-label.edit {
-    fill: var(--selected-vertex-label-color);
+  fill: var(--selected-vertex-label-color);
 }
 
 .mv-editmode .mv-visualizer .edgePath:hover path {
-    fill: var(--selected-edge-color);
-    stroke: var(--selected-edge-color);
+  fill: var(--selected-edge-color);
+  stroke: var(--selected-edge-color);
 
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .mv-editmode .mv-visualizer .edgePath.edit path {
-    stroke: var(--selected-edge-color);
-    fill: var(--selected-edge-color);
+  stroke: var(--selected-edge-color);
+  fill: var(--selected-edge-color);
 
-    font-weight: 600;
+  font-weight: 600;
 }
 
 .mv-editmode .mv-visualizer .edgeLabels .label :hover {
-    fill: var(--selected-edge-label-color);
+  fill: var(--selected-edge-label-color);
 
-    cursor: pointer;
-    font-weight: 600;
+  cursor: pointer;
+  font-weight: 600;
 }
 
 .mv-editmode .mv-visualizer .edgeLabels .label.edit {
-    font-weight: 600;
+  font-weight: 600;
 }
 
 .mv-editmode .mv-visualizer .dynamicPath {
-    stroke: var(--selected-edge-color);
-    fill: var(--selected-edge-color);
+  stroke: var(--selected-edge-color);
+  fill: var(--selected-edge-color);
 
-    stroke-width: 3px;
+  stroke-width: 3px;
 }
 
 .mv-editmode .mv-visualizer .dynamicPath.hidden {
-    stroke-width: 0;
+  stroke-width: 0;
 }
 
 /* Tooltips */
 
 .mv-tooltip {
-    position: fixed;
-    text-align: left;
+  position: fixed;
+  text-align: left;
 
-    max-width: 320px;
+  max-width: 320px;
 
-    font-size: 1rem;
-    font-weight: 400;
+  font-size: 1rem;
+  font-weight: 400;
 
-    padding: 10px 12px;
+  padding: 10px 12px;
 
-    background: var(--tooltip-color);
-    color: var(--tootlip-text-color);
+  background-color: var(--tooltip-color);
+  color: var(--tootlip-text-color);
 
-    border: 0;
-    border-radius: 1px;
+  font-size: 0.875rem;
 
-    pointer-events: none;
+  border: 0;
+  border-radius: 1px;
+
+  pointer-events: none;
 }
 
 .mv-tooltip-code {
-    display: inline-block;
+  display: inline-block;
 
-    font-size: 0.9em;
-    font-family: monospace;
+  font-size: 0.9em;
+  font-family: monospace;
 
-    padding: 3px 6px;
-    margin-top: 3px;
+  padding: 3px 6px;
+  margin-top: 3px;
 
-    border: 0px;
-    border-radius: 3px;
+  border: 0px;
+  border-radius: 3px;
 
-    background-color: #ecf0f1;
-    color: #e74c3c;
+  background-color: #ecf0f1;
+  color: #e74c3c;
+}
+
+/* Help Tooltip */
+
+.mv-help-icon {
+  fill: var(--tooltip-color);
+  cursor: pointer;
+}
+
+.mv-help-tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.mv-help-tooltip .mv-help-tooltip-text {
+  visibility: hidden;
+
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+
+  background-color: var(--tooltip-color);
+  color: var(--tootlip-text-color);
+
+  width: 220px;
+  padding: 0.5rem 0.5rem;
+  margin-left: -110px;
+
+  border: 0;
+  border-radius: 1px;
+
+  font-size: 0.875rem;
+  text-align: center;
+
+  opacity: 0;
+  transition: opacity 0.3s;
+
+  z-index: 1;
+}
+
+.mv-help-tooltip .mv-help-tooltip-text::after {
+  content: "";
+  position: absolute;
+
+  top: 100%;
+  left: 50%;
+
+  margin-left: -5px;
+  border-width: 5px;
+
+  border-style: solid;
+  border-color: var(--tooltip-color) transparent transparent transparent;
+}
+
+.mv-help-tooltip:hover .mv-help-tooltip-text {
+  visibility: visible;
+  opacity: 1;
 }
 
 /* PopUp */
