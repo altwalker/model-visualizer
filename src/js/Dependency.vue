@@ -16,7 +16,7 @@
       v-bind:class="{ 'mv-input-error': error }"
       id="mv-edge-dependency-input"
       type="text"
-      placeholder="Dependency"
+      placeholder="Dependency (optional)"
     />
 
     <span v-if="error" class="mv-error">{{error}}</span>

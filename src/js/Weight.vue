@@ -16,7 +16,7 @@
       v-bind:class="{ 'mv-input-error': error }"
       id="mv-edge-weight-input"
       type="text"
-      placeholder="Weight"
+      placeholder="Weight (optional)"
     />
 
     <span v-if="error" class="mv-error">{{error}}</span>

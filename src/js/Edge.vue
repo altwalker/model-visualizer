@@ -36,8 +36,8 @@
       <textarea
         :value="local.properties && local.properties.description"
         @input="update('properties.description', $event.target.value)"
-        placeholder="Description"
         id="mv-edge-description-input"
+        placeholder="Description (optional)"
       ></textarea>
     </div>
 
@@ -94,7 +94,7 @@
         @input="update('guard', $event.target.value)"
         id="mv-edge-guard-input"
         type="text"
-        placeholder="Guard"
+        placeholder="Guard (optional)"
       />
     </div>
 
