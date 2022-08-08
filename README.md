@@ -85,4 +85,4 @@ Join our Gitter chat room [here](https://gitter.im/altwalker/community) to chat 
 
 ## License
 
-Model-Visualizer is licensed under the GNU General Public License v3.0.
+Model-Visualizer is licensed under the [GNU General Public License v3.0](LICENSE).
