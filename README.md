@@ -1,6 +1,6 @@
 # Model-Visualizer
 
-A JavaScript library for visualizing and visualy editing JSON models for [AltWalker](https://altom.gitlab.io/altwalker/altwalker/) and [GraphWalker](http://graphwalker.github.io/).
+A JavaScript library for visualizing and visually editing JSON models for [AltWalker](https://altom.gitlab.io/altwalker/altwalker/) and [GraphWalker](http://graphwalker.github.io/).
 
 ## Installation
 
@@ -85,4 +85,4 @@ Join our Gitter chat room [here](https://gitter.im/altwalker/community) to chat 
 
 ## License
 
-Model-Visualizer is licensed under the GNU General Public License v3.0.
+This project is licensed under the [GNU General Public License v3.0](LICENSE).
