@@ -8,7 +8,6 @@ name: Unit Tests & Integration Tests
 
 on: [push]
 
-
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -58,7 +57,7 @@ jobs:
       if: ${{ always() }}
       with:
         name: screenshots-${{ matrix.browser }}
-        path: 'screenshots/**'
+        path: 'screenshots/'
 
   build:
     runs-on: ubuntu-latest
@@ -84,4 +83,4 @@ jobs:
       if: ${{ always() }}
       with:
         name: build
-        path: 'public/**'
+        path: 'public/'
