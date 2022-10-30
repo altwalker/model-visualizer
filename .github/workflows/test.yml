@@ -49,6 +49,6 @@ jobs:
 
     - name: Run tests
       env:
-        PUPPETEER_BROWSER: {{ matrix.browser }}
+        PUPPETEER_BROWSER: ${{ matrix.browser }}
       run: |
         npm run test --ci
