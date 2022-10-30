@@ -52,3 +52,10 @@ jobs:
         PUPPETEER_BROWSER: ${{ matrix.browser }}
       run: |
         npm run test --ci
+
+    - name: Upload screenshots
+      uses: actions/upload-artifact@v2
+      if: ${{ always() }}
+      with:
+        name: screenshots-${{ matrix.browser }}
+        path: 'screenshots/**'
