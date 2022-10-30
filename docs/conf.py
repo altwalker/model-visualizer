@@ -25,10 +25,10 @@ copyright = '2020, Altom Consulting'
 author = 'Altom Consulting'
 
 # The short X.Y version
-version = '0.1.0-alpha'
+version = '0.0.5'
 
 # The full version, including alpha/beta/rc tags
-release = '0.1.0-alpha'
+release = '0.0.5'
 
 primary_domain = 'js'
 js_source_path = '../src/js'
