@@ -56,7 +56,7 @@ jobs:
 
   build-docs:
     runs-on: ubuntu-latest
-    needs: [build, build-dev]
+    needs: build
 
     steps:
     - uses: actions/checkout@v3
