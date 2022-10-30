@@ -26,10 +26,14 @@ jobs:
     runs-on: ubuntu-latest
     needs: lint
 
+    strategy:
+      matrix:
+        branch: [main, develop]
+
     steps:
     - uses: actions/checkout@v3
       with:
-        ref: main
+        ref: ${{ matrix.branch }}
 
     - uses: actions/setup-node@v3
       with:
@@ -47,35 +51,7 @@ jobs:
       uses: actions/upload-artifact@v2
       if: ${{ always() }}
       with:
-        name: build
-        path: 'public/'
-
-  build-dev:
-    runs-on: ubuntu-latest
-    needs: lint
-
-    steps:
-    - uses: actions/checkout@v3
-      with:
-        ref: develop
-
-    - uses: actions/setup-node@v3
-      with:
-        node-version: 16
-
-    - name: Install npm dependencies
-      run: |
-        npm install
-
-    - name: Build
-      run: |
-        npm run build
-
-    - name: Upload build
-      uses: actions/upload-artifact@v2
-      if: ${{ always() }}
-      with:
-        name: build-dev
+        name: build-${{ matrix.branch }}
         path: 'public/'
 
   build-docs:
@@ -104,12 +80,12 @@ jobs:
 
     - uses: actions/download-artifact@v3
       with:
-        name: build
+        name: build-main
         path: 'docs/_build/html/build'
 
     - uses: actions/download-artifact@v3
       with:
-        name: build-dev
+        name: build-develop
         path: 'docs/_build/html/build-dev'
 
     - name: Upload artifact
