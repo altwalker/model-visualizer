@@ -1,12 +1,10 @@
 name: Unit Tests & Integration Tests
 
-# on:
-#   push:
-#     paths:
-#       - 'src/**'
-#       - 'tests/**'
-
-on: [push]
+on:
+  push:
+    paths:
+      - 'src/**'
+      - 'tests/**'
 
 jobs:
   lint:
