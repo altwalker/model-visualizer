@@ -115,7 +115,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: build
+    needs: build-docs
 
     if: github.ref == 'refs/heads/main'
 
