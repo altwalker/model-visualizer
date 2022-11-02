@@ -8,8 +8,8 @@ A JavaScript library for visualizing and visually editing JSON models for [AltWa
 
 You can get the latest browser-ready script:
 
-* https://altwalker.github.io/model-visualizer/build/model-visualizer.js
 * https://altwalker.github.io/model-visualizer/build/model-visualizer.css
+* https://altwalker.github.io/model-visualizer/build/model-visualizer.js
 
 #### CSS
 
