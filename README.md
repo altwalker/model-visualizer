@@ -1,6 +1,6 @@
 # Model-Visualizer
 
-A JavaScript library for visualizing and visually editing JSON models for [AltWalker](https://altom.gitlab.io/altwalker/altwalker/) and [GraphWalker](http://graphwalker.github.io/).
+A JavaScript library for visualizing and visually editing JSON models for [AltWalker](https://altwalker.github.io/altwalker/) and [GraphWalker](http://graphwalker.github.io/).
 
 ## Installation
 
@@ -8,15 +8,15 @@ A JavaScript library for visualizing and visually editing JSON models for [AltWa
 
 You can get the latest browser-ready script:
 
-* https://altom.gitlab.io/altwalker/model-visualizer/build/model-visualizer.js
-* https://altom.gitlab.io/altwalker/model-visualizer/build/model-visualizer.css
+* https://altwalker.github.io/model-visualizer/build/model-visualizer.js
+* https://altwalker.github.io/model-visualizer/build/model-visualizer.css
 
 #### CSS
 
 Copy-paste the stylesheet `<link>` into your `<head>` before all other stylesheets to load our CSS.
 
 ```html
-<link rel="stylesheet" href="https://altom.gitlab.io/altwalker/model-visualizer/build/model-visualizer.css">
+<link rel="stylesheet" href="https://altwalker.github.io/model-visualizer/build/model-visualizer.css">
 ```
 
 #### JS
@@ -24,7 +24,7 @@ Copy-paste the stylesheet `<link>` into your `<head>` before all other styleshee
 Place the following `<script>`s near the end of your pages, right before the closing `</body>` tag, to enable them.
 
 ```html
-<script src="https://altom.gitlab.io/altwalker/model-visualizer/build/model-visualizer.js"></script>
+<script src="https://altwalker.github.io/model-visualizer/build/model-visualizer.js"></script>
 ```
 
 ### Required Dependencies
@@ -47,7 +47,7 @@ The following code initializes `ModelVisualizer` in `editMode` inside the elemen
 let visualizer = new ModelVisualizer({container: "visualizer", editMode: false});
 ```
 
-Yo can find a working example [here](https://altom.gitlab.io/altwalker/model-visualizer/_static/examples/edit-mode.html).
+Yo can find a working example [here](https://altwalker.github.io/model-visualizer/_static/examples/edit-mode.html).
 
 ## Setting Up a Development Environment
 
