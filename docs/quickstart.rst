@@ -8,8 +8,8 @@ Browser scripts
 
 You can get the latest browser-ready script:
 
-* https://altom.gitlab.io/altwalker/model-visualizer/build/model-visualizer.js
-* https://altom.gitlab.io/altwalker/model-visualizer/build/model-visualizer.css
+* https://altwalker.github.io/model-visualizer/build/model-visualizer.css
+* https://altwalker.github.io/model-visualizer/build/model-visualizer.js
 
 CSS
 ~~~
@@ -19,7 +19,7 @@ stylesheets to load our CSS.
 
 .. code-block:: html
 
-    <link rel="stylesheet" href="https://altom.gitlab.io/altwalker/model-visualizer/build/model-visualizer.css">
+    <link rel="stylesheet" href="https://altwalker.github.io/model-visualizer/build/model-visualizer.css">
 
 
 JavaScript
@@ -30,7 +30,7 @@ closing ``</body>`` tag, to enable them.
 
 .. code-block:: html
 
-    <script src="https://altom.gitlab.io/altwalker/model-visualizer/build/model-visualizer.js"></script>
+    <script src="https://altwalker.github.io/model-visualizer/build/model-visualizer.js"></script>
 
 
 Dependencies
@@ -61,7 +61,7 @@ library.
 
     let visualizer = new ModelVisualizer({container: "visualizer", editMode: false});
 
-Yo can find a working example `here <https://altom.gitlab.io/altwalker/model-visualizer/_static/examples/edit-mode.html>`_.
+Yo can find a working example `here <https://altwalker.github.io/model-visualizer/_static/examples/edit-mode.html>`_.
 
 Starter Template
 ----------------
@@ -76,7 +76,7 @@ Put it all together and your pages should look like this:
             <title>ModelVisualizer - Starter Template</title>
 
             <!-- ModelVisualizer CSS -->
-            <link rel="stylesheet" href="https://altom.gitlab.io/altwalker/model-visualizer/build/model-visualizer.css">
+            <link rel="stylesheet" href="https://altwalker.github.io/model-visualizer/build/model-visualizer.css">
 
             <!-- Optional Milligram CSS -->
             <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/milligram/1.3.0/milligram.css">
@@ -96,7 +96,7 @@ Put it all together and your pages should look like this:
             <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"></script>
 
             <!-- Model-Visualizer -->
-            <script src="https://altom.gitlab.io/altwalker/model-visualizer/build/model-visualizer.js"></script>
+            <script src="https://altwalker.github.io/model-visualizer/build/model-visualizer.js"></script>
 
             <!-- Main JS -->
             <script>

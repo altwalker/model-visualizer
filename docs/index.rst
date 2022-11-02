@@ -5,7 +5,7 @@ Welcome to ModelVisualizer's documentation!
   :keywords: GraphWalker, AltWalker, Model-Based Testing
 
 A JavaScript library for visualizing and visualy editing JSON models for
-`AltWalker <https://altom.gitlab.io/altwalker/altwalker/>`_ and `GraphWalker <http://graphwalker.github.io/>`_.
+`AltWalker <https://altwalker.github.io/altwalker>`_ and `GraphWalker <http://graphwalker.github.io>`_.
 
 Get started with the :doc:`quickstart`. There is also a list of
 :doc:`examples`. The rest of the documentation describes how to
@@ -26,9 +26,9 @@ with us or with other members of the community.
 .. toctree::
     :caption: Useful Links:
 
-    GraphWalker <http://graphwalker.github.io/>
-    AltWalker <https://altom.gitlab.io/altwalker/altwalker/>
-    Model Editor <https://altom.gitlab.io/altwalker/model-editor>
+    GraphWalker <http://graphwalker.github.io>
+    AltWalker <https://altwalker.github.io/altwalker>
+    Model Editor <https://altwalker.github.io/model-editor>
 
 .. toctree::
     :caption: Community:

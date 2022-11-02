@@ -111,12 +111,12 @@ html_css_files = [
 
 # If you want to integrate editing into your own theme.
 #
-# For integrating GitLab
+# For integrating GitHub
 html_context = {
-    "display_gitlab": True, # Integrate GitLab
-    "gitlab_user": "altom/model-visualizer", # Username
-    "gitlab_repo": "model-visualizer", # Repo name
-    "gitlab_version": "master", # Version
+    "display_github": True, # Integrate GitHub
+    "github_user": "altwalker", # Username
+    "github_repo": "model-visualizer", # Repo name
+    "github_version": "main", # Version
     "conf_py_path": "/docs/", # Path in the checkout to the docs root
 }
 
