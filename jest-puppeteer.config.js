@@ -5,8 +5,8 @@ module.exports = {
     launchTimeout: 10000
   },
   launch: {
-    args: ['--no-sandbox', '--disable-features=VizDisplayCompositor']
-    // headless: false
+    args: ['--no-sandbox', '--disable-features=VizDisplayCompositor'],
+    headless: 'new'
   },
   browser: process.env.PUPPETEER_BROWSER || 'chromium'
 }
