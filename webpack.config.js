@@ -7,6 +7,12 @@ module.exports = {
   entry: {
     app: ['./src/js/ModelVisualizer.js']
   },
+  devServer: {
+    static: {
+      directory: path.join(__dirname, 'examples'),
+      serveIndex: true,
+    },
+  },
   output: {
     path: path.resolve(__dirname, 'public'),
     filename: 'model-visualizer.js',

@@ -5,7 +5,7 @@
   "scripts": {
     "build:dev": "webpack --mode development",
     "build": "webpack --mode production",
-    "dev": "webpack-dev-server --content-base examples/ --host 0.0.0.0",
+    "dev": "webpack-dev-server --host 0.0.0.0",
     "test": "jest",
     "lint": "eslint --ext '.js,.vue' src",
     "lint:fix": "eslint --ext '.js,.vue' src --fix"
