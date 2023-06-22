@@ -13,7 +13,7 @@ function createDynamicPath(gInteraction, graph, svg) {
     edgeId: null,
 
     getSvgLocation(x, y) {
-      var pt = svg.node().createSVGPoint()
+      const pt = svg.node().createSVGPoint()
 
       pt.x = x
       pt.y = y
@@ -25,7 +25,7 @@ function createDynamicPath(gInteraction, graph, svg) {
       this.edgeId = edgeId
       const node = d3.select(graph.node(nodeId).elem).node()
       const coords = node.getBoundingClientRect()
-      var location = this.getSvgLocation(coords.x + coords.width / 2, coords.y + coords.height / 2)
+      const location = this.getSvgLocation(coords.x + coords.width / 2, coords.y + coords.height / 2)
 
       this.endx = this.stx = location.x
       this.endy = this.sty = location.y
@@ -95,10 +95,10 @@ class Interaction {
 export function setupInteraction(svg, graph) {
   const interaction = new Interaction()
 
-  var dLine = createDynamicPath(svg.select('g#interaction'), graph, svg)
+  const dLine = createDynamicPath(svg.select('g#interaction'), graph, svg)
 
   function mousemove() {
-    var coords = d3.mouse(this)
+    const coords = d3.mouse(this)
     dLine.paint(coords)
   }
 
@@ -169,8 +169,8 @@ export function setupInteraction(svg, graph) {
 }
 
 export function setupZoom(svg, graph) {
-  var inner = svg.select('g#graph')
-  var zoom = d3.zoom()
+  const inner = svg.select('g#graph')
+  const zoom = d3.zoom()
     .scaleExtent([0.1, 7])
     .on('zoom', function () {
       inner.attr('transform', d3.event.transform)
