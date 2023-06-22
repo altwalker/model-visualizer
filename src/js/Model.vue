@@ -36,7 +36,7 @@
       <label for="mv-model-generator-input">Generator</label>
 
       <div class="mv-help-tooltip">
-        <InfoIcon />
+        <Info />
 
         <span class="mv-help-tooltip-text">
           Decides how to walk through the graph and when to stop.
@@ -56,7 +56,7 @@
     </div>
 
     <div class="mv-model-actions">
-      <ActionsForm :value="local.actions" :tooltipMessage="this.actionsTooltipMessage" @input="updateActions($event)" />
+      <Actions :value="local.actions" :tooltipMessage="this.actionsTooltipMessage" @input="updateActions($event)" />
     </div>
 
     <div>
@@ -69,11 +69,11 @@
 import { cloneDeep, tap } from 'lodash'
 
 import { isKeyword, isIdentifier } from './models'
-import ActionsForm from './ActionsForm.vue'
-import InfoIcon from './icons/InfoIcon.vue'
+import Actions from './Actions.vue'
+import Info from './icons/Info.vue'
 
 export default {
-  components: { ActionsForm, InfoIcon },
+  components: { Actions, Info },
 
   props: {
     value: Object,

@@ -3,7 +3,7 @@
     <label for="mv-edge-dependency-input">Dependency</label>
 
     <div class="mv-help-tooltip">
-      <InfoIcon />
+      <Info />
 
       <span class="mv-help-tooltip-text">
         An integer used by the dependency_edge_coverage stop condition to finish the path when all the edges with dependency higher or equal to the threshold are reached.
@@ -24,10 +24,10 @@
 </template>
 <script>
 import { isDependencyValid } from './models'
-import InfoIcon from './icons/InfoIcon.vue'
+import Info from './icons/Info.vue'
 
 export default {
-  components: { InfoIcon },
+  components: { Info },
 
   props: {
     value: Number

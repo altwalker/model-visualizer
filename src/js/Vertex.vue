@@ -45,7 +45,7 @@
       <label for="mv-vertex-shared-state-input">Shared state</label>
 
       <div class="mv-help-tooltip">
-        <InfoIcon />
+        <Info />
 
         <span class="mv-help-tooltip-text">
           A common shared state value added to vertexes to link them together, allowing the path to jump from one to another.
@@ -65,7 +65,7 @@
       <label for="mv-vertex-blocked-input">Blocked</label>
 
       <div class="mv-help-tooltip">
-        <InfoIcon />
+        <Info />
 
         <span class="mv-help-tooltip-text">
           A property which filters out the vertex from the path.
@@ -101,10 +101,10 @@
 <script>
 import { cloneDeep, tap, set } from 'lodash'
 import { isKeyword, isIdentifier } from './models'
-import InfoIcon from './icons/InfoIcon.vue'
+import Info from './icons/Info.vue'
 
 export default {
-  components: { InfoIcon },
+  components: { Info },
 
   props: {
     value: Object,
