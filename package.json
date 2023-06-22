@@ -1,7 +1,7 @@
 {
   "name": "model-visualizer",
-  "version": "0.0.1",
-  "description": "Visualize your AltWalker or GraphWalker json models",
+  "version": "0.0.6",
+  "description": "Model-Visualizer is a JavaScript library that enables visualization and visual editing of JSON models for AltWalker and GraphWalker.",
   "scripts": {
     "build:dev": "webpack --mode development",
     "build": "webpack --mode production",
