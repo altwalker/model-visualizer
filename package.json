@@ -18,7 +18,7 @@
     "@vue/cli-plugin-babel": "^3.12.1",
     "babel-jest": "^24.9.0",
     "babel-loader": "^8.0.6",
-    "css-loader": "^3.5.3",
+    "css-loader": "^6.8.1",
     "dagre-d3": "^0.6.4",
     "eslint": "^8.43.0",
     "eslint-config-standard": "^17.1.0",
