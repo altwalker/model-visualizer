@@ -13,7 +13,7 @@ import { createGraph, renderTooltips, renderLegend } from './graph'
 import { setupZoom } from './interaction'
 
 export default {
-  name: 'EditorComponent',
+  name: 'Visualizer',
   data: function() {
     return {
       svg: null
@@ -37,7 +37,7 @@ export default {
   },
   methods: {
     paintGraph() {
-      const { graph, legendDomain, legendRange } = createGraph(
+      var { graph, legendDomain, legendRange } = createGraph(
         this.models.models,
         this.graphLayoutOptions
       )
@@ -50,7 +50,7 @@ export default {
     renderGraph(container, graph) {
       const svg = d3.select(container).select('svg.mv-visualizer')
       const tooltip = d3.select(container).select('div.mv-tooltip')
-      const inner = svg.select('g#graph')
+      var inner = svg.select('g#graph')
 
       const width = container.offsetWidth
       const height = container.offsetHeight
@@ -58,7 +58,7 @@ export default {
       svg.attr('width', width).attr('height', height)
 
       // Create the renderer
-      const render = new dagreD3.render() // eslint-disable-line new-cap
+      var render = new dagreD3.render() // eslint-disable-line new-cap
 
       // Run the renderer. This is what draws the final graph.
       render(inner, graph)

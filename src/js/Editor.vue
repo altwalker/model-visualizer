@@ -17,7 +17,7 @@
         <button class="mv-button mv-button-new-model" @click="createModel">New model</button>
       </div>
 
-      <ModelForm
+      <Model
         v-if="editModelMeta && editableModelIndex >=0"
         v-model="editableModels.models[editableModelIndex]"
         :modelNames="allModelNames"
@@ -26,7 +26,7 @@
         v-on:delete="showDeleteModelPopUp"
       />
 
-      <EdgeForm
+      <Edge
         v-if="editableEdgeIndex >= 0"
         v-model="edges[editableEdgeIndex]"
         :vertices="vertices"
@@ -34,7 +34,7 @@
         v-on:delete="removeEdge(edges[editableEdgeIndex].id)"
       />
 
-      <VertexForm
+      <Vertex
         v-if="editableVertexIndex >=0 "
         v-model="vertices[editableVertexIndex]"
         :newVertex="newVertex"
@@ -81,16 +81,16 @@
 </template>
 
 <script>
-import EdgeForm from './EdgeForm.vue'
-import VertexForm from './VertexForm.vue'
-import ModelForm from './ModelForm.vue'
+import Edge from './Edge.vue'
+import Vertex from './Vertex.vue'
+import Model from './Model.vue'
 import UndoRedo from './undoredo'
 import { createGraph, renderTooltips, renderLegend } from './graph'
 import { setupInteraction } from './interaction'
 
 export default {
-  name: 'EditorComponent',
-  components: { EdgeForm, VertexForm, ModelForm },
+  name: 'Editor',
+  components: { Edge, Vertex, Model },
   undoredo: null,
 
   data: function() {
@@ -303,7 +303,7 @@ export default {
 
     paintGraph() {
       const models = [this.editableModels.models[this.editableModelIndex]]
-      const { graph, legendDomain, legendRange } = createGraph(
+      var { graph, legendDomain, legendRange } = createGraph(
         models,
         this.graphLayoutOptions
       )
@@ -424,8 +424,8 @@ export default {
       const edge = {
         id: `e${id}`,
         name: `e${id}`,
-        sourceVertexId,
-        targetVertexId
+        sourceVertexId: sourceVertexId,
+        targetVertexId: targetVertexId
       }
       this.edges.push(edge)
       this.selectEdge(edge.id)
@@ -486,8 +486,8 @@ export default {
       }
 
       // Create the renderer
-      const render = new dagreD3.render() // eslint-disable-line new-cap
-      const inner = svg.select('g#graph')
+      var render = new dagreD3.render() // eslint-disable-line new-cap
+      var inner = svg.select('g#graph')
 
       // Run the renderer. This is what draws the final graph.
       render(inner, graph)

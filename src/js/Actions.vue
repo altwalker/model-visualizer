@@ -3,7 +3,7 @@
     <label for="mv-actions-input">Actions</label>
 
     <div class="mv-help-tooltip">
-      <InfoIcon />
+      <Info />
 
       <span class="mv-help-tooltip-text">{{tooltipMessage}}</span>
     </div>
@@ -24,10 +24,10 @@
 </template>
 
 <script>
-import InfoIcon from './icons/InfoIcon.vue'
+import Info from './icons/Info.vue'
 
 export default {
-  components: { InfoIcon },
+  components: { Info },
 
   props: {
     value: Array,

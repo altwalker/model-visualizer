@@ -1,7 +1,5 @@
 /* global PATH, visualizer, jest, page, expect, describe, beforeEach, test */
 
-jest.retryTimes(5);
-
 const models = {
   name: 'Test Models',
   models: [

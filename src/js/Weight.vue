@@ -3,7 +3,7 @@
     <label for="mv-edge-weight-input">Weight</label>
 
     <div class="mv-help-tooltip">
-      <InfoIcon />
+      <Info />
 
       <span class="mv-help-tooltip-text">
         A number between 0 and 1 used by the weighted_random generator. It represents the probability of an edge getting chosen.
@@ -25,10 +25,10 @@
 
 <script>
 import { isWeightValid } from './models'
-import InfoIcon from './icons/InfoIcon.vue'
+import Info from './icons/Info.vue'
 
 export default {
-  components: { InfoIcon },
+  components: { Info },
 
   props: {
     value: Number
