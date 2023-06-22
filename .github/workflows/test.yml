@@ -5,6 +5,11 @@ on:
     paths:
       - 'src/**'
       - 'tests/**'
+      - package.json
+      - package-lock.json
+      - webpack.config.js
+      - jest-puppeteer.config.js
+      - jest.config.js
 
 jobs:
   lint:
