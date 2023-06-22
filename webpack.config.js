@@ -4,13 +4,13 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin');
 var path = require('path');
 
 module.exports = {
+  mode: 'development',
   entry: {
     app: ['./src/js/ModelVisualizer.js']
   },
   devServer: {
     static: {
-      directory: path.join(__dirname, 'examples'),
-      serveIndex: true,
+      directory: path.join(__dirname, 'examples')
     },
   },
   output: {
