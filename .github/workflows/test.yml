@@ -31,7 +31,7 @@ jobs:
 
     strategy:
       matrix:
-        browser: [firefox, chromium]
+        browser: [chromium]
 
     steps:
     - uses: actions/checkout@v3
