@@ -1,7 +1,7 @@
 import Vue from 'vue'
 
-import EditorComponent from './EditorComponent.vue'
-import VisualizerComponent from './VisualizerComponent.vue'
+import Editor from './Editor.vue'
+import Visualizer from './Visualizer.vue'
 import { ValidationError } from './exceptions'
 import { defaultModels, validateModels } from './models'
 import '../css/style.css'
@@ -19,7 +19,7 @@ class ModelVisualizer {
    * @param {string | HTMLElement} options.container - The container or container id where the model will be rendered.
    * @param {Object} [options.models] - The models to be rendered.
    * @param {Boolean} [options.editMode=true] - Enable or disable editMode.
-   * @param {Function} [options.onModelsChange] - Called when the model changes. Called only if editMode is enabled. It's called with one parameter the new value of the models.
+   * @param {Function} [options.onModelsChange] - Called when the model changes. Called only if editMode is enabled. It's called with one paramter the new value of the models.
    * @param {string} options.legendContainer - The container id where the legend will be rendered.
    * @param {Object} options.graphLayoutOptions - The dagreD3 graph layout options.
    * @param {Object} options.graphLayoutOptions.rankdir - Direction for rank nodes. Can be TB, BT, LR, or RL, where T = top, B = bottom, L = left, and R = right.
@@ -61,17 +61,17 @@ class ModelVisualizer {
     }
     ModelVisualizer.validate(data.models)
     this.vm = new Vue({
-      components: { EditorComponent, VisualizerComponent },
-      data,
+      components: { Editor, Visualizer },
+      data: data,
       template: `
-  <EditorComponent
+  <Editor
     ref='editor'
     v-if="editMode"
     v-on:change="modelsChanged"
     :models='models'
     :legend-container="legendContainer"
     :graph-layout-options="graphLayoutOptions" />
-  <VisualizerComponent ref='visualizer' v-else :models='models' :legend-container="legendContainer" :graph-layout-options="graphLayoutOptions"/>
+  <Visualizer ref='visualizer' v-else :models='models' :legend-container="legendContainer" :graph-layout-options="graphLayoutOptions"/>
         `,
       methods: {
         modelsChanged: function (models) {

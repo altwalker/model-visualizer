@@ -1,6 +1,6 @@
 # Model-Visualizer
 
-Model-Visualizer is a JavaScript library that enables visualization and visual editing of JSON models for [AltWalker](https://altwalker.github.io/altwalker/) and [GraphWalker](http://graphwalker.github.io/).
+A JavaScript library for visualizing and visually editing JSON models for [AltWalker](https://altwalker.github.io/altwalker/) and [GraphWalker](http://graphwalker.github.io/).
 
 ## Installation
 

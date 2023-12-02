@@ -2,7 +2,7 @@ import { isString } from 'lodash'
 
 import { ValidationError, PlottingError } from './exceptions'
 
-export const defaultModels = {
+export var defaultModels = {
   name: 'Default Models',
   models: [
     {
@@ -108,13 +108,13 @@ export function isKeyword(name) {
 export function isIdentifier(name) {
   // The regular expression is based on the python identifiers specification from: https://docs.python.org/3/reference/lexical_analysis.html#identifiers
 
+  /* eslint-disable-next-line no-misleading-character-class */
   let identifierRegex
 
   try {
-    /* eslint-disable-next-line prefer-regex-literals */
     identifierRegex = new RegExp('^[\\p{L}\\p{Nl}\u1885\u1886\u2118\u212E\u309B\u309CA-Za-z_][\\p{L}\\p{Nl}\\p{Mn}\\p{Mc}\\p{Nd}\\p{Pc}\u1885\u1886\u2118\u212E\u309B\u309C\u00B7\u0387\u1369\u1369\u136A\u136B\u136C\u136D\u136E\u136F\u1370\u1371\u19DA0-9A-Za-z_]*$', 'u')
   } catch (error) {
-    identifierRegex = /^[_a-zA-Z]\\w*$/
+    identifierRegex = new RegExp('^[_a-zA-Z]\\w*$')
   }
 
   if (!identifierRegex.test(name)) {
@@ -231,14 +231,14 @@ export function validateModels(json) {
     throw new PlottingError('Models should not be empty.')
   }
 
-  const verticesIds = {}
-  const edgesIds = {}
+  var verticesIds = {}
+  var edgesIds = {}
 
-  let hasStartElement = false
-  const modelNames = []
+  var hasStartElement = false
+  var modelNames = []
 
   models.forEach((model) => {
-    const modelVerticesIds = {}
+    var modelVerticesIds = {}
 
     const vertices = model.vertices || []
     vertices.forEach(vertex => {
@@ -280,8 +280,8 @@ export function validateModels(json) {
     validateModel(model)
     modelNames.push(model.name)
 
-    let modelHasStartElement = false
-    let modelHasSharedState = false
+    var modelHasStartElement = false
+    var modelHasSharedState = false
 
     model.vertices.forEach(vertex => {
       validateVertex(vertex)

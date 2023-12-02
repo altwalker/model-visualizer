@@ -3,7 +3,7 @@ import { isEmpty, omit } from 'lodash'
 
 let fakeNodesCount = 0
 
-const commonLegendDomain = ['Start Vertex', 'Blocked Vertex', 'Fake Vertex']
+const commonLegendDommain = ['Start Vertex', 'Blocked Vertex', 'Fake Vertex']
 const commonLegendRange = ['var(--start-vertex-color)', 'var(--blocked-vertex-color)', 'var(--fake-vertex-color)']
 
 function createVertexLabel(vertex, startElementsIds) {
@@ -102,13 +102,13 @@ export function createGraph(models, graphOptions) {
   fakeNodesCount = 0
 
   // Create a new directed graph
-  const graph = new dagreD3.graphlib.Graph({ multigraph: true }).setGraph(graphOptions || {})
+  var graph = new dagreD3.graphlib.Graph({ multigraph: true }).setGraph(graphOptions || {})
 
-  const vertices = models.reduce((acc, cur) => acc.concat(cur.vertices), [])
-  const edges = models.reduce((acc, cur) => acc.concat(cur.edges), [])
+  var vertices = models.reduce((acc, cur) => acc.concat(cur.vertices), [])
+  var edges = models.reduce((acc, cur) => acc.concat(cur.edges), [])
 
-  const startElementsIds = models.map(x => x.startElementId)
-  const sharedStates = vertices.reduce((acc, cur) => {
+  var startElementsIds = models.map(x => x.startElementId)
+  var sharedStates = vertices.reduce((acc, cur) => {
     if (cur.sharedState) {
       if (acc[cur.sharedState]) {
         acc[cur.sharedState].push(cur.id)
@@ -120,8 +120,8 @@ export function createGraph(models, graphOptions) {
     return acc
   }, {})
 
-  const sharedStatesNames = Object.keys(sharedStates)
-  const colors = {}
+  var sharedStatesNames = Object.keys(sharedStates)
+  var colors = {}
 
   // Automatically label each of the nodes
   vertices.forEach(function (vertex) {
@@ -155,7 +155,7 @@ export function createGraph(models, graphOptions) {
       )
     )
   graph.nodes().forEach(function (v) {
-    const node = graph.node(v)
+    var node = graph.node(v)
     node.rx = node.ry = 1
 
     sharedStatesNames.forEach(key => {
@@ -167,8 +167,8 @@ export function createGraph(models, graphOptions) {
   })
 
   return {
-    graph,
-    legendDomain: [...commonLegendDomain, ...sharedStatesNames.map(name => `Shared State: ${name}`)],
+    graph: graph,
+    legendDomain: [...commonLegendDommain, ...sharedStatesNames.map(name => `Shared State: ${name}`)],
     legendRange: [
       ...commonLegendRange,
       ...sharedStatesNames.map(name => color(name))
@@ -310,11 +310,11 @@ export function renderLegend(legendContainer, legendDomain, legendRange) {
     .attr('class', 'legendQuant')
     .attr('transform', 'translate(20,20)')
 
-  const ordinal = d3.scaleOrdinal()
+  var ordinal = d3.scaleOrdinal()
     .domain(legendDomain)
     .range(legendRange)
 
-  const legend = d3.legendColor()
+  var legend = d3.legendColor()
     .title('Graph Legend')
     .scale(ordinal)
 
