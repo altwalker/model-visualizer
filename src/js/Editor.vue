@@ -88,6 +88,9 @@ import UndoRedo from './undoredo'
 import { createGraph, renderTooltips, renderLegend } from './graph'
 import { setupInteraction } from './interaction'
 
+import * as dagreD3 from 'dagre-d3-es';
+import * as d3 from 'd3';
+
 export default {
   name: 'Editor',
   components: { Edge, Vertex, Model },

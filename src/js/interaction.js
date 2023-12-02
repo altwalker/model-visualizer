@@ -1,3 +1,5 @@
+import * as d3 from 'd3';
+
 function createDynamicPath(gInteraction, graph, svg) {
   const dPath = {
     path: gInteraction.select('path.dynamicPath'),
@@ -97,8 +99,8 @@ export function setupInteraction(svg, graph) {
 
   var dLine = createDynamicPath(svg.select('g#interaction'), graph, svg)
 
-  function mousemove() {
-    var coords = d3.mouse(this)
+  function mousemove(event) {
+    var coords = d3.pointer(event);
     dLine.paint(coords)
   }
 
@@ -134,7 +136,7 @@ export function setupInteraction(svg, graph) {
     }
   }
 
-  function mouseover(d) {
+  function mouseover(event, d) {
     if (dLine.active) {
       dLine.endNodeId = d
     }
@@ -146,16 +148,16 @@ export function setupInteraction(svg, graph) {
 
   svg.selectAll('g.node .label').attr('pointer-events', 'none')
   svg.selectAll('g.node')
-    .on('mousedown.interaction', nodeId => {
-      d3.event.stopPropagation()
+    .on('mousedown.interaction', (event, nodeId) => {
+      event.stopPropagation()
       dLine.activate(nodeId)
     })
     .on('mouseout.interaction', mouseout)
     .on('mouseover.interaction', mouseover)
 
   svg.selectAll('.edgePath, .edgeLabel')
-    .on('mousedown.interaction', edge => {
-      d3.event.stopPropagation()
+    .on('mousedown.interaction', (event, edge) => {
+      event.stopPropagation()
       dLine.activate(edge.v, edge.name)
     })
 
@@ -172,8 +174,8 @@ export function setupZoom(svg, graph) {
   var inner = svg.select('g#graph')
   var zoom = d3.zoom()
     .scaleExtent([0.1, 7])
-    .on('zoom', function () {
-      inner.attr('transform', d3.event.transform)
+    .on('zoom', function (event) {
+      inner.attr('transform', event.transform)
     })
   svg.call(zoom)
   if (!inner.attr('transform')) {

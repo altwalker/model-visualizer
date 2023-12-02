@@ -1,4 +1,7 @@
-import dagreD3 from 'dagre-d3'
+import * as dagreD3 from 'dagre-d3-es';
+import * as d3 from 'd3';
+import { legendColor } from 'd3-svg-legend'
+
 import { isEmpty, omit } from 'lodash'
 
 let fakeNodesCount = 0
@@ -155,8 +158,8 @@ export function createGraph(models, graphOptions) {
       )
     )
   graph.nodes().forEach(function (v) {
-    var node = graph.node(v)
-    node.rx = node.ry = 1
+    let node = graph.node(v);
+    node.rx = node.ry = 1;
 
     sharedStatesNames.forEach(key => {
       if (sharedStates[key].includes(v)) {
@@ -263,7 +266,7 @@ function addTootips(svg, tooltip, cssSelector, htlmFunction, graph) {
 
   svg
     .selectAll(cssSelector)
-    .on('mouseover.tooltip', d => {
+    .on('mouseover.tooltip', (event, d) => {
       tooltip
         .transition()
         .style('display', 'block')
@@ -271,8 +274,8 @@ function addTootips(svg, tooltip, cssSelector, htlmFunction, graph) {
 
       tooltip
         .html(htlmFunction(graph, d))
-        .style('left', d3.event.pageX + tooltipOffset.x + 'px')
-        .style('top', d3.event.pageY + tooltipOffset.y + 'px')
+        .style('left', event.pageX + tooltipOffset.x + 'px')
+        .style('top', event.pageY + tooltipOffset.y + 'px')
         .style('cursor', 'pointer')
     })
     .on('mouseout.tooltip', d => {
@@ -314,7 +317,7 @@ export function renderLegend(legendContainer, legendDomain, legendRange) {
     .domain(legendDomain)
     .range(legendRange)
 
-  var legend = d3.legendColor()
+  var legend = legendColor()
     .title('Graph Legend')
     .scale(ordinal)
 
