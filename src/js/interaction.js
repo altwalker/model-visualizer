@@ -1,4 +1,4 @@
-import * as d3 from 'd3';
+import * as d3 from 'd3'
 
 function createDynamicPath(gInteraction, graph, svg) {
   const dPath = {
@@ -100,7 +100,7 @@ export function setupInteraction(svg, graph) {
   var dLine = createDynamicPath(svg.select('g#interaction'), graph, svg)
 
   function mousemove(event) {
-    var coords = d3.pointer(event);
+    var coords = d3.pointer(event)
     dLine.paint(coords)
   }
 

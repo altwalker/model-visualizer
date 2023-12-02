@@ -77,7 +77,7 @@ export default {
     },
 
     validateActions(actions) {
-      if (!actions || actions == []) {
+      if (!actions || actions.length === 0) {
         this.error = ''
         return true
       }

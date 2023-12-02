@@ -1,7 +1,6 @@
-import * as dagreD3 from 'dagre-d3-es';
-import * as d3 from 'd3';
+import * as dagreD3 from 'dagre-d3-es'
+import * as d3 from 'd3'
 import { legendColor } from 'd3-svg-legend'
-
 import { isEmpty, omit } from 'lodash'
 
 let fakeNodesCount = 0
@@ -158,8 +157,8 @@ export function createGraph(models, graphOptions) {
       )
     )
   graph.nodes().forEach(function (v) {
-    let node = graph.node(v);
-    node.rx = node.ry = 1;
+    const node = graph.node(v)
+    node.rx = node.ry = 1
 
     sharedStatesNames.forEach(key => {
       if (sharedStates[key].includes(v)) {
