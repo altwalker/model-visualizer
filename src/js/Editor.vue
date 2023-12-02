@@ -445,11 +445,11 @@ export default {
 
       const interaction = setupInteraction(this.svg, graph)
 
-      interaction.onUpdateEdge = (edgeid, sourceVertexId, targetVertexId) => {
-        const edge = self.getEdge(edgeid)
+      interaction.onUpdateEdge = (edgeId, sourceVertexId, targetVertexId) => {
+        const edge = self.getEdge(edgeId)
         edge.sourceVertexId = sourceVertexId
         edge.targetVertexId = targetVertexId
-        self.selectEdge(edgeid)
+        self.selectEdge(edgeId)
       }
       interaction.onCreateEdge = (sourceVertexId, targetVertexId) => {
         self.createEdge(sourceVertexId, targetVertexId)
