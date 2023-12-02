@@ -29,14 +29,11 @@ Place the following `<script>`s near the end of your pages, right before the clo
 
 ### Required Dependencies
 
-* [D3](https://d3js.org/)
-* [dagre-d3](https://github.com/dagrejs/dagre-d3)
 * [Vue.js](https://vuejs.org/)
 * [lodash](https://lodash.com/)
 
 ### Optional Dependencies
 
-* [d3-legend](https://d3-legend.susielu.com/) (__Optional__) - if you want to use the legend.
 * [Milligram](https://milligram.io/) (__Optional__) - for the forms design.
 
 ## Example
