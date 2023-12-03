@@ -1,9 +1,11 @@
-import dagreD3 from 'dagre-d3'
+import * as dagreD3 from 'dagre-d3-es'
+import * as d3 from 'd3'
+import { legendColor } from 'd3-svg-legend'
 import { isEmpty, omit } from 'lodash'
 
 let fakeNodesCount = 0
 
-const commonLegendDommain = ['Start Vertex', 'Blocked Vertex', 'Fake Vertex']
+const commonLegendDomain = ['Start Vertex', 'Blocked Vertex', 'Fake Vertex']
 const commonLegendRange = ['var(--start-vertex-color)', 'var(--blocked-vertex-color)', 'var(--fake-vertex-color)']
 
 function createVertexLabel(vertex, startElementsIds) {
@@ -45,7 +47,7 @@ function createVertexLabel(vertex, startElementsIds) {
   return label
 }
 
-function createEdgeLable(edge) {
+function createEdgeLabel(edge) {
   const label = {
     id: edge.id,
     labelId: 'label_' + edge.id,
@@ -93,7 +95,7 @@ function setStartingEdge(graph, edge, startElementsIds) {
   graph.setEdge(
     fakeVertex.id,
     edge.targetVertexId,
-    createEdgeLable(edge),
+    createEdgeLabel(edge),
     edge.id
   )
 }
@@ -102,13 +104,13 @@ export function createGraph(models, graphOptions) {
   fakeNodesCount = 0
 
   // Create a new directed graph
-  var graph = new dagreD3.graphlib.Graph({ multigraph: true }).setGraph(graphOptions || {})
+  const graph = new dagreD3.graphlib.Graph({ multigraph: true }).setGraph(graphOptions || {})
 
-  var vertices = models.reduce((acc, cur) => acc.concat(cur.vertices), [])
-  var edges = models.reduce((acc, cur) => acc.concat(cur.edges), [])
+  const vertices = models.reduce((acc, cur) => acc.concat(cur.vertices), [])
+  const edges = models.reduce((acc, cur) => acc.concat(cur.edges), [])
 
-  var startElementsIds = models.map(x => x.startElementId)
-  var sharedStates = vertices.reduce((acc, cur) => {
+  const startElementsIds = models.map(x => x.startElementId)
+  const sharedStates = vertices.reduce((acc, cur) => {
     if (cur.sharedState) {
       if (acc[cur.sharedState]) {
         acc[cur.sharedState].push(cur.id)
@@ -120,8 +122,8 @@ export function createGraph(models, graphOptions) {
     return acc
   }, {})
 
-  var sharedStatesNames = Object.keys(sharedStates)
-  var colors = {}
+  const sharedStatesNames = Object.keys(sharedStates)
+  const colors = {}
 
   // Automatically label each of the nodes
   vertices.forEach(function (vertex) {
@@ -134,7 +136,7 @@ export function createGraph(models, graphOptions) {
       graph.setEdge(
         edge.sourceVertexId,
         edge.targetVertexId,
-        createEdgeLable(edge),
+        createEdgeLabel(edge),
         edge.id
       )
     } else {
@@ -155,7 +157,7 @@ export function createGraph(models, graphOptions) {
       )
     )
   graph.nodes().forEach(function (v) {
-    var node = graph.node(v)
+    const node = graph.node(v)
     node.rx = node.ry = 1
 
     sharedStatesNames.forEach(key => {
@@ -167,8 +169,8 @@ export function createGraph(models, graphOptions) {
   })
 
   return {
-    graph: graph,
-    legendDomain: [...commonLegendDommain, ...sharedStatesNames.map(name => `Shared State: ${name}`)],
+    graph,
+    legendDomain: [...commonLegendDomain, ...sharedStatesNames.map(name => `Shared State: ${name}`)],
     legendRange: [
       ...commonLegendRange,
       ...sharedStatesNames.map(name => color(name))
@@ -233,7 +235,7 @@ function generateNodeTooltipHtml(graph, d) {
   return html
 }
 
-function generateEdgeTootipHtml(graph, d) {
+function generateEdgeTooltipHtml(graph, d) {
   const edge = graph.edge(d.v, d.w, d.name)
   let html = `<div>Id: <span>${edge.id}</span></div>`
 
@@ -255,7 +257,7 @@ function generateEdgeTootipHtml(graph, d) {
   return html
 }
 
-function addTootips(svg, tooltip, cssSelector, htlmFunction, graph) {
+function addTooltips(svg, tooltip, cssSelector, htmlFunction, graph) {
   const tooltipOffset = {
     x: 12,
     y: 12
@@ -263,16 +265,16 @@ function addTootips(svg, tooltip, cssSelector, htlmFunction, graph) {
 
   svg
     .selectAll(cssSelector)
-    .on('mouseover.tooltip', d => {
+    .on('mouseover.tooltip', (event, d) => {
       tooltip
         .transition()
         .style('display', 'block')
         .style('opacity', 1)
 
       tooltip
-        .html(htlmFunction(graph, d))
-        .style('left', d3.event.pageX + tooltipOffset.x + 'px')
-        .style('top', d3.event.pageY + tooltipOffset.y + 'px')
+        .html(htmlFunction(graph, d))
+        .style('left', event.pageX + tooltipOffset.x + 'px')
+        .style('top', event.pageY + tooltipOffset.y + 'px')
         .style('cursor', 'pointer')
     })
     .on('mouseout.tooltip', d => {
@@ -287,12 +289,12 @@ function addTootips(svg, tooltip, cssSelector, htlmFunction, graph) {
 export function renderTooltips(svg, graph, tooltip) {
   tooltip.style('display', 'none').style('opacity', 0)
 
-  addTootips(svg, tooltip, '.node', generateNodeTooltipHtml, graph)
-  addTootips(
+  addTooltips(svg, tooltip, '.node', generateNodeTooltipHtml, graph)
+  addTooltips(
     svg,
     tooltip,
     '.edgePath, .edgeLabel',
-    generateEdgeTootipHtml,
+    generateEdgeTooltipHtml,
     graph
   )
 }
@@ -310,11 +312,11 @@ export function renderLegend(legendContainer, legendDomain, legendRange) {
     .attr('class', 'legendQuant')
     .attr('transform', 'translate(20,20)')
 
-  var ordinal = d3.scaleOrdinal()
+  const ordinal = d3.scaleOrdinal()
     .domain(legendDomain)
     .range(legendRange)
 
-  var legend = d3.legendColor()
+  const legend = legendColor()
     .title('Graph Legend')
     .scale(ordinal)
 

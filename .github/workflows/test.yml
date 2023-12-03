@@ -5,6 +5,10 @@ on:
     paths:
       - 'src/**'
       - 'tests/**'
+      - '.github/workflows/test.yml'
+
+env:
+  NODE_VERSION: 16
 
 jobs:
   lint:
@@ -15,7 +19,7 @@ jobs:
 
     - uses: actions/setup-node@v3
       with:
-        node-version: 16
+        node-version: ${{ env.NODE_VERSION }}
 
     - name: Install npm dependencies
       run: |
@@ -38,7 +42,7 @@ jobs:
 
     - uses: actions/setup-node@v3
       with:
-        node-version: 16
+        node-version: ${{ env.NODE_VERSION }}
 
     - name: Install npm dependencies
       run: |
@@ -66,7 +70,7 @@ jobs:
 
     - uses: actions/setup-node@v3
       with:
-        node-version: 16
+        node-version: ${{ env.NODE_VERSION }}
 
     - name: Install npm dependencies
       run: |

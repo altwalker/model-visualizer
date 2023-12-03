@@ -82,7 +82,7 @@
       <label for="mv-edge-guard-input">Guard</label>
 
       <div class="mv-help-tooltip">
-        <Info />
+        <InfoIcon />
 
         <span class="mv-help-tooltip-text">
           A JavaScript conditional expression that blocks the edge until the condition is met.
@@ -99,15 +99,15 @@
     </div>
 
     <div class="mv-edge-weight">
-      <Weight :value="local.weight" @input="update('weight', $event)" />
+      <WeightForm :value="local.weight" @input="update('weight', $event)" />
     </div>
 
     <div class="mv-edge-dependency">
-      <Dependency :value="local.dependency" @input="update('dependency', $event)" />
+      <DependencyForm :value="local.dependency" @input="update('dependency', $event)" />
     </div>
 
     <div class="mv-edge-actions">
-      <Actions :value="local.actions" :tooltipMessage="this.actionsTooltipMessage" @input="updateActions($event)" />
+      <ActionsForm :value="local.actions" :tooltipMessage="this.actionsTooltipMessage" @input="updateActions($event)" />
     </div>
 
     <div>
@@ -120,13 +120,13 @@
 import { cloneDeep, tap, set, unset } from 'lodash'
 
 import { isKeyword, isIdentifier } from './models'
-import Actions from './Actions.vue'
-import Weight from './Weight.vue'
-import Dependency from './Dependency.vue'
-import Info from './icons/Info.vue'
+import ActionsForm from './ActionsForm.vue'
+import WeightForm from './WeightForm.vue'
+import DependencyForm from './DependencyForm.vue'
+import InfoIcon from './icons/InfoIcon.vue'
 
 export default {
-  components: { Actions, Weight, Dependency, Info },
+  components: { ActionsForm, WeightForm, DependencyForm, InfoIcon },
 
   props: {
     value: Object,

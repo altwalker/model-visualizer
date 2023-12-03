@@ -50,7 +50,6 @@ module.exports = {
     new VueLoaderPlugin()
   ],
   externals: {
-    'dagre-d3': 'dagreD3',
     vue: 'Vue'
   }
 }

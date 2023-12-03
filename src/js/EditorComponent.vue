@@ -17,7 +17,7 @@
         <button class="mv-button mv-button-new-model" @click="createModel">New model</button>
       </div>
 
-      <Model
+      <ModelForm
         v-if="editModelMeta && editableModelIndex >=0"
         v-model="editableModels.models[editableModelIndex]"
         :modelNames="allModelNames"
@@ -26,7 +26,7 @@
         v-on:delete="showDeleteModelPopUp"
       />
 
-      <Edge
+      <EdgeForm
         v-if="editableEdgeIndex >= 0"
         v-model="edges[editableEdgeIndex]"
         :vertices="vertices"
@@ -34,7 +34,7 @@
         v-on:delete="removeEdge(edges[editableEdgeIndex].id)"
       />
 
-      <Vertex
+      <VertexForm
         v-if="editableVertexIndex >=0 "
         v-model="vertices[editableVertexIndex]"
         :newVertex="newVertex"
@@ -81,16 +81,19 @@
 </template>
 
 <script>
-import Edge from './Edge.vue'
-import Vertex from './Vertex.vue'
-import Model from './Model.vue'
+import EdgeForm from './EdgeForm.vue'
+import VertexForm from './VertexForm.vue'
+import ModelForm from './ModelForm.vue'
 import UndoRedo from './undoredo'
 import { createGraph, renderTooltips, renderLegend } from './graph'
 import { setupInteraction } from './interaction'
 
+import * as dagreD3 from 'dagre-d3-es'
+import * as d3 from 'd3'
+
 export default {
-  name: 'Editor',
-  components: { Edge, Vertex, Model },
+  name: 'EditorComponent',
+  components: { EdgeForm, VertexForm, ModelForm },
   undoredo: null,
 
   data: function() {
@@ -303,7 +306,7 @@ export default {
 
     paintGraph() {
       const models = [this.editableModels.models[this.editableModelIndex]]
-      var { graph, legendDomain, legendRange } = createGraph(
+      const { graph, legendDomain, legendRange } = createGraph(
         models,
         this.graphLayoutOptions
       )
@@ -424,8 +427,8 @@ export default {
       const edge = {
         id: `e${id}`,
         name: `e${id}`,
-        sourceVertexId: sourceVertexId,
-        targetVertexId: targetVertexId
+        sourceVertexId,
+        targetVertexId
       }
       this.edges.push(edge)
       this.selectEdge(edge.id)
@@ -445,11 +448,11 @@ export default {
 
       const interaction = setupInteraction(this.svg, graph)
 
-      interaction.onUpdateEdge = (edgeid, sourceVertexId, targetVertexId) => {
-        const edge = self.getEdge(edgeid)
+      interaction.onUpdateEdge = (edgeId, sourceVertexId, targetVertexId) => {
+        const edge = self.getEdge(edgeId)
         edge.sourceVertexId = sourceVertexId
         edge.targetVertexId = targetVertexId
-        self.selectEdge(edgeid)
+        self.selectEdge(edgeId)
       }
       interaction.onCreateEdge = (sourceVertexId, targetVertexId) => {
         self.createEdge(sourceVertexId, targetVertexId)
@@ -486,8 +489,8 @@ export default {
       }
 
       // Create the renderer
-      var render = new dagreD3.render() // eslint-disable-line new-cap
-      var inner = svg.select('g#graph')
+      const render = new dagreD3.render() // eslint-disable-line new-cap
+      const inner = svg.select('g#graph')
 
       // Run the renderer. This is what draws the final graph.
       render(inner, graph)

@@ -39,15 +39,12 @@ Dependencies
 Required Dependencies
 *********************
 
-* `D3 <https://d3js.org/>`_
-* `dagre-d3 <https://github.com/dagrejs/dagre-d3>`_
 * `Vue.js <https://vuejs.org/>`_
 * `lodash <https://lodash.com/>`_
 
 Optional Dependencies
 *********************
 
-* `d3-legend <https://d3-legend.susielu.com/>`_ (**Optional**) - if you want to use the legend.
 * `Milligram <https://milligram.io/>`_ (**Optional**) - for the forms design.
 
 Initialize the ModelVisualizer
@@ -84,10 +81,6 @@ Put it all together and your pages should look like this:
         <body>
             <div id="visualizer">
             </div>
-
-            <!-- DagreD3 and D3 -->
-            <script src="https://d3js.org/d3.v5.js"></script>
-            <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dagre-d3/0.6.3/dagre-d3.min.js"></script>
 
             <!-- VueJS -->
             <script src="https://cdn.jsdelivr.net/npm/vue"></script>
