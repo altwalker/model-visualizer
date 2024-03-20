@@ -78,12 +78,12 @@ jobs:
         cd docs
         make html
 
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: build-main
         path: 'docs/_build/html/build'
 
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: build-develop
         path: 'docs/_build/html/build-dev'
