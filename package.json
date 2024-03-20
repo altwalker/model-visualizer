@@ -1,6 +1,6 @@
 {
   "name": "model-visualizer",
-  "version": "0.0.1",
+  "version": "0.0.6",
   "description": "Visualize your AltWalker or GraphWalker json models",
   "scripts": {
     "build:dev": "webpack --mode development",
