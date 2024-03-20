@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - uses: actions/setup-python@v4
       with:
@@ -31,7 +31,7 @@ jobs:
         branch: [main, develop]
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         ref: ${{ matrix.branch }}
 
@@ -59,7 +59,7 @@ jobs:
     needs: build
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - uses: altwalker/setup-graphwalker@v1
       with:
